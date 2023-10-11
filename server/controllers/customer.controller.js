@@ -1,7 +1,9 @@
 const { genSalt, hash } = require('bcryptjs');
 const Customer = require('../models/customer.model');
 
-exports.loginCustomer = (req, res) => {};
+exports.loginCustomer = (req, res) => {
+  console.log('User logged In successfully');
+};
 
 exports.registerCustomer = async (req, res, next) => {
   const { firstName, lastName, email, username, password } = req.body;

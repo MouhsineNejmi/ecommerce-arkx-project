@@ -18,6 +18,6 @@ router.post(
   registerCustomer
 );
 
-router.post('/login', loginCustomer);
+router.post('/login', passport.authenticate('customer-local'), loginCustomer);
 
 module.exports = router;
