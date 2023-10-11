@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const passport = require('passport');
 const { body } = require('express-validator');
 
 const {
@@ -18,6 +19,6 @@ router.post(
   registerCustomer
 );
 
-router.post('/login', loginCustomer);
+router.post('/login', passport.authenticate('customer-local'), loginCustomer);
 
 module.exports = router;
