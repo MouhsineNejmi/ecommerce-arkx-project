@@ -62,6 +62,37 @@ exports.searchUser = async (req, res) => {
   }
 };
 
-exports.updateUserData = (req, res) => {};
+exports.updateUserData = async (req, res) => {
+  const { id } = req.params;
+  const { first_name, last_name, username, email, password, role } = req.body;
+
+  try {
+    const updatedFields = {
+      first_name,
+      last_name,
+      username,
+      email,
+      password,
+      role,
+      last_update: Date.now(),
+    };
+
+    const user = await User.findByIdAndUpdate(id, updatedFields, {
+      new: true,
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'users not found.' });
+    }
+
+    return res
+      .status(204)
+      .json({ status: 204, message: 'User updated successfully.' });
+  } catch (error) {
+    return res
+      .status(403)
+      .json({ status: 403, message: "You don't have enough privilege." });
+  }
+};
 
 exports.deleteUserAccount = (req, res) => {};
