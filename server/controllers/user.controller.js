@@ -55,7 +55,10 @@ exports.searchUser = async (req, res) => {
       data: users,
     });
   } catch (error) {
-    next(error);
+    return res.status(403).json({
+      status: 403,
+      message: "You don't have enough priviliege.",
+    });
   }
 };
 
