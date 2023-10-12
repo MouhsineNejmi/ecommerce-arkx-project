@@ -8,6 +8,6 @@ router.use(errorHanlderMiddleware);
 
 router.use('/customers', customerRoutes);
 router.use('/users', userRoutes);
-router.use('/orders', orderRoutes)
+router.use('/orders', orderRoutes) 
 
 module.exports = router;

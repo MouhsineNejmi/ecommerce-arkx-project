@@ -9,8 +9,10 @@ const {
 
 router.post('/', createOrder);
 router.get('/', listAllOrders);
-// router.get('/orders/:id', getOrderByID);
-// router.put('/orders/:id',updateOrder);
+router.get('/:id', getOrderByID);
+// router.put('/:id',updateOrder);
 
 module.exports = router;
+
+
  
