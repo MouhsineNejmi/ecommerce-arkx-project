@@ -1,6 +1,9 @@
 const router = require('express').Router();
 
-const { isUserAdminOrManager } = require('../middlewares/user.middleware');
+const {
+  isUserAdminOrManager,
+  isUserAdmin,
+} = require('../middlewares/user.middleware');
 const {
   getAllUsers,
   getUserById,
@@ -12,7 +15,7 @@ const {
 router.get('/', isUserAdminOrManager, getAllUsers);
 router.get('/user/:id', isUserAdminOrManager, getUserById);
 router.get('/user', isUserAdminOrManager, searchUser);
-router.put('/user/:id', isUserAdminOrManager, updateUserData);
-router.delete('/user/:id', isUserAdminOrManager, deleteUserAccount);
+router.put('/user/:id', isUserAdmin, updateUserData);
+router.delete('/user/:id', isUserAdmin, deleteUserAccount);
 
 module.exports = router;
