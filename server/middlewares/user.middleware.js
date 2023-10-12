@@ -21,7 +21,7 @@ const isUserAuthenticated = (req, res, next) => {
   }
 };
 
-const isUserAdmin = (req, res, next) => {
+const isUserAdminOrManager = (req, res, next) => {
   try {
     const authHeader = req.headers['authorization'];
     const accessToken = authHeader && authHeader.split(' ')[1];
@@ -34,9 +34,9 @@ const isUserAdmin = (req, res, next) => {
 
     const decoded = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET_KEY);
 
-    if (decoded.role !== 'admin') {
+    if (decoded.role !== 'admin' && decoded.role !== 'manager') {
       return res.status(403).json({
-        message: 'Access Denied. You should be admin to access this route.',
+        message: "Access Denied. You don't have enough priviliege.",
       });
     }
 
@@ -46,4 +46,4 @@ const isUserAdmin = (req, res, next) => {
   }
 };
 
-module.exports = { isUserAuthenticated, isUserAdmin };
+module.exports = { isUserAuthenticated, isUserAdminOrManager };

@@ -1,22 +1,16 @@
 const router = require('express').Router();
 
-const {
-  isUserAdmin,
-  isUserAuthenticated,
-} = require('../middlewares/user.middleware');
+const { isUserAdminOrManager } = require('../middlewares/user.middleware');
 const {
   getAllUsers,
-  searchUser,
   getUserById,
+  searchUser,
   updateUserData,
   deleteUserAccount,
   getUserProfile,
 } = require('../controllers/user.controller');
 
-router.get('/admin', isUserAdmin, (req, res) => {
-  res.json({ message: 'Welcome authenticated user' });
-});
-
-router.get('/', isUserAuthenticated, getAllUsers);
+router.get('/', isUserAdminOrManager, getAllUsers);
+router.get('/:id', isUserAdminOrManager, getUserById);
 
 module.exports = router;

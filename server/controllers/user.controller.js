@@ -7,7 +7,7 @@ exports.getAllUsers = async (req, res, next) => {
 
   try {
     const users = await User.find()
-      .sort({ name: sort.toLowerCase() })
+      .sort({ username: sort.toLowerCase() })
       .skip((page - 1) * resultsPerPage)
       .limit(page * resultsPerPage);
 
@@ -19,9 +19,27 @@ exports.getAllUsers = async (req, res, next) => {
   }
 };
 
-exports.searchUser = (req, res) => {};
+exports.getUserById = async (req, res, next) => {
+  const { id } = req.params;
 
-exports.getUserById = (req, res) => {};
+  try {
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: 'User not found.',
+      });
+    }
+
+    return res.status(200).json({
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.searchUser = (req, res) => {};
 exports.updateUserData = (req, res) => {};
 exports.deleteUserAccount = (req, res) => {};
 exports.getUserProfile = (req, res) => {};
