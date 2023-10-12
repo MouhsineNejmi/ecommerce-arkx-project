@@ -6,6 +6,6 @@ const errorHanlderMiddleware = require('../middlewares/errorHandler.middleware')
 router.use(errorHanlderMiddleware);
 
 router.use('/auth', authRoutes);
-router.use('/user', userRoutes);
+router.use('/users', userRoutes);
 
 module.exports = router;
