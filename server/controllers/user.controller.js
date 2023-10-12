@@ -39,7 +39,26 @@ exports.getUserById = async (req, res, next) => {
   }
 };
 
-exports.searchUser = (req, res) => {};
+exports.searchUser = async (req, res) => {
+  const query = req.query.query;
+  const sort = req.query.sort || 'desc';
+  const page = req.query.page >= 1 ? req.query.page : 1;
+  const resultsPerPage = 10;
+
+  try {
+    const users = await User.findOne({ username: query })
+      .sort({ username: sort.toLowerCase() })
+      .skip((page - 1) * resultsPerPage)
+      .limit(page * resultsPerPage);
+
+    return res.status(200).json({
+      data: users,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.updateUserData = (req, res) => {};
 exports.deleteUserAccount = (req, res) => {};
 exports.getUserProfile = (req, res) => {};

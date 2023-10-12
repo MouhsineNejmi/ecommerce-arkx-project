@@ -11,6 +11,7 @@ const {
 } = require('../controllers/user.controller');
 
 router.get('/', isUserAdminOrManager, getAllUsers);
-router.get('/:id', isUserAdminOrManager, getUserById);
+router.get('/user/:id', isUserAdminOrManager, getUserById);
+router.get('/user', isUserAdminOrManager, searchUser);
 
 module.exports = router;
