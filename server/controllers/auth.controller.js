@@ -26,10 +26,11 @@ exports.registerUser = async (req, res, next) => {
     return res.json({
       status: 201,
       message: 'User created successfully',
-      user: newUser,
     });
   } catch (error) {
-    next(error);
+    return res
+      .status(401)
+      .json({ status: 401, message: 'Invalid email form or password.' });
   }
 };
 
