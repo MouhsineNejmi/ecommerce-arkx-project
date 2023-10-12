@@ -60,5 +60,5 @@ exports.searchUser = async (req, res) => {
 };
 
 exports.updateUserData = (req, res) => {};
+
 exports.deleteUserAccount = (req, res) => {};
-exports.getUserProfile = (req, res) => {};
