@@ -1,9 +1,11 @@
 const router = require('express').Router();
-const customerRoutes = require('./customer.routes');
+const authRoutes = require('./auth.routes');
+const userRoutes = require('./user.routes');
 const errorHanlderMiddleware = require('../middlewares/errorHandler.middleware');
 
 router.use(errorHanlderMiddleware);
 
-router.use('/customers', customerRoutes);
+router.use('/auth', authRoutes);
+router.use('/user', userRoutes);
 
 module.exports = router;
