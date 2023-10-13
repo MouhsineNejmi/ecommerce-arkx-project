@@ -1,69 +1,114 @@
-const { genSalt, hash } = require('bcryptjs');
 const User = require('../models/user.model');
-const jwt = require('jsonwebtoken');
 
+exports.getAllUsers = async (req, res, next) => {
+  const sort = req.query.sort || 'desc';
+  const page = req.query.page >= 1 ? req.query.page : 1;
+  const resultsPerPage = 10;
 
-exports.userAuthentication = async (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
-  const user = {name: username, password: password}
-  const accessToken = generateAccessToken(user)
-  const refreshToken = jwt.sign(user, process.env.JWT_SECRET_KEY_USER)
-  res.json({ accessToken: accessToken, refreshToken: refreshToken })
-}
-function generateAccessToken(user) {
-  return jwt.sign(user, process.env.JWT_SECRET_KEY_USER, { expiresIn: '1d' });
-}
+  try {
+    const users = await User.find()
+      .sort({ username: sort.toLowerCase() })
+      .skip((page - 1) * resultsPerPage)
+      .limit(page * resultsPerPage);
 
+    return res.status(200).json({
+      data: users,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
-exports.userRegister = async (req, res, next) => {
-    const { firstName, lastName, email, username, password } = req.body;
-  
-    try {
-      const salt = await genSalt(12);
-      const hashedPassword = await hash(password, salt);
-      const newUser = await User.create({
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        username,
-        password: hashedPassword,
-        role: 'user',
-        creation_date: Date.now(),
-        last_login: Date.now(),
-        last_update: null,
-        active: true,
+exports.getUserById = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: 'User not found.',
       });
-  
-      return res.json({
-        status: 201,
-        message: 'User created successfully',
-        customer: newUser,
-      });
-    } catch (error) {
-      next(error);
     }
+
+    return res.status(200).json({
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
+exports.searchUser = async (req, res) => {
+  const query = req.query.query;
+  const sort = req.query.sort || 'desc';
+  const page = req.query.page >= 1 ? req.query.page : 1;
+  const resultsPerPage = 10;
 
-exports.getAllUserList = (req, res) =>{
+  try {
+    const users = await User.findOne({ username: query })
+      .sort({ username: sort.toLowerCase() })
+      .skip((page - 1) * resultsPerPage)
+      .limit(page * resultsPerPage);
 
+    return res.status(200).json({
+      data: users,
+    });
+  } catch (error) {
+    return res.status(403).json({
+      status: 403,
+      message: "You don't have enough priviliege.",
+    });
+  }
 };
 
-exports.getUserById = (req, res) =>{
+exports.updateUserData = async (req, res) => {
+  const { id } = req.params;
+  const { first_name, last_name, username, email, password, role } = req.body;
 
+  try {
+    const updatedFields = {
+      first_name,
+      last_name,
+      username,
+      email,
+      password,
+      role,
+      last_update: Date.now(),
+    };
+
+    const user = await User.findByIdAndUpdate(id, updatedFields, {
+      new: true,
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'users not found.' });
+    }
+
+    return res
+      .status(204)
+      .json({ status: 204, message: 'User updated successfully.' });
+  } catch (error) {
+    return res
+      .status(403)
+      .json({ status: 403, message: "You don't have enough privilege." });
+  }
 };
 
-exports.searchUser = (req, res) =>{
+exports.deleteUserAccount = async (req, res) => {
+  const { id } = req.params;
 
+  try {
+    const user = await User.findByIdAndDelete(id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'users not found' });
+    }
+
+    return res.status(200).json({ message: 'User deleted successfully' });
+  } catch (error) {
+    return res
+      .status(403)
+      .json({ status: 403, message: "You don't have enough privilege." });
+  }
 };
-
-exports.updateUserData = (req, res) =>{
-
-};
-
-exports.deleteUser = (req, res) =>{
-
-};
-
-
