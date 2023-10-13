@@ -28,9 +28,7 @@ exports.registerUser = async (req, res, next) => {
       message: 'User created successfully',
     });
   } catch (error) {
-    return res
-      .status(401)
-      .json({ status: 401, message: 'Invalid email form or password.' });
+    return res.status(401).json({ status: 401, message: error.message });
   }
 };
 
@@ -42,7 +40,7 @@ exports.loginUser = (req, res, next) => {
 
     req.login(user, { session: false }, (err) => {
       if (err) {
-        return res.json({ status: 401, message: 'Invalid credentials' });
+        return res.json({ status: 401, message: err.message });
       }
 
       const accessToken = generateAccessToken({
