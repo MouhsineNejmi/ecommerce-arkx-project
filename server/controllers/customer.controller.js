@@ -22,9 +22,31 @@ exports.getAllCustomers = async (req, res) => {
   }
 };
 
+exports.getCustomerById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const customer = await Customer.findById(id);
+
+    if (!customer) {
+      return res.status(404).json({
+        message: 'Customer not found.',
+      });
+    }
+
+    return res.status(200).json({
+      data: customer,
+    });
+  } catch (error) {
+    return res.status(403).json({
+      status: 403,
+      message: error.message,
+    });
+  }
+};
+
 exports.searchCustomer = (req, res) => {};
 
-exports.getCustomerById = (req, res) => {};
 exports.updateCustomerData = (req, res) => {};
 exports.deleteCustomerAccount = (req, res) => {};
 exports.getCustomerProfile = (req, res) => {};

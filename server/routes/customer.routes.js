@@ -2,8 +2,8 @@ const router = require('express').Router();
 
 const {
   getAllCustomers,
-  searchCustomer,
   getCustomerById,
+  searchCustomer,
   updateCustomerData,
   deleteCustomerAccount,
   getCustomerProfile,
@@ -14,5 +14,6 @@ const {
 } = require('../middlewares/user.middleware');
 
 router.get('/', isUserAdminOrManager, getAllCustomers);
+router.get('/customer/:id', isUserAdminOrManager, getCustomerById);
 
 module.exports = router;
