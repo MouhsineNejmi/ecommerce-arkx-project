@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 
-const UserSchema = new Schema({
+const CustomerSchema = new Schema({
   first_name: {
     type: String,
   },
@@ -14,7 +14,6 @@ const UserSchema = new Schema({
     unique: true,
   },
   role: {
-    enum: ['admin', 'manager'],
     type: String,
     required: true,
   },
@@ -42,6 +41,6 @@ const UserSchema = new Schema({
   },
 });
 
-const User = model('User', UserSchema);
+const Customer = model('Customer', CustomerSchema);
 
-module.exports = User;
+module.exports = Customer;
