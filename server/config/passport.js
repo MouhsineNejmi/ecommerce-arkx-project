@@ -2,6 +2,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const verifyPassword = require('../helpers/verifyPassword');
 const User = require('../models/user.model');
 const Customer = require('../models/customer.model');
+const Seller = require('../models/seller.model');
 
 module.exports = (passport) => {
   passport.use(
@@ -17,8 +18,8 @@ module.exports = (passport) => {
           user = await User.findOne({ email: username });
           isMatched = await verifyPassword(user.password, password);
         } else if (accountType === 'seller') {
-          // seller = await Seller.findOne({ email: username });
-          // isMatched = await verifyPassword(seller.password, password);
+          seller = await Seller.findOne({ email: username });
+          isMatched = await verifyPassword(seller.password, password);
         } else {
           customer = await Customer.findOne({ email: username });
           isMatched = await verifyPassword(customer.password, password);
@@ -66,7 +67,7 @@ module.exports = (passport) => {
         if (accountType === 'customer') {
           return done(null, customer);
         } else if (accountType === 'seller') {
-          // return done(null, seller);
+          return done(null, seller);
         }
         return done(null, user);
       }

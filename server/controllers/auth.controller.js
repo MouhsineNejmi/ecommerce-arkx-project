@@ -7,7 +7,7 @@ const Customer = require('../models/customer.model');
 
 const { generateAccessToken } = require('../helpers/authHelpers');
 
-exports.register = async (req, res, next) => {
+exports.register = async (req, res) => {
   const { firstName, lastName, email, accountType, role, username, password } =
     req.body;
 
@@ -54,15 +54,20 @@ exports.register = async (req, res, next) => {
   }
 };
 
-exports.login = (req, res, next) => {
+exports.login = (req, res) => {
   passport.authenticate('local', { session: false }, (err, user, info) => {
     if (err || !user) {
-      return next(err);
+      return res
+        .json(401)
+        .json({
+          status: 401,
+          message: err.message || 'Invalid email or password',
+        });
     }
 
     req.login(user, { session: false }, (err) => {
       if (err) {
-        return res.json({ status: 401, message: err.message });
+        return res.status(401).json({ status: 401, message: err.message });
       }
 
       const accessToken = generateAccessToken({
