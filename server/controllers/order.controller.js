@@ -76,7 +76,35 @@ exports.getOrderByID = async(req, res) => {
   })
 };
 
+exports.updateOrder = async (req, res) => {
+  try {
+    const orderId = req.params.id;
+    const newStatus = req.body.status;
 
+    const order = await Order.findById(orderId);
+
+    if(order){
+      return res.status(200).json({
+        status: 200,
+        message: "Order status updated successfully"
+      })
+    }
+
+    if (!order) {
+      return res.status(404).json({
+        status : 404,
+        message: "Invalid order id",
+        success: false
+      })
+    }
+
+  } catch (error) {
+    console.error(err);
+    res.status(500).json({
+      error: 'Error updating the order status'
+    });
+  }
+}
 
 };
 
