@@ -68,6 +68,38 @@ exports.searchCustomer = async (req, res) => {
   }
 };
 
-exports.updateCustomerData = (req, res) => {};
+exports.updateCustomerData = async (req, res) => {
+  const { id } = req.params;
+  const { first_name, last_name, username, email, password } = req.body;
+
+  try {
+    const updatedFields = {
+      first_name,
+      last_name,
+      username,
+      email,
+      password,
+    };
+
+    const customer = await Customer.findByIdAndUpdate(id, updatedFields, {
+      new: true,
+    });
+
+    if (!customer) {
+      return res.status(404).json({ message: 'customer not found.' });
+    }
+
+    return res
+      .status(204)
+      .json({ status: 204, message: 'Customer updated successfully.' });
+  } catch (error) {
+    return res.status(403).json({
+      status: 403,
+      message: error.message,
+    });
+  }
+};
+
 exports.deleteCustomerAccount = (req, res) => {};
+
 exports.getCustomerProfile = (req, res) => {};
