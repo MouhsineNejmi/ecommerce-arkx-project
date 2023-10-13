@@ -45,7 +45,28 @@ exports.getCustomerById = async (req, res) => {
   }
 };
 
-exports.searchCustomer = (req, res) => {};
+exports.searchCustomer = async (req, res) => {
+  const query = req.query.query;
+  const sort = req.query.sort || 'desc';
+  const page = req.query.page >= 1 ? req.query.page : 1;
+  const resultsPerPage = 10;
+
+  try {
+    const customer = await Customer.findOne({ username: query })
+      .sort({ username: sort.toLowerCase() })
+      .skip((page - 1) * resultsPerPage)
+      .limit(page * resultsPerPage);
+
+    return res.status(200).json({
+      data: customer,
+    });
+  } catch (error) {
+    return res.status(403).json({
+      status: 403,
+      message: error.message,
+    });
+  }
+};
 
 exports.updateCustomerData = (req, res) => {};
 exports.deleteCustomerAccount = (req, res) => {};

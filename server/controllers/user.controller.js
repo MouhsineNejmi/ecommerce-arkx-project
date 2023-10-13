@@ -52,13 +52,13 @@ exports.searchUser = async (req, res) => {
   const resultsPerPage = 10;
 
   try {
-    const users = await User.findOne({ username: query })
+    const user = await User.findOne({ username: query })
       .sort({ username: sort.toLowerCase() })
       .skip((page - 1) * resultsPerPage)
       .limit(page * resultsPerPage);
 
     return res.status(200).json({
-      data: users,
+      data: user,
     });
   } catch (error) {
     return res.status(403).json({
