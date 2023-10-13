@@ -14,7 +14,7 @@ const {
 } = require('../controllers/customer.controller');
 
 router.post(
-  '/',
+  '/', 
   [body('email').isEmail(), body('password').isLength({ min: 6, max: 30 })],
   registerCustomer
 );
