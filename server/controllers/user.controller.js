@@ -114,9 +114,8 @@ exports.deleteUserAccount = async (req, res) => {
 
     return res.status(200).json({ message: 'User deleted successfully' });
   } catch (error) {
-    return res.status(403).json({
-      status: 403,
-      message: error.message,
-    });
+    return res
+      .status(403)
+      .json({ status: 403, message: "You don't have enough privilege." });
   }
 };

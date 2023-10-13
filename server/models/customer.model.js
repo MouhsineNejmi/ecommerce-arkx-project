@@ -13,10 +13,6 @@ const CustomerSchema = new Schema({
     required: true,
     unique: true,
   },
-  role: {
-    type: String,
-    required: true,
-  },
   username: {
     type: String,
     required: true,
@@ -32,8 +28,9 @@ const CustomerSchema = new Schema({
   last_login: {
     type: Date,
   },
-  last_update: {
-    type: Date,
+  valid_account: {
+    type: Boolean,
+    default: false,
   },
   active: {
     type: Boolean,
