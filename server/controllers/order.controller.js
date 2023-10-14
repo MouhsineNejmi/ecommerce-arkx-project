@@ -1,14 +1,9 @@
 const Order = require('../models/order.model');
 
-exports.createOrder = async(req, res) => {
+exports.createOrder = async (req, res) => {
   try {
-    const {
-      customer_id,
-      order_items,
-      order_date,
-      cart_total_price,
-      status,
-    } = req.body;
+    const { customer_id, order_items, order_date, cart_total_price, status } =
+      req.body;
 
     const newOrder = await Order.create({
       customer_id,
@@ -21,102 +16,95 @@ exports.createOrder = async(req, res) => {
     console.log(newOrder);
     return res.status(201).json({
       status: 201,
-      message: "Order created successfully",
-      newOrder
+      message: 'Order created successfully',
+      data: newOrder,
     });
   } catch (err) {
     console.error(err);
-    res.status(403).json({
+    return res.status(403).json({
       status: 403,
-      message: "You don't have enough privilege"
+      message: err?.message,
     });
   }
 };
 
-exports.listAllOrders = async(req, res) => {
+exports.listAllOrders = async (req, res) => {
   try {
     const orders = await Order.find();
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 200,
-      message: "Order created successfully",
-      success: true,
-      orders,
+      message: 'Order created successfully',
+      data: orders,
     });
   } catch (err) {
     console.error(err);
-    res.status(403).json({ 
+    return res.status(403).json({
       status: 403,
-      error: "You don't have enough privilege"
-    })
+      message: err?.message,
+    });
   }
 };
 
-exports.getOrderByID = async(req, res) => {
-  try{
-    const orderId = req.params.id;
-    const order = await Order.findById(orderId);
-
-    if(!order) {
-      return res.status(404).json({
-        status: 404,
-        message: "Order not found",
-      });
-    }
-    res.status(200).json({
-      status: 200,
-      success: true,
-      order
-    });
-}catch (err){
-  console.err(err);
-  res.status(403).json({
-    status: 403,
-    message: "You don't have enough privilege"
-  })
-};
-
-exports.updateOrder = async (req, res) => {
+exports.getOrderByID = async (req, res) => {
   try {
     const orderId = req.params.id;
-    const newStatus = req.body.status;
-
     const order = await Order.findById(orderId);
-
-    if(order){
-      return res.status(200).json({
-        status: 200,
-        message: "Order status updated successfully"
-      })
-    }
 
     if (!order) {
       return res.status(404).json({
-        status : 404,
-        message: "Invalid order id",
-        success: false
-      })
+        status: 404,
+        message: 'Order not found',
+      });
     }
-
-  } catch (error) {
-    console.error(err);
-    res.status(500).json({
-      error: 'Error updating the order status'
+    return res.status(200).json({
+      status: 200,
+      data: order,
+    });
+  } catch (err) {
+    console.err(err);
+    return res.status(403).json({
+      status: 403,
+      message: "You don't have enough privilege",
     });
   }
-}
-
 };
 
+exports.updateOrder = async (req, res) => {
+  const { customer_id, order_items, order_date, cart_total_price, status } =
+    req.body;
 
+  try {
+    const orderId = req.params.id;
+    const updatedOrder = {
+      customer_id,
+      order_items,
+      order_date,
+      cart_total_price,
+      status,
+    };
 
+    const order = await Order.findByIdAndUpdate(orderId, updatedOrder);
 
+    if (!order) {
+      return res.status(404).json({
+        status: 404,
+        message: 'Invalid order id',
+      });
+    }
 
-
-
-
-
-
+    return res.status(200).json({
+      status: 200,
+      message: 'Order status updated successfully',
+    });
+  } catch (error) {
+    console.error(err);
+    return res.status(500).json({
+      status: 500,
+      message: error?.message,
+    });
+  }
+};
 
 // exports.getOrderByID = async (req, res, next) => {
 //     const orders = await Order.find();

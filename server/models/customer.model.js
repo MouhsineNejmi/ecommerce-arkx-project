@@ -22,6 +22,10 @@ const CustomerSchema = new Schema({
     type: String,
     required: true,
   },
+  accountType: {
+    enum: ['user', 'customer', 'seller'],
+    type: String,
+  },
   creation_date: {
     type: Date,
   },

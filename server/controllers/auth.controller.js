@@ -3,7 +3,7 @@ const { genSalt, hash } = require('bcryptjs');
 
 const User = require('../models/user.model');
 const Customer = require('../models/customer.model');
-// const Seller = require('../models/seller.model');
+const Seller = require('../models/seller.model');
 
 const { generateAccessToken } = require('../helpers/authHelpers');
 
@@ -24,6 +24,7 @@ exports.register = async (req, res) => {
         email,
         username,
         password: hashedPassword,
+        accountType,
         role,
         creation_date: Date.now(),
         last_login: Date.now(),
@@ -37,9 +38,23 @@ exports.register = async (req, res) => {
         email,
         username,
         password: hashedPassword,
+        accountType,
         creation_date: Date.now(),
         last_login: Date.now(),
         valid_account: false,
+        active: true,
+      });
+    } else if (accountType === 'seller') {
+      newAccount = await Seller.create({
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        username,
+        password: hashedPassword,
+        accountType,
+        creation_date: Date.now(),
+        last_login: Date.now(),
+        last_update: null,
         active: true,
       });
     }
@@ -50,29 +65,28 @@ exports.register = async (req, res) => {
       data: newAccount,
     });
   } catch (error) {
-    return res.status(401).json({ status: 401, message: error.message });
+    return res.status(401).json({ status: 401, message: error?.message });
   }
 };
 
 exports.login = (req, res) => {
   passport.authenticate('local', { session: false }, (err, user, info) => {
     if (err || !user) {
-      return res
-        .json(401)
-        .json({
-          status: 401,
-          message: err.message || 'Invalid email or password',
-        });
+      return res.json(401).json({
+        status: 401,
+        message: 'User with this credentials not found',
+      });
     }
 
     req.login(user, { session: false }, (err) => {
       if (err) {
-        return res.status(401).json({ status: 401, message: err.message });
+        return res.status(401).json({ status: 401, message: err?.message });
       }
 
       const accessToken = generateAccessToken({
         _id: user._id,
-        role: user.role,
+        role: user.role ? user.role : null,
+        accountType: user.accountType,
       });
 
       res.cookie('accessToken', accessToken);

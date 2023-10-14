@@ -12,12 +12,13 @@ exports.getAllUsers = async (req, res, next) => {
       .limit(page * resultsPerPage);
 
     return res.status(200).json({
+      status: 200,
       data: users,
     });
   } catch (error) {
     return res.status(403).json({
       status: 403,
-      message: error.message,
+      message: error?.message,
     });
   }
 };
@@ -30,17 +31,19 @@ exports.getUserById = async (req, res, next) => {
 
     if (!user) {
       return res.status(404).json({
+        status: 404,
         message: 'User not found.',
       });
     }
 
     return res.status(200).json({
+      status: 200,
       data: user,
     });
   } catch (error) {
     return res.status(403).json({
       status: 403,
-      message: error.message,
+      message: error?.message,
     });
   }
 };
@@ -58,12 +61,13 @@ exports.searchUser = async (req, res) => {
       .limit(page * resultsPerPage);
 
     return res.status(200).json({
+      status: 200,
       data: user,
     });
   } catch (error) {
     return res.status(403).json({
       status: 403,
-      message: error.message,
+      message: error?.message,
     });
   }
 };
@@ -88,7 +92,7 @@ exports.updateUserData = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).json({ message: 'users not found.' });
+      return res.status(404).json({ status: 404, message: 'users not found.' });
     }
 
     return res
@@ -97,7 +101,7 @@ exports.updateUserData = async (req, res) => {
   } catch (error) {
     return res.status(403).json({
       status: 403,
-      message: error.message,
+      message: error?.message,
     });
   }
 };
@@ -109,13 +113,13 @@ exports.deleteUserAccount = async (req, res) => {
     const user = await User.findByIdAndDelete(id);
 
     if (!user) {
-      return res.status(404).json({ message: 'users not found' });
+      return res.status(404).json({ status: 404, message: 'users not found' });
     }
 
-    return res.status(200).json({ message: 'User deleted successfully' });
-  } catch (error) {
     return res
-      .status(403)
-      .json({ status: 403, message: "You don't have enough privilege." });
+      .status(200)
+      .json({ satus: 200, message: 'User deleted successfully' });
+  } catch (error) {
+    return res.status(403).json({ status: 403, message: error?.message });
   }
 };

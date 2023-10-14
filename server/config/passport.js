@@ -16,13 +16,15 @@ module.exports = (passport) => {
 
         if (accountType === 'user') {
           user = await User.findOne({ email: username });
-          isMatched = await verifyPassword(user.password, password);
+          isMatched = user && (await verifyPassword(user.password, password));
         } else if (accountType === 'seller') {
           seller = await Seller.findOne({ email: username });
-          isMatched = await verifyPassword(seller.password, password);
+          isMatched =
+            seller && (await verifyPassword(seller.password, password));
         } else {
           customer = await Customer.findOne({ email: username });
-          isMatched = await verifyPassword(customer.password, password);
+          isMatched =
+            customer && (await verifyPassword(customer.password, password));
         }
 
         if (accountType === 'user' && !user) {
