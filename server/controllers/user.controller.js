@@ -92,7 +92,7 @@ exports.updateUserData = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).json({ status: 404, message: 'users not found.' });
+      return res.status(404).json({ status: 404, message: 'User not found.' });
     }
 
     return res
@@ -113,7 +113,7 @@ exports.deleteUserAccount = async (req, res) => {
     const user = await User.findByIdAndDelete(id);
 
     if (!user) {
-      return res.status(404).json({ status: 404, message: 'users not found' });
+      return res.status(404).json({ status: 404, message: 'User not found' });
     }
 
     return res

@@ -72,8 +72,8 @@ exports.register = async (req, res) => {
 exports.login = (req, res) => {
   passport.authenticate('local', { session: false }, (err, user, info) => {
     if (err || !user) {
-      return res.json(401).json({
-        status: 401,
+      return res.json(404).json({
+        status: 404,
         message: 'User with this credentials not found',
       });
     }
