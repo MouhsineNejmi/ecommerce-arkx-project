@@ -2,6 +2,19 @@ const mongoose = require('mongoose');
 const { schema } = require('./user.model');
 const { Schema, model } = mongoose;
 
-const subcategoriesSchema = new Schema({
-    
-})
+const subCategoriesSchema = new Schema({
+    subcategory_name:{
+        type: String,
+        unique: true
+    },
+    category_id: {
+        type: Schema.Types.ObjectId
+    },
+    active: {
+        type: Boolean,
+        status: false
+    }
+});
+
+const SubCategories = model('SubCategories', subCategoriesSchema);
+module.exports=  SubCategories ;

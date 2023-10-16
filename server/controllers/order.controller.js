@@ -43,8 +43,8 @@ exports.listAllOrders = async(req, res) => {
       success: true,
       orders,
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error();
     res.status(403).json({ 
       status: 403,
       error: "You don't have enough privilege"
