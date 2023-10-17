@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const { body } = require('express-validator');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 const { register, login } = require('../controllers/auth.controller');
 
@@ -12,6 +14,7 @@ router.post(
       'Your password should be between 6 and 30 characters'
     ).isLength({ min: 6, max: 30 }),
   ],
+  upload.single('image'),
   register
 );
 

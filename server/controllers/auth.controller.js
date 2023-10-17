@@ -6,19 +6,26 @@ const Customer = require('../models/customer.model');
 const Seller = require('../models/seller.model');
 
 const { generateAccessToken } = require('../helpers/authHelpers');
+const { uploadImageToS3, getImageLink } = require('../helpers/awsHelpers');
 
 exports.register = async (req, res) => {
   const { firstName, lastName, email, accountType, role, username, password } =
     req.body;
+  const { file } = req;
 
   try {
     const salt = await genSalt(12);
     const hashedPassword = await hash(password, salt);
 
+    const key = await uploadImageToS3(file);
+
+    console.log('key: ', key);
+
     let newAccount = {};
 
     if (accountType === 'user') {
       newAccount = await User.create({
+        image_name: key,
         first_name: firstName,
         last_name: lastName,
         email,
@@ -33,6 +40,7 @@ exports.register = async (req, res) => {
       });
     } else if (accountType === 'customer') {
       newAccount = await Customer.create({
+        image_name: key,
         first_name: firstName,
         last_name: lastName,
         email,
@@ -46,6 +54,7 @@ exports.register = async (req, res) => {
       });
     } else if (accountType === 'seller') {
       newAccount = await Seller.create({
+        image_name: key,
         first_name: firstName,
         last_name: lastName,
         email,

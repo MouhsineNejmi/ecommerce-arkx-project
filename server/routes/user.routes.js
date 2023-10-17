@@ -1,4 +1,6 @@
 const router = require('express').Router();
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 const {
   isUserAdminOrManager,
@@ -15,7 +17,7 @@ const {
 router.get('/', isUserAdminOrManager, getAllUsers);
 router.get('/user/:id', isUserAdminOrManager, getUserById);
 router.get('/user', isUserAdminOrManager, searchUser);
-router.put('/user/:id', isUserAdmin, updateUserData);
+router.put('/user/:id', isUserAdmin, upload.single('image'), updateUserData);
 router.delete('/user/:id', isUserAdmin, deleteUserAccount);
 
 module.exports = router;

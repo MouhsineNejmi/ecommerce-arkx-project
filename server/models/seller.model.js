@@ -2,6 +2,13 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 
 const SellerSchema = new Schema({
+  image_name: {
+    type: String,
+  },
+  profile_image: {
+    type: String,
+    default: 'https://fontawesome.com/icons/user?f=classic&s=regular&sz=lg',
+  },
   first_name: {
     type: String,
   },

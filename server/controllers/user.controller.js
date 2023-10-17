@@ -1,6 +1,11 @@
+const {
+  uploadImageToS3,
+  getImageLink,
+  deleteImage,
+} = require('../helpers/awsHelpers');
 const User = require('../models/user.model');
 
-exports.getAllUsers = async (req, res, next) => {
+exports.getAllUsers = async (req, res) => {
   const sort = req.query.sort || 'desc';
   const page = req.query.page >= 1 ? req.query.page : 1;
   const resultsPerPage = 10;
@@ -23,7 +28,7 @@ exports.getAllUsers = async (req, res, next) => {
   }
 };
 
-exports.getUserById = async (req, res, next) => {
+exports.getUserById = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -55,7 +60,9 @@ exports.searchUser = async (req, res) => {
   const resultsPerPage = 10;
 
   try {
-    const user = await User.findOne({ username: query })
+    const user = await User.findOne({
+      username: { $regex: new RegExp(query, 'i') },
+    })
       .sort({ username: sort.toLowerCase() })
       .skip((page - 1) * resultsPerPage)
       .limit(page * resultsPerPage);
@@ -75,9 +82,13 @@ exports.searchUser = async (req, res) => {
 exports.updateUserData = async (req, res) => {
   const { id } = req.params;
   const { first_name, last_name, username, email, password, role } = req.body;
+  const { file } = req;
 
   try {
+    const key = await uploadImageToS3(file);
+
     const updatedFields = {
+      image_name: key,
       first_name,
       last_name,
       username,
@@ -91,13 +102,15 @@ exports.updateUserData = async (req, res) => {
       new: true,
     });
 
+    user.profile_image = await getImageLink(key);
+
     if (!user) {
       return res.status(404).json({ status: 404, message: 'User not found.' });
     }
 
     return res
-      .status(204)
-      .json({ status: 204, message: 'User updated successfully.' });
+      .status(200)
+      .json({ status: 200, message: 'User updated successfully.' });
   } catch (error) {
     return res.status(403).json({
       status: 403,
@@ -111,6 +124,8 @@ exports.deleteUserAccount = async (req, res) => {
 
   try {
     const user = await User.findByIdAndDelete(id);
+
+    user.image_name && (await deleteImage(user.image_name));
 
     if (!user) {
       return res.status(404).json({ status: 404, message: 'User not found' });

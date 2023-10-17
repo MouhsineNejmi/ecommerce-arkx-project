@@ -1,3 +1,8 @@
+const {
+  uploadImageToS3,
+  getImageLink,
+  deleteImage,
+} = require('../helpers/awsHelpers');
 const Seller = require('../models/seller.model');
 
 exports.getAllSellers = async (req, res) => {
@@ -58,7 +63,9 @@ exports.searchSeller = async (req, res) => {
   const resultsPerPage = 10;
 
   try {
-    const seller = await Seller.findOne({ username: query })
+    const seller = await Seller.findOne({
+      username: { $regex: new RegExp(query, 'i') },
+    })
       .sort({ username: sort.toLowerCase() })
       .skip((page - 1) * resultsPerPage)
       .limit(page * resultsPerPage);
@@ -81,7 +88,10 @@ exports.updateSellerData = async (req, res) => {
   const { first_name, last_name, username, email, password, role } = req.body;
 
   try {
+    const key = await uploadImageToS3(file);
+
     const updatedFields = {
+      image_name: key,
       first_name,
       last_name,
       username,
@@ -93,6 +103,8 @@ exports.updateSellerData = async (req, res) => {
     const seller = await Seller.findByIdAndUpdate(id, updatedFields, {
       new: true,
     });
+
+    seller.profile_image = await getImageLink(key);
 
     if (!seller) {
       return res.status(404).json({ status: 404, message: 'users not found.' });
@@ -116,6 +128,8 @@ exports.deleteSellerAccount = async (req, res) => {
   try {
     const seller = await Seller.findByIdAndDelete(id);
 
+    seller.image_name && (await deleteImage(seller.image_name));
+
     if (!seller) {
       return res.status(404).json({ status: 404, message: 'Seller not found' });
     }
@@ -135,9 +149,7 @@ exports.getSellerProfile = async (req, res) => {
     const seller = await Seller.findById(id);
 
     if (!seller) {
-      return res
-        .status(404)
-        .json({ status: 404, message: 'Customer not found' });
+      return res.status(404).json({ status: 404, message: 'Seller not found' });
     }
 
     return res.status(200).json({ status: 200, data: seller });
