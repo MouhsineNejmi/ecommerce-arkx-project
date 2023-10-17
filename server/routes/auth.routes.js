@@ -1,7 +1,8 @@
 const router = require('express').Router();
 const { body } = require('express-validator');
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 const { register, login } = require('../controllers/auth.controller');
 

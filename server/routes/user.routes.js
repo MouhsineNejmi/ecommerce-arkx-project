@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 const {
   isUserAdminOrManager,
