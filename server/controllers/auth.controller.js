@@ -92,6 +92,8 @@ exports.login = (req, res) => {
         return res.status(401).json({ status: 401, message: err?.message });
       }
 
+      user.last_login = Date.now();
+
       const accessToken = generateAccessToken({
         _id: user._id,
         role: user.role ? user.role : null,
@@ -100,7 +102,7 @@ exports.login = (req, res) => {
 
       res.cookie('accessToken', accessToken);
 
-      res.status(200).json({ status: 200, accessToken, user });
+      res.status(200).json({ status: 200, accessToken });
     });
   })(req, res);
 };
