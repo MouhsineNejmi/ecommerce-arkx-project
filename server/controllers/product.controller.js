@@ -37,7 +37,13 @@ exports.addProduct = async (req, res) => {
 // get list of products
 exports.listProduct = async (req, res) => {
 try {
-    const products = await Product.find().limit(10);
+     const page  = req.query.page||1;
+    const itemsPerPage = 10;
+    const pageNumber = parseInt(page, 10) || 1;
+    const skip = (pageNumber - 1) * itemsPerPage;
+
+
+    const products = await Product.find().skip(skip).limit(itemsPerPage);
   
     return res.status(200).json({
       products,
@@ -51,6 +57,39 @@ try {
   }
 }
 //search for products
+exports.searchforProduct = async (req, res) => {
+  try {
+    const { query, page } = req.query;
+    const itemsPerPage = 10;
+    const pageNumber = parseInt(page, 10) || 1;
+
+    // Define the search query for product_name
+    const searchQuery = {
+      product_name: { $regex: new RegExp(query, "i") },
+    };
+    const skip = (pageNumber - 1) * itemsPerPage;
+
+    // Project only the specified fields in the query
+    const products = await Product.find(searchQuery)
+      .select("sku product_image product_name price category_id") // Specify the fields you want
+      .skip(skip)
+      .limit(itemsPerPage)
+      .exec();
+
+    if (products.length === 0) {
+      res
+        .status(404)
+        .json({ message: "No products found for the given search query" });
+    } else {
+      res.status(200).json({ products });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Internal server error", message: error.message });
+  }
+};
+
 
 // get products by id 
 exports.getProductID = async (req, res) => {
@@ -59,7 +98,7 @@ try {
 
   const id = req.params.id;
   const productId = await Product.findById({_id:id})
-  if (!id){
+  if (!productId){
     res.status(404).json({message: "ProductiD not found"})
   }
 
@@ -82,11 +121,11 @@ exports.updateProduct = async (req, res) => {
   try {
     const idProduct = req.params.id
     const updatedProduct = req.body
-   
-    if (!idProduct){
+    const product= await  Product.findOneAndUpdate({_id:idProduct},updatedProduct,{new:true});
+    if (!Product){
       res.status(404).json({ message: "product not found" });
     }
-    const product= await  Product.findOneAndUpdate({_id:idProduct},updatedProduct,{new:true});
+  
    
       res.status(200).send({
         product,
@@ -105,21 +144,17 @@ exports.updateProduct = async (req, res) => {
 
 // delete product 
 exports.deleteProduct = async (req, res) => {
-
   try {
 
-     const idProduct =req.params.id
-     
-     const products = await Product.deleteOne({_id :idProduct});
+     const idProduct = req.params.id
+     const deletedproducts = await Product.findByIdAndDelete(idProduct).exec();
 
-     if(!idProduct){
-      return ("id product not found")
+   
+     if(!deletedproducts){
+        res.status(404).json({message: "product not found"})
      }
     
       return res.status(200).json({ message: "Product deleted successfully" });
-
-    
-    
     
   } catch (error) {
     console.error(error); 
