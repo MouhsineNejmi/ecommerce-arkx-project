@@ -25,6 +25,6 @@ router.put(
 );
 router.delete('/delete', isSeller, deleteSellerAccount);
 router.get('/profile', isSeller, getSellerProfile);
-router.patch('/profile/update', isSeller, updateSellerData);
+router.put('/profile/update', isSeller, updateSellerData);
 
 module.exports = router;

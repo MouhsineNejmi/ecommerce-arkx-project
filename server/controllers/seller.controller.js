@@ -100,6 +100,15 @@ exports.updateSellerData = async (req, res) => {
       last_update: Date.now(),
     };
 
+    const existingSeller = await Seller.findOne({ username });
+    if (existingSeller) {
+      return res.status(400).json({
+        status: 400,
+        message:
+          'Seller with this username already exist try another username.',
+      });
+    }
+
     const seller = await Seller.findByIdAndUpdate(id, updatedFields, {
       new: true,
     });

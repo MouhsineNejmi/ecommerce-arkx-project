@@ -8,36 +8,36 @@ module.exports = (passport) => {
   passport.use(
     'local',
     new LocalStrategy(
-      { usernameField: 'email', passReqToCallback: true },
+      { passReqToCallback: true },
       async (req, username, password, done) => {
         const { accountType } = req.body;
         let user, seller, customer;
         let isMatched;
 
         if (accountType === 'user') {
-          user = await User.findOne({ email: username });
+          user = await User.findOne({ username });
           isMatched = user && (await verifyPassword(user.password, password));
         } else if (accountType === 'seller') {
-          seller = await Seller.findOne({ email: username });
+          seller = await Seller.findOne({ username });
           isMatched =
             seller && (await verifyPassword(seller.password, password));
         } else {
-          customer = await Customer.findOne({ email: username });
+          customer = await Customer.findOne({ username });
           isMatched =
             customer && (await verifyPassword(customer.password, password));
         }
 
         if (accountType === 'user' && !user) {
-          console.log('Incorrect email or password');
+          console.log('Incorrect username or password');
           return done(null, false, {
-            message: 'Incorrect email or password.',
+            message: 'Incorrect username or password.',
           });
         }
 
         if (accountType === 'customer' && !customer) {
-          console.log('Incorrect email or password');
+          console.log('Incorrect username or password');
           return done(null, false, {
-            message: 'Incorrect email or password.',
+            message: 'Incorrect username or password.',
           });
         }
 
