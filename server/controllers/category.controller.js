@@ -1,5 +1,4 @@
 const Categories = require('../models/category.model');
-const Category = require('../models/category.model');
 
 exports.createNewCategory = async (req, res) => {
     try {
@@ -8,12 +7,24 @@ exports.createNewCategory = async (req, res) => {
             active
         } = req.body;
 
+        const existingCategory = await Category.findOne({category_name});
+        if(typeof category_name !== 'string'){
+          return res.status(400).json({
+            status: 400,
+            message: "Category name must be a string"
+          })
+        }
+        if(existingCategory){
+          return res.status(400).json({
+            status: 400,
+            message: "The category already exist"
+        })
+        }
         const newCategory = await Category.create({
             category_name,
             active
         });
         console.log(newCategory);
-        
         return res.status(201).json({
             status: 201,
             message: "Category created successfully",
@@ -21,20 +32,31 @@ exports.createNewCategory = async (req, res) => {
         });
     } catch (error) {
         console.error();
-        return res.status(400).json({
-            status: 400,
-            message: "The category already exist"
+        res.status(500).json({
+          status: 500,
+          message : "Internal server error"
         })
     }
 };
 
 exports.listAllCategories = async (req, res) => {
     try {
-        const categories = await Category.find();
+      const page = req.query.page || 1;
+      const perPage = 10;
+      const skip = (page - 1) * perPage;
+
+      const categories = await Category.find().skip(skip).limit(perPage);
+      if(categories.length === 0){
         res.status(200).json({
             status: 200,
-            categories
-        });
+            categories : []
+          })
+      }else{
+        res.status(200).json({
+          status: 200,
+          categories
+        })
+      }
     } catch (error) {
         console.error();
         res.status(500).json({
@@ -47,14 +69,25 @@ exports.listAllCategories = async (req, res) => {
 exports.searchCategories = async (req, res) => {
     try {
         const query = { active: true};
-        const categories = await Categories.find(query);
-        res.json({
+        const page = req.query.page || 1;
+        const perPage = 10;
+        const skip = (page - 1) * perPage;
+        const categories = await Categories.find(query).skip(skip).limit(perPage);
+
+        if(categories.length === 0){
+        res.status(200).json({
             status: 200,
-            categories
-        });
+            categories : []
+          })
+      }else{
+        res.status(200).json({
+          status: 200,
+          categories
+        })
+      }
     } catch (error) {
         res.status(500).json({
-            message: error.message
+            message: error?.message
         })
     }
 };
@@ -85,27 +118,43 @@ exports.getCategoryByID = async (req, res) => {
 };
 
 exports.updateCategoryData = async (req, res) => {
-    try {
-        const categoryId = req.params.id;
-        const category = await Categories.findById(categoryId);
+  try {
+    const categoryId = req.params.id;
+    const updatedCategoryData = req.body;
 
-        if(!category){
-            return res.status(404).json({
-                status: 404,
-                message: "Invalid category id"
-            });
-        }
-        return res.status(200).json({
-            status: 200,
-            message: "category updated successfully"
-        })
-    } catch (error) {
-        console.error();
-        res.status(403).json({
-            status: 403,
-            message: "You don't have enough privilege"
+    const existingCategory = await Category.findById(categoryId);
+
+    if (!existingCategory) {
+        return res.status(404).json({
+            status: 404,
+            message: "Invalid category id"
         });
     }
+
+    if (updatedCategoryData.name) {
+        const categoryWithSameName = await Category.findOne({ name: updatedCategoryData.name });
+        if (categoryWithSameName && categoryWithSameName._id.toString() !== categoryId) {
+            return res.status(400).json({
+                status: 400,
+                message: "Category name must be unique"
+            });
+        }
+    }
+
+    await Categories.findByIdAndUpdate(categoryId, updatedCategoryData);
+
+    return res.status(200).json({
+        status: 200,
+        message: "Category updated successfully"
+    });
+
+} catch (error) {
+    console.error(error);
+    res.status(500).json({
+        status: 500,
+        message: "Internal Server Error"
+    });
+}
 };
 
 exports.deleteCategory = async (req, res) => {

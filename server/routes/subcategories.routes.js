@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const { model } = require('mongoose');
 
 const {
     createNewSubCategory,
@@ -12,10 +11,10 @@ const {
 } = require('../controllers/subcategories.controller');
 
 router.post('/' , createNewSubCategory);
-router.get('/', listAllSubCategories);
-router.get('/', GetSubCategoryByID);
 router.get('/', searchSubCategories);
-router.put('/', updateSubCategoryData);
-router.delete('/', deleteSubCategory)
+router.get('/', listAllSubCategories);
+router.get('/:id', GetSubCategoryByID);
+router.put('/:id', updateSubCategoryData);
+router.delete('/:id', deleteSubCategory)
 
 module.exports = router;
