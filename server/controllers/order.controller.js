@@ -16,11 +16,11 @@ exports.createOrder = async (req, res) => {
     return res.status(201).json({
       status: 201,
       message: "Order created successfully",
-      newOrder,
+      data: newOrder,
     });
-  } catch (err) {
-    console.error(err);
-    res.status(403).json({
+  } catch (error) {
+    console.error(error);
+    return res.status(403).json({
       status: 403,
       message: "You don't have enough privilege",
     });
@@ -29,19 +29,22 @@ exports.createOrder = async (req, res) => {
 
 exports.listAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find();
+    const page = req.query.page || 1;
+    const perPage = 10;
+    const skip = (page - 1) * perPage;
 
-    res.status(200).json({
+    const orders = await Order.find().skip(skip).limit(perPage);
+
+    return res.status(200).json({
       status: 200,
       message: "Order created successfully",
-      success: true,
-      orders,
+      data: orders,
     });
   } catch (error) {
-    console.error();
-    res.status(403).json({
+    console.error(error);
+    return res.status(403).json({
       status: 403,
-      error: "You don't have enough privilege",
+      message: error?.message,
     });
   }
 };
@@ -57,16 +60,15 @@ exports.getOrderByID = async (req, res) => {
         message: "Order not found",
       });
     }
-    res.status(200).json({
+    return res.status(200).json({
       status: 200,
-      success: true,
-      order,
+      data: order,
     });
   } catch (error) {
     console.error(error);
-    res.status(403).json({
+    return res.status(403).json({
       status: 403,
-      message: error.message,
+      message: error?.message,
     });
   }
 };
@@ -88,11 +90,10 @@ exports.updateOrder = async (req, res) => {
       message: "Order status updated successfully",
     });
   } catch (error) {
-    console.error();
-    res.status(403).json({
+    console.error(error);
+    return res.status(403).json({
       status: 403,
-      message: error.message,
+      message: error?.message,
     });
   }
 };
-

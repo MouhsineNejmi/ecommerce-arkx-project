@@ -1,14 +1,13 @@
 const SubCategories = require("../models/subcategories.model");
-const Categories = require("../models/category.model");
 
 exports.createNewSubCategory = async (req, res) => {
   try {
-    const { subcategory_name, category_id, active } = req.body;
+    const { subcategory_name, category_id } = req.body;
 
     const newSubCategory = await SubCategories.create({
       subcategory_name,
       category_id,
-      active,
+      active: true,
     });
 
     console.log(newSubCategory);
@@ -16,12 +15,12 @@ exports.createNewSubCategory = async (req, res) => {
     return res.status(201).json({
       status: 201,
       message: "Subcategory created successfully",
-      newSubCategory,
+      data: newSubCategory,
     });
   } catch (error) {
     console.log(error);
-    res.status(400).json({
-      message: error.message,
+    return res.json({
+      message: error?.message,
     });
   }
 };
@@ -33,20 +32,17 @@ exports.listAllSubCategories = async (req, res) => {
     const skip = (page - 1) * perPage;
 
     const subCategories = await SubCategories.find().skip(skip).limit(perPage);
-    if (subCategories) {
-      return res.json({ message: "No results Found" });
-    }
-    res.json({ status: 200, message: subCategories });
+
+    return res.json({ status: 200, message: subCategories });
   } catch (error) {
     console.log(error);
-    res.status(500).json({
-      message: error.message,
+    return res.status(500).json({
+      message: error?.message,
     });
   }
 };
 
 exports.searchSubCategories = async (req, res) => {
-  console.log("Subcategories all");
   try {
     const { query } = req.query;
     const page = req.query.page || 1;
@@ -65,10 +61,10 @@ exports.searchSubCategories = async (req, res) => {
 
     return res.status(200).json({
       status: 200,
-      subCategory,
+      data: subCategory,
     });
   } catch (error) {
-    return res.status(500).json({
+    return res.json({
       message: error?.message,
     });
   }
@@ -85,16 +81,15 @@ exports.GetSubCategoryByID = async (req, res) => {
         message: "SubCategory Not Found",
       });
     }
-    res.status(200).json({
+    return res.status(200).json({
       status: 200,
       success: true,
       subCat,
     });
   } catch (error) {
     console.error(error);
-    res.status(403).json({
-      status: 403,
-      message: error.message,
+    return res.json({
+      message: error?.message,
     });
   }
 };
@@ -116,10 +111,9 @@ exports.updateSubCategoryData = async (req, res) => {
       message: "Subcategory updated successfully",
     });
   } catch (error) {
-    console.error();
-    res.status(403).json({
-      status: 403,
-      message: error.message,
+    console.error(error);
+    return res.json({
+      message: error?.message,
     });
   }
 };
@@ -146,9 +140,8 @@ exports.deleteSubCategory = async (req, res) => {
         message: "Products attached, cannot delete this subcategory",
       });
     } else {
-      res.status(500).json({
-        status: 500,
-        message: message.error
+      return res.json({
+        error: error?.message,
       });
     }
   }
