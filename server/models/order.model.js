@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { schema } = require('./user.model');
 const {Schema , model} = mongoose;
 
 const orderSchema = new Schema({
@@ -16,7 +15,8 @@ const orderSchema = new Schema({
         type: Number
     },
     status: {
-        type: String
+        type: String,
+        default: "open"
     }
 });
 

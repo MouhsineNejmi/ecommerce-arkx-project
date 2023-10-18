@@ -10,7 +10,7 @@ const {
 router.post('/', createOrder);
 router.get('/', listAllOrders);
 router.get('/:id', getOrderByID);
-// router.put('/:id',updateOrder);
+router.put('/:id', updateOrder);
 
 module.exports = router;
 

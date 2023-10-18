@@ -1,14 +1,13 @@
-const Order = require('../models/order.model');
+const Order = require("../models/order.model");
 
 exports.createOrder = async (req, res) => {
   try {
-    const { customer_id, order_items, order_date, cart_total_price, status } =
-      req.body;
+    const { customer_id, order_items, cart_total_price, status } = req.body;
 
     const newOrder = await Order.create({
       customer_id,
       order_items,
-      order_date,
+      order_date: Date.now(),
       cart_total_price,
       status,
     });
@@ -21,8 +20,7 @@ exports.createOrder = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    return res.status(403).json({
-      status: 403,
+    return res.json({
       message: err?.message,
     });
   }
@@ -30,18 +28,21 @@ exports.createOrder = async (req, res) => {
 
 exports.listAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find();
+    const page = req.query.page || 1;
+    const perPage = 10;
+    const skip = (page - 1) * perPage;
+
+    const orders = await Order.find().skip(skip).limit(perPage);
 
     return res.status(200).json({
       status: 200,
-      message: 'Order created successfully',
+      message: "Order created successfully",
       data: orders,
     });
-  } catch (err) {
-    console.error(err);
-    return res.status(403).json({
-      status: 403,
-      message: err?.message,
+  } catch (error) {
+    console.error(error);
+    return res.json({
+      message: error?.message,
     });
   }
 };
@@ -61,11 +62,10 @@ exports.getOrderByID = async (req, res) => {
       status: 200,
       data: order,
     });
-  } catch (err) {
-    console.err(err);
-    return res.status(403).json({
-      status: 403,
-      message: "You don't have enough privilege",
+  } catch (error) {
+    console.error(error);
+    return res.json({
+      message: error?.message,
     });
   }
 };
@@ -75,7 +75,7 @@ exports.updateOrder = async (req, res) => {
     req.body;
 
   try {
-    const orderId = req.params.id;
+    const orderId = req.params.id
     const updatedOrder = {
       customer_id,
       order_items,
@@ -89,69 +89,18 @@ exports.updateOrder = async (req, res) => {
     if (!order) {
       return res.status(404).json({
         status: 404,
-        message: 'Invalid order id',
-      });
+        message: 'Order not found',
+      })
     }
 
     return res.status(200).json({
       status: 200,
-      message: 'Order status updated successfully',
+      message: "Order status updated successfully",
     });
   } catch (error) {
-    console.error(err);
-    return res.status(500).json({
-      status: 500,
+    console.error(error);
+    return res.json({
       message: error?.message,
     });
   }
 };
-
-// exports.getOrderByID = async (req, res, next) => {
-//     const orders = await Order.find();
-
-//     let totalAmount = 0;
-
-//     orders.forEach((order) => {
-//         totalAmount += order.cart_total_price;
-//     });
-
-//     res.status(200).json({
-//         success: true,
-//         totalAmount,
-//         orders,
-//     });
-// };
-
-// exports.updateOrder = async (req, res, next) => {
-//     const order = await Order.findById(req.params.id);
-//     if (!order) {
-//         return res.status(404).json({ success: false, message: "Order not found with this Id" });
-//     }
-
-//     if (order.status === "Delivered") {
-//         return res.status(400).json({ success: false, message: "You have already delivered this order" });
-//     }
-
-//     if (req.body.status === "Shipped") {
-//         for (const o of order.order_items) {
-//             await updateStock(o.product, o.quantity);
-//         }
-//     }
-//     order.status = req.body.status;
-//     if (req.body.status === "Delivered") {
-//         order.deliveredAt = Date.now();
-//     }
-
-//     await order.save({ validateBeforeSave: false });
-//     res.status(200).json({
-//         success: true,
-//     });
-// };
-
-// async function updateStock(id, quantity) {
-//     const product = await Product.findById(id);
-
-//     product.Stock -= quantity;
-
-//     await product.save({ validateBeforeSave: false });
-// }
