@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 
-const UserSchema = new Schema({
+const SellerSchema = new Schema({
   image_name: {
     type: String,
   },
@@ -19,11 +19,6 @@ const UserSchema = new Schema({
     type: String,
     required: true,
     unique: true,
-  },
-  role: {
-    enum: ['admin', 'manager'],
-    type: String,
-    required: true,
   },
   username: {
     type: String,
@@ -49,6 +44,6 @@ const UserSchema = new Schema({
   },
 });
 
-const User = model('User', UserSchema);
+const Seller = model('Seller', SellerSchema);
 
-module.exports = User;
+module.exports = Seller;

@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const isCustomer = (req, res, next) => {
+const isSeller = (req, res, next) => {
   try {
     const authHeader = req.headers['authorization'];
     const accessToken = authHeader && authHeader.split(' ')[1];
@@ -13,14 +13,14 @@ const isCustomer = (req, res, next) => {
 
     const decoded = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET_KEY);
 
-    if (decoded.accountType !== 'customer') {
+    if (decoded.accountType !== 'seller') {
       return res.status(403).json({
         status: 403,
         message: 'Only customers can access this endpoint',
       });
     }
 
-    req.customer = decoded;
+    req.seller = decoded;
     next();
   } catch (error) {
     console.log(error);
@@ -28,4 +28,4 @@ const isCustomer = (req, res, next) => {
   }
 };
 
-module.exports = { isCustomer };
+module.exports = { isSeller };

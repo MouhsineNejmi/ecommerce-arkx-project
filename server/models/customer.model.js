@@ -2,6 +2,13 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 
 const CustomerSchema = new Schema({
+  image_name: {
+    type: String,
+  },
+  profile_image: {
+    type: String,
+    default: 'https://fontawesome.com/icons/user?f=classic&s=regular&sz=lg',
+  },
   first_name: {
     type: String,
   },
@@ -13,10 +20,6 @@ const CustomerSchema = new Schema({
     required: true,
     unique: true,
   },
-  role: {
-    type: String,
-    required: true,
-  },
   username: {
     type: String,
     required: true,
@@ -26,14 +29,19 @@ const CustomerSchema = new Schema({
     type: String,
     required: true,
   },
+  accountType: {
+    enum: ['user', 'customer', 'seller'],
+    type: String,
+  },
   creation_date: {
     type: Date,
   },
   last_login: {
     type: Date,
   },
-  last_update: {
-    type: Date,
+  valid_account: {
+    type: Boolean,
+    default: false,
   },
   active: {
     type: Boolean,

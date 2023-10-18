@@ -15,14 +15,13 @@ exports.createOrder = async (req, res) => {
     console.log(newOrder);
     return res.status(201).json({
       status: 201,
-      message: "Order created successfully",
+      message: 'Order created successfully',
       data: newOrder,
     });
-  } catch (error) {
-    console.error(error);
-    return res.status(403).json({
-      status: 403,
-      message: "You don't have enough privilege",
+  } catch (err) {
+    console.error(err);
+    return res.json({
+      message: err?.message,
     });
   }
 };
@@ -43,8 +42,7 @@ exports.listAllOrders = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    return res.status(403).json({
-      status: 403,
+    return res.json({
       message: error?.message,
     });
   }
@@ -58,7 +56,7 @@ exports.getOrderByID = async (req, res) => {
     if (!order) {
       return res.status(404).json({
         status: 404,
-        message: "Order not found",
+        message: 'Order not found',
       });
     }
     return res.status(200).json({
@@ -67,23 +65,33 @@ exports.getOrderByID = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    return res.status(403).json({
-      status: 403,
+    return res.json({
       message: error?.message,
     });
   }
 };
 
 exports.updateOrder = async (req, res) => {
+  const { customer_id, order_items, order_date, cart_total_price, status } =
+    req.body;
+
   try {
-    const orderId = req.params.id;
-    const order = await Order.findById(orderId);
+    const orderId = req.params.id
+    const updatedOrder = {
+      customer_id,
+      order_items,
+      order_date,
+      cart_total_price,
+      status,
+    };
+
+    const order = await Order.findByIdAndUpdate(orderId, updatedOrder);
 
     if (!order) {
       return res.status(404).json({
         status: 404,
-        message: "Invalid order id",
-      });
+        message: 'Order not found',
+      })
     }
 
     return res.status(200).json({
@@ -92,8 +100,7 @@ exports.updateOrder = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    return res.status(403).json({
-      status: 403,
+    return res.json({
       message: error?.message,
     });
   }

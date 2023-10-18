@@ -1,40 +1,161 @@
-const { genSalt, hash } = require('bcryptjs');
+const {
+  uploadImageToS3,
+  getImageLink,
+  deleteImage,
+} = require('../helpers/awsHelpers');
 const Customer = require('../models/customer.model');
 
-exports.loginCustomer = (req, res) => {};
-
-exports.registerCustomer = async (req, res, next) => {
-  const { firstName, lastName, email, username, password } = req.body;
+exports.getAllCustomers = async (req, res) => {
+  const sort = req.query.sort || 'desc';
+  const page = req.query.page >= 1 ? req.query.page : 1;
+  const resultsPerPage = 10;
 
   try {
-    const salt = await genSalt(12);
-    const hashedPassword = await hash(password, salt);
-    const newCustomer = await Customer.create({
-      first_name: firstName,
-      last_name: lastName,
-      email,
-      username,
-      password: hashedPassword,
-      role: 'customer',
-      creation_date: Date.now(),
-      last_login: Date.now(),
-      last_update: null,
-      active: true,
-    });
+    const users = await Customer.find()
+      .sort({ username: sort.toLowerCase() })
+      .skip((page - 1) * resultsPerPage)
+      .limit(page * resultsPerPage);
 
-    return res.json({
-      status: 201,
-      message: 'Customer created successfully',
-      customer: newCustomer,
+    return res.status(200).json({
+      status: 200,
+      data: users || [],
     });
   } catch (error) {
-    next(error);
+    return res.status(403).json({
+      status: 403,
+      message: error?.message,
+    });
   }
 };
 
-exports.getAllCustomers = (req, res) => {};
-exports.searchCustomer = (req, res) => {};
-exports.getCustomerById = (req, res) => {};
-exports.updateCustomerData = (req, res) => {};
-exports.deleteCustomerAccount = (req, res) => {};
-exports.getCustomerProfile = (req, res) => {};
+exports.getCustomerById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const customer = await Customer.findById(id);
+
+    if (!customer) {
+      return res.status(404).json({
+        status: 404,
+        message: 'Customer not found.',
+      });
+    }
+
+    return res.status(200).json({
+      status: 200,
+      data: customer,
+    });
+  } catch (error) {
+    return res.status(403).json({
+      status: 403,
+      message: error?.message,
+    });
+  }
+};
+
+exports.searchCustomer = async (req, res) => {
+  const query = req.query.query;
+  const sort = req.query.sort || 'desc';
+  const page = req.query.page >= 1 ? req.query.page : 1;
+  const resultsPerPage = 10;
+
+  try {
+    const customer = await Customer.findOne({
+      username: { $regex: new RegExp(query, 'i') },
+    })
+      .sort({ username: sort.toLowerCase() })
+      .skip((page - 1) * resultsPerPage)
+      .limit(page * resultsPerPage);
+
+    return res.status(200).json({
+      status: 200,
+      data: customer,
+    });
+  } catch (error) {
+    return res.status(403).json({
+      status: 403,
+      message: error?.message,
+    });
+  }
+};
+
+exports.updateCustomerData = async (req, res) => {
+  const id = req.params.id || req.customer._id;
+  const { first_name, last_name, username, email, password } = req.body;
+  const { file } = req;
+
+  try {
+    const key = await uploadImageToS3(file);
+    const updatedFields = {
+      image_name: key,
+      first_name,
+      last_name,
+      username,
+      email,
+      password,
+    };
+
+    const customer = await Customer.findByIdAndUpdate(id, updatedFields, {
+      new: true,
+    });
+
+    customer.profile_image = await getImageLink(key);
+
+    if (!customer) {
+      return res
+        .status(404)
+        .json({ status: 404, message: 'customer not found.' });
+    }
+
+    return res
+      .status(200)
+      .json({ status: 200, message: 'Customer updated successfully.' });
+  } catch (error) {
+    return res.status(403).json({
+      status: 403,
+      message: error?.message,
+    });
+  }
+};
+
+exports.deleteCustomerAccount = async (req, res) => {
+  const id = req.customer._id;
+
+  try {
+    const customer = await Customer.findByIdAndDelete(id);
+
+    if (!customer) {
+      return res
+        .status(404)
+        .json({ status: 404, message: 'Customer not found' });
+    }
+
+    req.customer = null;
+
+    return res
+      .status(200)
+      .json({ status: 200, message: 'Customer deleted successfully' });
+  } catch (error) {
+    return res.status(403).json({ status: 403, message: error?.message });
+  }
+};
+
+exports.getCustomerProfile = async (req, res) => {
+  const id = req.customer._id;
+
+  try {
+    const customer = await Customer.findById(id);
+
+    customer.image_name && (await deleteImage(customer.image_name));
+
+    if (!customer) {
+      return res
+        .status(404)
+        .json({ status: 404, message: 'Customer not found' });
+    }
+
+    return res.status(200).json({ status: 200, data: customer });
+  } catch (error) {
+    return res.status(403).json({ status: 403, message: error?.message });
+  }
+};
