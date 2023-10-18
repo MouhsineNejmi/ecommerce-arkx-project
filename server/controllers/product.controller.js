@@ -16,6 +16,7 @@ exports.addProduct = async (req, res) => {
   try {
     
     const newProduct = await Product.create({
+      sku,
       category_id: categoryID,
       product_image: product_image,
       product_name: product_name,
@@ -23,12 +24,13 @@ exports.addProduct = async (req, res) => {
       long_description: long_description,
       price: price,
       discount_price: discount_price,
+      options,
       active: false,
     });
     return res.status(200).json({
-      newProduct,
-      status: 201,
+      status: 200,
       message: "product created successfully",
+      newProduct,
     });
   } catch (error) {
     console.log(error);
@@ -46,12 +48,14 @@ try {
     const products = await Product.find().skip(skip).limit(itemsPerPage);
   
     return res.status(200).json({
-      products,
+      status: 200,
+      data: products,
       message: "Products retrieved successfully",
     });  
 } catch (error) {
     console.error(error); 
     return res.status(500).json({
+      status: 500,
       message: "Internal server error",
     });
   }
@@ -71,7 +75,6 @@ exports.searchforProduct = async (req, res) => {
 
     // Project only the specified fields in the query
     const products = await Product.find(searchQuery)
-      .select("sku product_image product_name price category_id") // Specify the fields you want
       .skip(skip)
       .limit(itemsPerPage)
       .exec();
@@ -81,12 +84,15 @@ exports.searchforProduct = async (req, res) => {
         .status(404)
         .json({ message: "No products found for the given search query" });
     } else {
-      res.status(200).json({ products });
-    }
+      res.status(200).json({  
+        status:200,
+        data:products });
+           }
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Internal server error", message: error.message });
+    res.status(500)
+      .json({
+        status:500,
+        error: "Internal server error", message: error.message });
   }
 };
 
@@ -94,21 +100,21 @@ exports.searchforProduct = async (req, res) => {
 // get products by id 
 exports.getProductID = async (req, res) => {
 try {
-  
-
   const id = req.params.id;
-  const productId = await Product.findById({_id:id})
-  if (!productId){
+  const product = await Product.findById(id)
+  if (!product){
     res.status(404).json({message: "ProductiD not found"})
   }
 
   return res.status(200).json({
-    productId,
+    status: 500,
+    data:product,
     message: "Product found",
   })        
 } catch (error) {
   console.error(error); 
     return res.status(500).json({
+      status:500,
       message: "Internal server error",
     });
 }   
@@ -127,16 +133,13 @@ exports.updateProduct = async (req, res) => {
     }
   
    
-      res.status(200).send({
-        product,
+      return res.status(200).send({
+        data: product,
         message:"product updated successfully"})
-
-  
-
-    
   } catch (error) {
     console.log(error); 
     return res.status(500).json({
+      status:500,
       message: "Internal server error",
     });
   }
@@ -145,20 +148,21 @@ exports.updateProduct = async (req, res) => {
 // delete product 
 exports.deleteProduct = async (req, res) => {
   try {
-
      const idProduct = req.params.id
      const deletedproducts = await Product.findByIdAndDelete(idProduct).exec();
-
-   
-     if(!deletedproducts){
-        res.status(404).json({message: "product not found"})
-     }
-    
-      return res.status(200).json({ message: "Product deleted successfully" });
+       if(!deletedproducts){
+        res.status(404).json({
+          status: 404,
+          message: "product not found"})
+        }
+      return res.status(200).json({ 
+        status:200,
+        message: "Product deleted successfully" });
     
   } catch (error) {
     console.error(error); 
     return res.status(500).json({
+      status:500,
       message: "Internal server error",
     });
 
