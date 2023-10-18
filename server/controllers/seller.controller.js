@@ -3,24 +3,25 @@ const {
   getImageLink,
   deleteImage,
 } = require('../helpers/awsHelpers');
-const User = require('../models/user.model');
+const Seller = require('../models/seller.model');
 
-exports.getAllUsers = async (req, res) => {
+exports.getAllSellers = async (req, res) => {
   const sort = req.query.sort || 'desc';
   const page = req.query.page >= 1 ? req.query.page : 1;
   const resultsPerPage = 10;
 
   try {
-    const users = await User.find()
+    const sellers = await Seller.find()
       .sort({ username: sort.toLowerCase() })
       .skip((page - 1) * resultsPerPage)
       .limit(page * resultsPerPage);
 
     return res.status(200).json({
       status: 200,
-      data: users,
+      data: sellers,
     });
   } catch (error) {
+    console.log(error);
     return res.status(403).json({
       status: 403,
       message: error?.message,
@@ -28,22 +29,23 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-exports.getUserById = async (req, res) => {
+// Admin see seller info
+exports.getSellerById = async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    const user = await User.findById(id);
+    const seller = await Seller.findById(id);
 
-    if (!user) {
+    if (!seller) {
       return res.status(404).json({
         status: 404,
-        message: 'User not found.',
+        message: 'Seller not found.',
       });
     }
 
     return res.status(200).json({
       status: 200,
-      data: user,
+      data: seller,
     });
   } catch (error) {
     return res.status(403).json({
@@ -53,14 +55,15 @@ exports.getUserById = async (req, res) => {
   }
 };
 
-exports.searchUser = async (req, res) => {
+// Admin search seller
+exports.searchSeller = async (req, res) => {
   const query = req.query.query;
   const sort = req.query.sort || 'desc';
   const page = req.query.page >= 1 ? req.query.page : 1;
   const resultsPerPage = 10;
 
   try {
-    const user = await User.findOne({
+    const seller = await Seller.findOne({
       username: { $regex: new RegExp(query, 'i') },
     })
       .sort({ username: sort.toLowerCase() })
@@ -69,7 +72,7 @@ exports.searchUser = async (req, res) => {
 
     return res.status(200).json({
       status: 200,
-      data: user,
+      data: seller,
     });
   } catch (error) {
     return res.status(403).json({
@@ -79,10 +82,10 @@ exports.searchUser = async (req, res) => {
   }
 };
 
-exports.updateUserData = async (req, res) => {
-  const { id } = req.params;
+// Admin & Seller => update seller info
+exports.updateSellerData = async (req, res) => {
+  const id = req.params.id || req.seller._id;
   const { first_name, last_name, username, email, password, role } = req.body;
-  const { file } = req;
 
   try {
     const key = await uploadImageToS3(file);
@@ -94,23 +97,22 @@ exports.updateUserData = async (req, res) => {
       username,
       email,
       password,
-      role,
       last_update: Date.now(),
     };
 
-    const user = await User.findByIdAndUpdate(id, updatedFields, {
+    const seller = await Seller.findByIdAndUpdate(id, updatedFields, {
       new: true,
     });
 
-    user.profile_image = await getImageLink(key);
+    seller.profile_image = await getImageLink(key);
 
-    if (!user) {
-      return res.status(404).json({ status: 404, message: 'User not found.' });
+    if (!seller) {
+      return res.status(404).json({ status: 404, message: 'users not found.' });
     }
 
     return res
       .status(200)
-      .json({ status: 200, message: 'User updated successfully.' });
+      .json({ status: 200, message: 'Seller updated successfully.' });
   } catch (error) {
     return res.status(403).json({
       status: 403,
@@ -119,21 +121,38 @@ exports.updateUserData = async (req, res) => {
   }
 };
 
-exports.deleteUserAccount = async (req, res) => {
+// Admin delete seller
+exports.deleteSellerAccount = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const user = await User.findByIdAndDelete(id);
+    const seller = await Seller.findByIdAndDelete(id);
 
-    user.image_name && (await deleteImage(user.image_name));
+    seller.image_name && (await deleteImage(seller.image_name));
 
-    if (!user) {
-      return res.status(404).json({ status: 404, message: 'User not found' });
+    if (!seller) {
+      return res.status(404).json({ status: 404, message: 'Seller not found' });
     }
 
     return res
       .status(200)
-      .json({ satus: 200, message: 'User deleted successfully' });
+      .json({ satus: 200, message: 'Seller deleted successfully' });
+  } catch (error) {
+    return res.status(403).json({ status: 403, message: error?.message });
+  }
+};
+
+exports.getSellerProfile = async (req, res) => {
+  const id = req.customer._id;
+
+  try {
+    const seller = await Seller.findById(id);
+
+    if (!seller) {
+      return res.status(404).json({ status: 404, message: 'Seller not found' });
+    }
+
+    return res.status(200).json({ status: 200, data: seller });
   } catch (error) {
     return res.status(403).json({ status: 403, message: error?.message });
   }

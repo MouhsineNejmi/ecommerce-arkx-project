@@ -1,24 +1,30 @@
 const router = require('express').Router();
-const passport = require('passport');
-const { body } = require('express-validator');
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 const {
-  registerCustomer,
-  loginCustomer,
   getAllCustomers,
-  searchCustomer,
   getCustomerById,
+  searchCustomer,
   updateCustomerData,
   deleteCustomerAccount,
   getCustomerProfile,
 } = require('../controllers/customer.controller');
+const { isUserAdminOrManager } = require('../middlewares/user.middleware');
+const { isCustomer } = require('../middlewares/customer.middleware');
 
-router.post(
-  '/', 
-  [body('email').isEmail(), body('password').isLength({ min: 6, max: 30 })],
-  registerCustomer
+router.get('/', isUserAdminOrManager, getAllCustomers);
+router.get('/customer/:id', isUserAdminOrManager, getCustomerById);
+router.get('/customer', isUserAdminOrManager, searchCustomer);
+router.put(
+  '/customer/:id',
+  isUserAdminOrManager,
+  upload.single('image'),
+  updateCustomerData
 );
-
-router.post('/login', passport.authenticate('customer-local'), loginCustomer);
+router.delete('/delete', isCustomer, deleteCustomerAccount);
+router.get('/profile', isCustomer, getCustomerProfile);
+router.patch('/profile/update', isCustomer, updateCustomerData);
 
 module.exports = router;

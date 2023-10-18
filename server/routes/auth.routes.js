@@ -1,7 +1,10 @@
 const router = require('express').Router();
 const { body } = require('express-validator');
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
-const { registerUser, loginUser } = require('../controllers/auth.controller');
+const { register, login } = require('../controllers/auth.controller');
 
 router.post(
   '/register',
@@ -12,9 +15,10 @@ router.post(
       'Your password should be between 6 and 30 characters'
     ).isLength({ min: 6, max: 30 }),
   ],
-  registerUser
+  upload.single('image'),
+  register
 );
 
-router.post('/login', loginUser);
+router.post('/login', login);
 
 module.exports = router;

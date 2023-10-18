@@ -8,7 +8,7 @@ const isUserAuthenticated = (req, res, next) => {
     if (!accessToken) {
       return res
         .status(403)
-        .json({ message: 'Access Denied. No token provided.' });
+        .json({ status: 403, message: 'Access Denied. No token provided.' });
     }
 
     const decoded = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET_KEY);
@@ -18,7 +18,7 @@ const isUserAuthenticated = (req, res, next) => {
     next();
   } catch (error) {
     console.log(error);
-    return res.json({ status: 500, message: error.message });
+    return res.status(500).json({ status: 500, message: error?.message });
   }
 };
 
@@ -30,20 +30,21 @@ const isUserAdminOrManager = (req, res, next) => {
     if (!accessToken) {
       return res
         .status(403)
-        .json({ message: 'Access Denied. No token provided.' });
+        .json({ status: 403, message: 'Access Denied. No token provided.' });
     }
 
     const decoded = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET_KEY);
 
     if (decoded.role !== 'admin' && decoded.role !== 'manager') {
       return res.status(403).json({
+        status: 403,
         message: "Access Denied. You don't have enough priviliege.",
       });
     }
 
     next();
   } catch (error) {
-    next(error);
+    return res.status(500).json({ status: 500, message: error?.message });
   }
 };
 
@@ -55,23 +56,22 @@ const isUserAdmin = (req, res, next) => {
     if (!accessToken) {
       return res
         .status(403)
-        .json({ message: 'Access Denied. No token provided.' });
+        .json({ status: 403, message: 'Access Denied. No token provided.' });
     }
 
     const decoded = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET_KEY);
 
-    if (decoded.role !== 'admin' && decoded.role === 'manager') {
+    if (decoded.role !== 'admin') {
       return res.status(403).json({
+        status: 403,
         message: "Access Denied. You don't have enough priviliege.",
       });
     }
 
-    if (decoded.role === 'admin') {
-      next();
-    }
+    next();
   } catch (error) {
     console.log(error);
-    return res.json({ status: 500, message: error.message });
+    return res.status(500).json({ status: 500, message: error?.message });
   }
 };
 
