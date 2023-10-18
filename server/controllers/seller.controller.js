@@ -3,24 +3,25 @@ const {
   getImageLink,
   deleteImage,
 } = require('../helpers/awsHelpers');
-const Customer = require('../models/customer.model');
+const Seller = require('../models/seller.model');
 
-exports.getAllCustomers = async (req, res) => {
+exports.getAllSellers = async (req, res) => {
   const sort = req.query.sort || 'desc';
   const page = req.query.page >= 1 ? req.query.page : 1;
   const resultsPerPage = 10;
 
   try {
-    const users = await Customer.find()
+    const sellers = await Seller.find()
       .sort({ username: sort.toLowerCase() })
       .skip((page - 1) * resultsPerPage)
       .limit(page * resultsPerPage);
 
     return res.status(200).json({
       status: 200,
-      data: users || [],
+      data: sellers,
     });
   } catch (error) {
+    console.log(error);
     return res.status(403).json({
       status: 403,
       message: error?.message,
@@ -28,22 +29,23 @@ exports.getAllCustomers = async (req, res) => {
   }
 };
 
-exports.getCustomerById = async (req, res) => {
+// Admin see seller info
+exports.getSellerById = async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    const customer = await Customer.findById(id);
+    const seller = await Seller.findById(id);
 
-    if (!customer) {
+    if (!seller) {
       return res.status(404).json({
         status: 404,
-        message: 'Customer not found.',
+        message: 'Seller not found.',
       });
     }
 
     return res.status(200).json({
       status: 200,
-      data: customer,
+      data: seller,
     });
   } catch (error) {
     return res.status(403).json({
@@ -53,14 +55,15 @@ exports.getCustomerById = async (req, res) => {
   }
 };
 
-exports.searchCustomer = async (req, res) => {
+// Admin search seller
+exports.searchSeller = async (req, res) => {
   const query = req.query.query;
   const sort = req.query.sort || 'desc';
   const page = req.query.page >= 1 ? req.query.page : 1;
   const resultsPerPage = 10;
 
   try {
-    const customer = await Customer.findOne({
+    const seller = await Seller.findOne({
       username: { $regex: new RegExp(query, 'i') },
     })
       .sort({ username: sort.toLowerCase() })
@@ -69,7 +72,7 @@ exports.searchCustomer = async (req, res) => {
 
     return res.status(200).json({
       status: 200,
-      data: customer,
+      data: seller,
     });
   } catch (error) {
     return res.status(403).json({
@@ -79,13 +82,14 @@ exports.searchCustomer = async (req, res) => {
   }
 };
 
-exports.updateCustomerData = async (req, res) => {
-  const id = req.params.id || req.customer._id;
-  const { first_name, last_name, username, email, password } = req.body;
-  const { file } = req;
+// Admin & Seller => update seller info
+exports.updateSellerData = async (req, res) => {
+  const id = req.params.id || req.seller._id;
+  const { first_name, last_name, username, email, password, role } = req.body;
 
   try {
     const key = await uploadImageToS3(file);
+
     const updatedFields = {
       image_name: key,
       first_name,
@@ -93,32 +97,31 @@ exports.updateCustomerData = async (req, res) => {
       username,
       email,
       password,
+      last_update: Date.now(),
     };
 
-    const existingCustomer = await Customer.findOne({ username });
-    if (existingCustomer) {
+    const existingSeller = await Seller.findOne({ username });
+    if (existingSeller) {
       return res.status(400).json({
         status: 400,
         message:
-          'Customer with this username already exist try another username.',
+          'Seller with this username already exist try another username.',
       });
     }
 
-    const customer = await Customer.findByIdAndUpdate(id, updatedFields, {
+    const seller = await Seller.findByIdAndUpdate(id, updatedFields, {
       new: true,
     });
 
-    customer.profile_image = await getImageLink(key);
+    seller.profile_image = await getImageLink(key);
 
-    if (!customer) {
-      return res
-        .status(404)
-        .json({ status: 404, message: 'customer not found.' });
+    if (!seller) {
+      return res.status(404).json({ status: 404, message: 'users not found.' });
     }
 
     return res
       .status(200)
-      .json({ status: 200, message: 'Customer updated successfully.' });
+      .json({ status: 200, message: 'Seller updated successfully.' });
   } catch (error) {
     return res.status(403).json({
       status: 403,
@@ -127,43 +130,38 @@ exports.updateCustomerData = async (req, res) => {
   }
 };
 
-exports.deleteCustomerAccount = async (req, res) => {
-  const id = req.customer._id;
+// Admin delete seller
+exports.deleteSellerAccount = async (req, res) => {
+  const { id } = req.params;
 
   try {
-    const customer = await Customer.findByIdAndDelete(id);
+    const seller = await Seller.findByIdAndDelete(id);
 
-    if (!customer) {
-      return res
-        .status(404)
-        .json({ status: 404, message: 'Customer not found' });
+    seller.image_name && (await deleteImage(seller.image_name));
+
+    if (!seller) {
+      return res.status(404).json({ status: 404, message: 'Seller not found' });
     }
-
-    req.customer = null;
 
     return res
       .status(200)
-      .json({ status: 200, message: 'Customer deleted successfully' });
+      .json({ satus: 200, message: 'Seller deleted successfully' });
   } catch (error) {
     return res.status(403).json({ status: 403, message: error?.message });
   }
 };
 
-exports.getCustomerProfile = async (req, res) => {
+exports.getSellerProfile = async (req, res) => {
   const id = req.customer._id;
 
   try {
-    const customer = await Customer.findById(id);
+    const seller = await Seller.findById(id);
 
-    customer.image_name && (await deleteImage(customer.image_name));
-
-    if (!customer) {
-      return res
-        .status(404)
-        .json({ status: 404, message: 'Customer not found' });
+    if (!seller) {
+      return res.status(404).json({ status: 404, message: 'Seller not found' });
     }
 
-    return res.status(200).json({ status: 200, data: customer });
+    return res.status(200).json({ status: 200, data: seller });
   } catch (error) {
     return res.status(403).json({ status: 403, message: error?.message });
   }
