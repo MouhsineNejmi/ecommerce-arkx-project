@@ -9,7 +9,7 @@ router.get("/", isUserAdminOrManager,listProduct);
 router.get("/:name", isUserAdminOrManager,searchforProduct); 
 router.get("/:id", isUserAdminOrManager,getProductID);
 router.delete("/:id", isUserAdminOrManager,deleteProduct);
-router.patch("/:id", isUserAdminOrManager,updateProduct);
+router.put("/:id", isUserAdminOrManager,updateProduct);
 
 
 module.exports = router;
