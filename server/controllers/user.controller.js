@@ -98,6 +98,14 @@ exports.updateUserData = async (req, res) => {
       last_update: Date.now(),
     };
 
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(400).json({
+        status: 400,
+        message: 'User with this username already exist try another username.',
+      });
+    }
+
     const user = await User.findByIdAndUpdate(id, updatedFields, {
       new: true,
     });

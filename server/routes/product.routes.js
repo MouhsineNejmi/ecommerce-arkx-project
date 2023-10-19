@@ -1,13 +1,15 @@
 const router = require("express").Router();
-const { addProduct,listProduct, deleteProduct,updateProduct,getProductID,searchforProduct} = require("../controllers/product.controller");
+const { addProduct,listProduct, deleteProduct,updateProduct,getProductID,searchforProduct} = require("../controllers/Product.controller");
+const { isUserAdminOrManager } = require('../middlewares/user.middleware');
 
 
-router.post("/", addProduct);
-router.get("/", listProduct);
-router.get("/:name", searchforProduct); 
-router.get("/:id", getProductID);
-router.delete("/:id", deleteProduct);
-router.patch("/:id", updateProduct);
+
+router.post("/", isUserAdminOrManager,addProduct);
+router.get("/", isUserAdminOrManager,listProduct);
+router.get("/:name", isUserAdminOrManager,searchforProduct); 
+router.get("/:id", isUserAdminOrManager,getProductID);
+router.delete("/:id", isUserAdminOrManager,deleteProduct);
+router.put("/:id", isUserAdminOrManager,updateProduct);
 
 
 module.exports = router;

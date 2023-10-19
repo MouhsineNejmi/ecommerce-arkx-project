@@ -95,6 +95,15 @@ exports.updateCustomerData = async (req, res) => {
       password,
     };
 
+    const existingCustomer = await Customer.findOne({ username });
+    if (existingCustomer) {
+      return res.status(400).json({
+        status: 400,
+        message:
+          'Customer with this username already exist try another username.',
+      });
+    }
+
     const customer = await Customer.findByIdAndUpdate(id, updatedFields, {
       new: true,
     });
