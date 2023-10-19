@@ -12,7 +12,7 @@ let productSchema = new Schema({
   quantity: { type: Number },
   discount_price: { type: Number },
   options: { type: Array },
-  active: { type: Boolean },
+  active: { type: Boolean , default: false },
   seller_id: { type: Number },
 });
 const Product = mongoose.model("Product", productSchema);
