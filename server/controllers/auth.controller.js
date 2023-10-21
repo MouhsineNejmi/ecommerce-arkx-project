@@ -6,7 +6,7 @@ const Customer = require('../models/customer.model');
 const Seller = require('../models/seller.model');
 
 const { generateAccessToken } = require('../helpers/authHelpers');
-const { uploadImageToS3, getImageLink } = require('../helpers/awsHelpers');
+const { uploadImageToS3 } = require('../helpers/awsHelpers');
 
 exports.register = async (req, res) => {
   const { firstName, lastName, email, accountType, role, username, password } =
@@ -74,7 +74,7 @@ exports.register = async (req, res) => {
       data: newAccount,
     });
   } catch (error) {
-    return res.status(401).json({ status: 401, message: error?.message });
+    return res.json({ message: error?.message });
   }
 };
 
@@ -102,7 +102,7 @@ exports.login = (req, res) => {
 
       res.cookie('accessToken', accessToken);
 
-      res.status(200).json({ status: 200, accessToken });
+      return res.status(200).json({ status: 200, accessToken });
     });
   })(req, res);
 };
