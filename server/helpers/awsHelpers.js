@@ -11,11 +11,11 @@ const s3Client = require('../config/aws-s3');
 exports.generateKey = (originalname) => `${originalname}-${uuidv4()}`;
 
 exports.uploadImageToS3 = async (file) => {
-  const key = generateKey(orginalname);
+  const key = generateKey(originalname);
 
   try {
     const uploadCommand = new PutObjectCommand({
-      Bucket: 'ecommerce-arkx-project',
+      Bucket: process.env.AWS_BUCKET_NAME,
       Key: key,
       Body: file.buffer,
       ContentType: file.mimetype,
@@ -32,7 +32,7 @@ exports.uploadImageToS3 = async (file) => {
 exports.getImageLink = async (fileKey) => {
   try {
     const getCommand = new GetObjectCommand({
-      Bucket: bucketName,
+      Bucket: process.env.AWS_BUCKET_NAME,
       Key: fileKey,
     });
 
@@ -47,7 +47,7 @@ exports.getImageLink = async (fileKey) => {
 exports.deleteImage = async (filekey) => {
   try {
     const deleteCommand = new DeleteObjectCommand({
-      Bucket: bucketName,
+      Bucket: process.env.AWS_BUCKET_NAME,
       Key: filekey,
     });
 
