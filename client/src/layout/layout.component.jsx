@@ -4,11 +4,13 @@ import Navbar from '../components/navbar.component';
 
 const Layout = ({ children }) => {
   return (
-    <>
+    <div className='flex'>
       <Sidebar />
-      <Navbar />
-      <main>{children}</main>
-    </>
+      <main className='w-10/12'>
+        <Navbar />
+        {children}
+      </main>
+    </div>
   );
 };
 
