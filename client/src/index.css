@@ -4,12 +4,86 @@
 
 @layer base {
   :root {
-    --text-color: #050301;
-    --bg-color: #ffffff;
+    --background: #fff;
+    --foreground: #111113;
+
+    --card: #fff;
+    --card-foreground: #111113;
+
+    --popover: #fff;
+    --popover-foreground: #111113;
+
+    --primary: #111113;
+    --primary-foreground: #f8fafc;
+
+    --secondary: #f1f5f9;
+    --secondary-foreground: #111113;
+
+    --muted: #ddd;
+    --muted-foreground: #64748b;
+
+    --accent: #2965ff;
+    --accent-foreground: #fff;
+
+    --destructive: #ef4444;
+    --destructive-foreground: #f8fafc;
+
+    --input: #e2e8f0;
+    --ring: #111113;
+
+    --radius: 0.5rem;
+
+    --black: #111113;
+    --white: #fff;
+
+    --light-gray: #e9e8e8;
+    --gray: #ddd;
+    --dark-gray: #9d9d9d;
+  }
+
+  .dark {
+    --background: #111113;
+    --foreground: #f8fafc;
+
+    --card: #111113;
+    --card-foreground: #f8fafc;
+
+    --popover: #111113;
+    --popover-foreground: #f8fafc;
+
+    --primary: #f8fafc;
+    --primary-foreground: #111113;
+
+    --secondary: #111113;
+    --secondary-foreground: #f8fafc;
+
+    --muted: #ddd;
+    --muted-foreground: #94a3b8;
+
+    --accent: #2965ff;
+    --accent-foreground: #fff;
+
+    --destructive: #ef4444;
+    --destructive-foreground: #f8fafc;
+
+    --input: #111113;
+    --ring: #cbd5e1;
+
+    --black: #111113;
+    --white: #fff;
+
+    --light-gray: #e9e8e8;
+    --gray: #ddd;
+    --dark-gray: #9d9d9d;
   }
 }
 
-body {
-  font-family: Poppins, sans-serif;
-  letter-spacing: -0.4px;
+@layer base {
+  * {
+    border-color: var(--gray);
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Poppins', sans-serif;
+  }
 }

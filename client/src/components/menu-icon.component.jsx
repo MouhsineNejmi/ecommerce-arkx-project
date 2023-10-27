@@ -1,20 +1,12 @@
 import { bool } from 'prop-types';
-import { BsChevronBarLeft, BsChevronBarRight } from 'react-icons/bs';
+import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 
 const MenuIcon = ({ expanded }) => {
-  return (
-    <>
-      {expanded ? (
-        <BsChevronBarLeft size={20} />
-      ) : (
-        <BsChevronBarRight size={20} />
-      )}
-    </>
-  );
+  return <>{expanded ? <ChevronLeftIcon /> : <ChevronRightIcon />}</>;
 };
 
 MenuIcon.propTypes = {
-  expanded: bool,
+  expanded: bool.isRequired,
 };
 
 export default MenuIcon;

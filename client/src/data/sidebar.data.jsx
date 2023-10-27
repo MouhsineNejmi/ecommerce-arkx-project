@@ -1,21 +1,20 @@
-import { TiFlashOutline } from 'react-icons/ti';
-import { AiOutlineUser } from 'react-icons/ai';
-import { HiOutlineBuildingStorefront } from 'react-icons/hi2';
+import { DashboardIcon, PersonIcon } from '@radix-ui/react-icons';
+import { Store } from 'lucide-react';
 
 const sidebarData = [
   {
     name: 'Dashboard',
-    icon: <TiFlashOutline size={18} />,
+    icon: <DashboardIcon />,
     link: '/admin',
   },
   {
     name: 'Users',
-    icon: <AiOutlineUser size={18} />,
+    icon: <PersonIcon />,
     link: '/admin/users',
   },
   {
     name: 'Products',
-    icon: <HiOutlineBuildingStorefront size={18} />,
+    icon: <Store size={14} strokeWidth={2} />,
     link: '/admin/products',
   },
 ];
