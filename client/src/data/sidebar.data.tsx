@@ -1,5 +1,5 @@
 import { DashboardIcon, PersonIcon } from '@radix-ui/react-icons';
-import { Store } from 'lucide-react';
+import { Store, Tags } from 'lucide-react';
 
 const sidebarData = [
   {
@@ -11,11 +11,17 @@ const sidebarData = [
     name: 'Users',
     icon: <PersonIcon />,
     link: '/admin/users',
+    // sub_menu: [],
   },
   {
     name: 'Products',
     icon: <Store size={14} strokeWidth={2} />,
     link: '/admin/products',
+  },
+  {
+    name: 'Orders',
+    icon: <Tags size={14} strokeWidth={2} />,
+    link: '/admin/orders',
   },
 ];
 

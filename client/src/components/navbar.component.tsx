@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import ModeToggle from './mode-toggle';
-import UserDropDownMenu from './user-dropdown-menu.component';
+import ModeToggle from '@/components/mode-toggle';
+import UserDropDownMenu from '@/components/user-dropdown-menu.component';
 
 const Navbar = () => {
   const [preview, setPreview] = useState(false);
   const togglePage = () => setPreview((prev) => !prev);
 
   return (
-    <div className='border-b p-5 flex justify-between items-center'>
+    <div className='border-b border-slate-300 p-5 flex justify-between items-center'>
       <div className='flex items-center gap-2'>
         <h3 className='font-bold text-xl font-open'>37</h3>
         <span className='border-r w-[1px] rounded-sm h-6 bg-light-gray'></span>

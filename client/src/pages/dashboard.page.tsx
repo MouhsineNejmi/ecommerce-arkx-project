@@ -1,10 +1,27 @@
 import Layout from '@/layout/layout.component';
-// import DataTable from '@/components/table/data-table';
-// import { columns } from '@/components/table/columns';
-// import tasks from '@/data/tasks.json';
+import SellersSwitcher from '@/components/sellers-switcher.component';
+import Cards from '@/components/cards/cards.component';
+import Charts from '@/components/charts/charts.component';
+import RecentOrders from '@/components/recent-orders/recent-orders.component';
+import { DataTable } from '@/components/ui/data-table';
+import { columns } from '@/components/tables/columns';
+import productsData from '@/data/products.json';
 
 const Dashboard = () => {
-  return <Layout>{/* <DataTable data={tasks} columns={columns} /> */}</Layout>;
+  return (
+    <Layout>
+      <SellersSwitcher />
+      <Cards />
+      <div className='w-full flex gap-4 mb-8'>
+        <Charts />
+        <RecentOrders />
+      </div>
+      <div>
+        <h3 className='text-md font-semibold mb-4'>Top Selling Products</h3>
+        <DataTable columns={columns} data={productsData} />
+      </div>
+    </Layout>
+  );
 };
 
 export default Dashboard;

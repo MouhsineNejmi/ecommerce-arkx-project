@@ -15,6 +15,15 @@ module.exports = {
         '2xl': '1400px',
       },
     },
+    stroke: {
+      main: {
+        1: '#2965ff',
+        2: '#3d84ff',
+        3: '#61a8ff',
+        4: '#85ceff',
+        5: '#a8f1ff',
+      },
+    },
     fontFamily: {
       poppins: "'Poppins', sans-serif",
       open: "'Open Sans', sans-serif",

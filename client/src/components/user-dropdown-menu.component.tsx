@@ -15,7 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const UserDropDownMenu = () => {
   return (
-    <DropdownMenu className='bg-variant-white'>
+    <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className='cursor-pointer'>
           <AvatarImage src='https://github.com/shadcn.png' />

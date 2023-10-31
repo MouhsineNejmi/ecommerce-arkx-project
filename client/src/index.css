@@ -20,9 +20,9 @@
     --secondary-foreground: #111113;
 
     --muted: #ddd;
-    --muted-foreground: #64748b;
+    --muted-foreground: e9e8e8;
 
-    --accent: #2965ff;
+    --accent: #27272a;
     --accent-foreground: #fff;
 
     --destructive: #ef4444;
@@ -37,7 +37,7 @@
     --white: #fff;
 
     --light-gray: #e9e8e8;
-    --gray: #ddd;
+    --gray: #27272a;
     --dark-gray: #9d9d9d;
   }
 
@@ -54,13 +54,13 @@
     --primary: #f8fafc;
     --primary-foreground: #111113;
 
-    --secondary: #111113;
+    --secondary: #1e1e1f;
     --secondary-foreground: #f8fafc;
 
     --muted: #ddd;
     --muted-foreground: #94a3b8;
 
-    --accent: #2965ff;
+    --accent: #27272a;
     --accent-foreground: #fff;
 
     --destructive: #ef4444;
@@ -73,7 +73,7 @@
     --white: #fff;
 
     --light-gray: #e9e8e8;
-    --gray: #ddd;
+    --gray: #27272a;
     --dark-gray: #9d9d9d;
   }
 }
@@ -81,9 +81,15 @@
 @layer base {
   * {
     border-color: var(--gray);
+    font-size: 14px;
   }
+
   body {
     @apply bg-background text-foreground;
     font-family: 'Poppins', sans-serif;
+  }
+
+  tspan {
+    font-size: 12px;
   }
 }

@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "product_image": "https://i.dummyjson.com/data/products/1/thumbnail.jpg",
+    "product_name": "iPhone 9",
+    "active": true,
+    "ordered": 40,
+    "stock": 94,
+    "price": 400
+  },
+  {
+    "id": 2,
+    "product_image": "https://i.dummyjson.com/data/products/2/thumbnail.jpg",
+    "product_name": "iPhone X",
+    "active": false,
+    "ordered": 30,
+    "stock": 34,
+    "price": 899
+  },
+  {
+    "id": 3,
+    "product_image": "https://i.dummyjson.com/data/products/3/thumbnail.jpg",
+    "product_name": "Samsung Universe 9",
+    "active": true,
+    "ordered": 80,
+    "stock": 36,
+    "price": 1249
+  },
+  {
+    "id": 4,
+    "product_image": "https://i.dummyjson.com/data/products/4/thumbnail.jpg",
+    "product_name": "OPPOF19",
+    "active": true,
+    "ordered": 40,
+    "stock": 123,
+    "price": 280
+  },
+  {
+    "id": 5,
+    "product_image": "https://i.dummyjson.com/data/products/5/thumbnail.jpg",
+    "product_name": "Huawei P30",
+    "active": false,
+    "ordered": 56,
+    "stock": 32,
+    "price": 499
+  }
+]
