@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ProtectedRoutes from './protected.routes';
-import Dashboard from '../pages/dashboard.page';
+import ProtectedRoutes from '@/routes/protected.routes';
+import Dashboard from '@/pages/dashboard.page';
 
 const ConfigRoutes = () => {
   return (

@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 
-const ProtectedRoutes = () => {
+const ProtectedRoutes: React.FC = () => {
   return <Outlet />;
   // return condition ? <Outlet /> : <Navigate to='/admin' />;
 };

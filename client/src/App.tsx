@@ -1,4 +1,4 @@
-import ConfigRoutes from './routes/routes';
+import ConfigRoutes from '@/routes/routes';
 
 const App = () => {
   return (
