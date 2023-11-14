@@ -11,15 +11,20 @@ const {
   deleteCustomerAccount,
   getCustomerProfile,
 } = require('../controllers/customer.controller');
-const { isUserAdminOrManager } = require('../middlewares/user.middleware');
 const { isCustomer } = require('../middlewares/customer.middleware');
 
-router.get('/', isUserAdminOrManager, getAllCustomers);
-router.get('/customer/:id', isUserAdminOrManager, getCustomerById);
-router.get('/customer', isUserAdminOrManager, searchCustomer);
+const deserializeUser = require('../middlewares/deserialize-user.middleware');
+const requireUser = require('../middlewares/require-user.middleware');
+const restrictTo = require('../middlewares/restrict-to.middleware');
+
+router.use(deserializeUser, requireUser);
+
+router.get('/', restrictTo('admin', 'manager'), getAllCustomers);
+router.get('/customer/:id', restrictTo('admin', 'manager'), getCustomerById);
+router.get('/customer', restrictTo('admin', 'manager'), searchCustomer);
 router.put(
   '/customer/:id',
-  isUserAdminOrManager,
+  restrictTo('admin', 'manager'),
   upload.single('image'),
   updateCustomerData
 );

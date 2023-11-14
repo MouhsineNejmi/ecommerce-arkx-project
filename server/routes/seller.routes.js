@@ -11,15 +11,19 @@ const {
   deleteSellerAccount,
   getSellerProfile,
 } = require('../controllers/seller.controller');
-const { isUserAdmin } = require('../middlewares/user.middleware');
+const deserializeUser = require('../middlewares/deserialize-user.middleware');
+const requireUser = require('../middlewares/require-user.middleware');
+const restrictTo = require('../middlewares/restrict-to.middleware');
 const { isSeller } = require('../middlewares/seller.middleware');
 
-router.get('/', isUserAdmin, getAllSellers);
-router.get('/seller/:id', isUserAdmin, getSellerById);
-router.get('/seller', isUserAdmin, searchSeller);
+router.use(deserializeUser, requireUser);
+
+router.get('/', restrictTo('admin'), getAllSellers);
+router.get('/seller/:id', restrictTo('admin'), getSellerById);
+router.get('/seller', restrictTo('admin'), searchSeller);
 router.put(
   '/seller/:id',
-  isUserAdmin,
+  restrictTo('admin'),
   upload.single('image'),
   updateSellerData
 );
