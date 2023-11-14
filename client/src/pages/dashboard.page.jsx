@@ -1,4 +1,4 @@
-import SellersSwitcher from '../components/sellers-switcher.component';
+import SellersSwitcher from '../components/seller/sellers-switcher.component';
 import Cards from '../components/cards/cards.component';
 import Charts from '../components/charts/charts.component';
 import RecentOrders from '../components/recent-orders/recent-orders.component';

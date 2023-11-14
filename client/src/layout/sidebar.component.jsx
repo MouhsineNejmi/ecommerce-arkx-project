@@ -3,15 +3,15 @@ import { NavLink } from 'react-router-dom';
 
 import sidebarData from '../data/sidebar.data';
 
-import MenuIcon from './menu-icon.component';
-import AfricomLogo from './icons/africom-logo.component';
+import MenuIcon from '../components/menu-icon.component';
+import AfricomLogo from '../components/icons/africom-logo.component';
 
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from './ui/accordion';
+} from '../components/ui/accordion';
 
 const Sidebar = () => {
   const [expanded, setExpanded] = useState(true);

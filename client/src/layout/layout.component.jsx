@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { Toaster } from '../components/ui/toaster';
-import Sidebar from '../components/sidebar.component';
+import Sidebar from './sidebar.component';
 import Navbar from './navbar.component';
 
 const Layout = () => {
