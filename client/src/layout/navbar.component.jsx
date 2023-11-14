@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import ModeToggle from './mode-toggle.component';
-import UserDropDownMenu from './user-dropdown-menu.component';
+import ModeToggle from '../components/ui/mode-toggle.component';
+import UserDropDownMenu from '../components/user/user-dropdown-menu.component';
 
 const Navbar = () => {
   const [preview, setPreview] = useState(false);

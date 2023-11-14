@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import { Toaster } from '../components/ui/toaster';
-import Sidebar from '../components/sidebar/sidebar.component';
-import Navbar from '../components/navbar.component';
+import Sidebar from '../components/sidebar.component';
+import Navbar from './navbar.component';
 
 const Layout = () => {
   return (
