@@ -1,4 +1,4 @@
-const Product = require("../models/product.model");
+const Product = require('../models/product.model');
 //post create product
 exports.addProduct = async (req, res) => {
   const {
@@ -14,7 +14,6 @@ exports.addProduct = async (req, res) => {
   } = req.body;
 
   try {
-    
     const newProduct = await Product.create({
       sku,
       category_id: categoryID,
@@ -29,35 +28,34 @@ exports.addProduct = async (req, res) => {
     });
     return res.status(200).json({
       status: 200,
-      message: "product created successfully",
+      message: 'product created successfully',
       data: newProduct,
     });
   } catch (error) {
     console.log(error);
-    return res.json({message: error?.message});
+    return res.json({ message: error?.message });
   }
 };
 // get list of products
 exports.listProduct = async (req, res) => {
-try {
-     const page  = req.query.page||1;
+  try {
+    const page = req.query.page || 1;
     const itemsPerPage = 10;
     const pageNumber = parseInt(page, 10) || 1;
     const skip = (pageNumber - 1) * itemsPerPage;
 
-
     const products = await Product.find().skip(skip).limit(itemsPerPage);
-  
+
     return res.status(200).json({
       status: 200,
       data: products,
-      message: "Products retrieved successfully",
-    });  
-} catch (error) {
-    console.error(error); 
-    return res.json({message: error?.message});
+      message: 'Products retrieved successfully',
+    });
+  } catch (error) {
+    console.error(error);
+    return res.json({ message: error?.message });
   }
-}
+};
 //search for products
 exports.searchforProduct = async (req, res) => {
   try {
@@ -67,7 +65,7 @@ exports.searchforProduct = async (req, res) => {
 
     // Define the search query for product_name
     const searchQuery = {
-      product_name: { $regex: new RegExp(query, "i") },
+      product_name: { $regex: new RegExp(query, 'i') },
     };
     const skip = (pageNumber - 1) * itemsPerPage;
 
@@ -80,78 +78,78 @@ exports.searchforProduct = async (req, res) => {
     if (products.length === 0) {
       return res
         .status(404)
-        .json({ message: "No products found for the given search query" });
-    } 
-    return res.status(200).json({  
-        status:200,
-        data:products });
+        .json({ message: 'No products found for the given search query' });
+    }
+    return res.status(200).json({
+      status: 200,
+      data: products,
+    });
   } catch (error) {
-    return res.json({message: error?.message});
-
+    return res.json({ message: error?.message });
   }
 };
 
-
-// get products by id 
+// get products by id
 exports.getProductID = async (req, res) => {
-try {
-  const id = req.params.id;
-  const product = await Product.findById(id)
-  if (!product){
-    res.status(404).json({message: "ProductiD not found"})
+  try {
+    const id = req.params.id;
+    const product = await Product.findById(id);
+    if (!product) {
+      res.status(404).json({ message: 'ProductiD not found' });
+    }
+
+    return res.status(200).json({
+      status: 500,
+      data: product,
+      message: 'Product found',
+    });
+  } catch (error) {
+    console.error(error);
+    return res.json({ message: error?.message });
   }
-
-  return res.status(200).json({
-    status: 500,
-    data:product,
-    message: "Product found",
-  })        
-} catch (error) {
-  console.error(error); 
-  return res.json({message: error?.message});
-}   
-}
-
+};
 
 // update products
 exports.updateProduct = async (req, res) => {
-
   try {
-    const idProduct = req.params.id
-    const updatedProduct = req.body
-    const product= await  Product.findOneAndUpdate({_id:idProduct},updatedProduct,{new:true});
-    if (!product){
-      return res.status(404).json({ message: "product not found" });
+    const idProduct = req.params.id;
+    const updatedProduct = req.body;
+    const product = await Product.findOneAndUpdate(
+      { _id: idProduct },
+      updatedProduct,
+      { new: true }
+    );
+    if (!product) {
+      return res.status(404).json({ message: 'product not found' });
     }
 
-      return res.status(200).send({
-        data: product,
-        message:"product updated successfully"})
+    return res.status(200).send({
+      data: product,
+      message: 'product updated successfully',
+    });
   } catch (error) {
-    console.log(error); 
-    return res.json({message: error?.message});
-
+    console.log(error);
+    return res.json({ message: error?.message });
   }
-}
+};
 
-// delete product 
+// delete product
 exports.deleteProduct = async (req, res) => {
   try {
-     const idProduct = req.params.id
-     const deletedproduct = await Product.findByIdAndDelete(idProduct).exec();
-       if(!deletedproduct){
-        return  res.status(404).json({
-          status: 404,
-          message: "product not found"})
-        }
-      return res.status(200).json({ 
-        status:200,
-        message: "Product deleted successfully" });
-    
+    const idProduct = req.params.id;
+    const deletedproduct = await Product.findByIdAndDelete(idProduct).exec();
+    if (!deletedproduct) {
+      return res.status(404).json({
+        status: 404,
+        message: 'product not found',
+      });
+    }
+    return res.status(200).json({
+      status: 200,
+      message: 'Product deleted successfully',
+    });
   } catch (error) {
-    console.error(error); 
-    return res.json({message: error?.message});
-
-
+    console.error(error);
+    return res.json({ message: error?.message });
   }
-}
+};

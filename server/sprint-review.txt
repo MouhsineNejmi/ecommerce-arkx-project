@@ -1,5 +1,0 @@
-Don't send user data while loggin in (done)
-
--> Order items -> Product id, quantity, options, price -> to do
--> Order status -> enum['open', 'paid', 'shipped', 'closed'] -> to do
--> Admin & manager can only update status of orders -> to do

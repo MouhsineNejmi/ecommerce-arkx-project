@@ -1,24 +1,30 @@
 const router = require('express').Router();
-const { body } = require('express-validator');
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-const { register, login } = require('../controllers/auth.controller');
+const deserializeUser = require('../middlewares/deserialize-user.middleware');
+const requireUser = require('../middlewares/require-user.middleware');
+const { validate } = require('../middlewares/validate.middleware');
+
+const {
+  registerHandler,
+  loginHandler,
+  logoutHandler,
+} = require('../controllers/auth.controller');
+const { createUserSchema, loginUserSchema } = require('../schemas/user.schema');
 
 router.post(
   '/register',
-  [
-    body('email', 'Please enter a valid email').isEmail(),
-    body(
-      'password',
-      'Your password should be between 6 and 30 characters'
-    ).isLength({ min: 6, max: 30 }),
-  ],
+  validate(createUserSchema),
   upload.single('image'),
-  register
+  registerHandler
 );
 
-router.post('/login', login);
+router.post('/login', validate(loginUserSchema), loginHandler);
+
+router.use(deserializeUser, requireUser);
+
+router.get('/logout', logoutHandler);
 
 module.exports = router;

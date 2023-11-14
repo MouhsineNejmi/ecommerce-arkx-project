@@ -1,16 +1,22 @@
-const passport = require('passport');
-const { genSalt, hash } = require('bcryptjs');
+const { genSalt, hash, compare } = require('bcryptjs');
 
-const User = require('../models/user.model');
-const Customer = require('../models/customer.model');
-const Seller = require('../models/seller.model');
+const { uploadImageToS3 } = require('../utils/aws.utils');
+const AppError = require('../utils/app-error.utils');
 
-const { generateAccessToken } = require('../helpers/authHelpers');
-const { uploadImageToS3 } = require('../helpers/awsHelpers');
+const { createUser, findUser, signToken } = require('../services/user.service');
 
-exports.register = async (req, res) => {
-  const { firstName, lastName, email, accountType, role, username, password } =
-    req.body;
+const accessTokenCookieOptions = {
+  expires: new Date(Date.now() * 86400 * 1000),
+  maxAge: 86400 * 1000,
+  httpOnly: true,
+  sameSite: 'lax',
+};
+
+if (process.env.NODE_ENV === 'production')
+  accessTokenCookieOptions.secure = true;
+
+exports.registerHandler = async (req, res) => {
+  const { account_type, password } = req.body;
   const { file } = req;
 
   try {
@@ -21,88 +27,105 @@ exports.register = async (req, res) => {
 
     console.log('key: ', key);
 
-    let newAccount = {};
+    let newUser = {};
 
-    if (accountType === 'user') {
-      newAccount = await User.create({
-        image_name: key,
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        username,
+    if (account_type === 'user') {
+      newUser = await createUser({
+        ...req.body,
         password: hashedPassword,
-        accountType,
-        role,
-        creation_date: Date.now(),
-        last_login: Date.now(),
-        last_update: null,
-        active: true,
-      });
-    } else if (accountType === 'customer') {
-      newAccount = await Customer.create({
         image_name: key,
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        username,
-        password: hashedPassword,
-        accountType,
-        creation_date: Date.now(),
-        last_login: Date.now(),
-        valid_account: false,
-        active: true,
-      });
-    } else if (accountType === 'seller') {
-      newAccount = await Seller.create({
-        image_name: key,
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        username,
-        password: hashedPassword,
-        accountType,
-        creation_date: Date.now(),
-        last_login: Date.now(),
-        last_update: null,
-        active: true,
+        acc,
       });
     }
+    // else if (accountType === 'customer') {
+    //   newUser = await Customer.create({
+    //     image_name: key,
+    //     first_name: firstName,
+    //     last_name: lastName,
+    //     email,
+    //     username,
+    //     password: hashedPassword,
+    //     account_type,
+    //     creation_date: Date.now(),
+    //     last_login: Date.now(),
+    //     valid_account: false,
+    //     active: true,
+    //   });
+    // } else if (accountType === 'seller') {
+    //   newUser = await Seller.create({
+    //     image_name: key,
+    //     first_name: firstName,
+    //     last_name: lastName,
+    //     email,
+    //     username,
+    //     password: hashedPassword,
+    //     accountType,
+    //     creation_date: Date.now(),
+    //     last_login: Date.now(),
+    //     last_update: null,
+    //     active: true,
+    //   });
+    // }
 
     return res.json({
-      status: 201,
-      message: `${accountType.charAt(0).toUpperCase()} created successfully`,
-      data: newAccount,
+      status: 'success',
+      message: `${account_type.charAt(0).toUpperCase()} created successfully`,
+      data: { user: newUser },
     });
   } catch (error) {
-    return res.json({ message: error?.message });
+    if (error.code === 11000) {
+      return res.status(409).json({
+        status: 'fail',
+        message: 'Email already exist',
+      });
+    }
+    next(err);
   }
 };
 
-exports.login = (req, res) => {
-  passport.authenticate('local', { session: false }, (err, user, info) => {
-    if (err || !user) {
-      return res.json(404).json({
-        status: 404,
-        message: 'User with this credentials not found',
-      });
+exports.loginHandler = async (req, res, next) => {
+  try {
+    const user = await findUser({ username: req.body.username });
+
+    // Check if user exist and password is correct
+    if (!user || !compare(user.password, req.body.password)) {
+      return next(new AppError('Invalid username or password', 401));
     }
 
-    req.login(user, { session: false }, (err) => {
-      if (err) {
-        return res.status(401).json({ status: 401, message: err?.message });
-      }
+    // Create an Access Token
+    const { access_token } = await signToken(user);
 
-      user.last_login = Date.now();
-
-      const accessToken = generateAccessToken({
-        _id: user._id,
-        role: user.role ? user.role : null,
-        accountType: user.accountType,
-      });
-
-      res.cookie('accessToken', accessToken);
-
-      return res.status(200).json({ status: 200, accessToken });
+    res.cookie('access_token', access_token, accessTokenCookieOptions);
+    res.cookie('logged_in', true, {
+      ...accessTokenCookieOptions,
+      httpOnly: false,
     });
-  })(req, res);
+
+    res.status(200).json({
+      status: 'success',
+      user,
+      access_token,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const logout = (res) => {
+  res.cookie('access_token', '', { maxAge: 1 });
+  res.cookie('logged_in', '', {
+    maxAge: 1,
+  });
+};
+
+exports.logoutHandler = (req, res, next) => {
+  try {
+    logout(res);
+    return res.status(200).json({
+      status: 'success',
+      message: 'You logged out successfully.',
+    });
+  } catch (error) {
+    next(error);
+  }
 };

@@ -2,7 +2,7 @@ const {
   uploadImageToS3,
   getImageLink,
   deleteImage,
-} = require('../helpers/awsHelpers');
+} = require('../utils/aws.utils');
 const Seller = require('../models/seller.model');
 
 exports.getAllSellers = async (req, res) => {

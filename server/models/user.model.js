@@ -7,7 +7,7 @@ const UserSchema = new Schema({
   },
   profile_image: {
     type: String,
-    default: 'https://fontawesome.com/icons/user?f=classic&s=regular&sz=lg',
+    default: 'https://github.com/shadcn.png',
   },
   first_name: {
     type: String,
@@ -46,6 +46,11 @@ const UserSchema = new Schema({
   active: {
     type: Boolean,
     default: true,
+  },
+  account_type: {
+    enum: ['user', 'customer', 'seller'],
+    type: String,
+    required: true,
   },
 });
 

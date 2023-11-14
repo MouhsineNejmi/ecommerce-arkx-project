@@ -2,8 +2,23 @@ const {
   uploadImageToS3,
   getImageLink,
   deleteImage,
-} = require('../helpers/awsHelpers');
+} = require('../utils/aws.utils');
 const User = require('../models/user.model');
+
+exports.getMyProfileData = (req, res, next) => {
+  try {
+    const user = res.locals.user;
+    console.log(user);
+    res.status(200).json({
+      status: 'success',
+      data: {
+        user,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 exports.getAllUsers = async (req, res) => {
   const sort = req.query.sort || 'desc';
