@@ -6,6 +6,8 @@ import RequireAuth from '../components/require-auth.component';
 import AdminOrders from '../pages/admin-orders.page';
 import AdminProducts from '../pages/admin-products.page';
 import AdminProductDetails from '../pages/admin-product-details';
+import AddProduct from '../pages/add-product';
+import EditProduct from '../pages/edit-product';
 
 const DashboardRoutes = () => {
     return (
@@ -24,6 +26,8 @@ const DashboardRoutes = () => {
                         path='product/:id'
                         element={<AdminProductDetails />}
                     />
+                    <Route path='product/add' element={<AddProduct />} />
+                    <Route path='product/edit/:id' element={<EditProduct />} />
                 </Route>
             </Route>
         </Routes>

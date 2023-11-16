@@ -6,11 +6,11 @@ const accessKeyId = process.env.AWS_ACCESS_KEY;
 const secretAccessKey = process.env.AWS_SECRET_ACCESS;
 
 const s3Client = new S3Client({
-  credentials: {
-    accessKeyId,
-    secretAccessKey,
-  },
-  region: bucketRegion,
+    credentials: {
+        accessKeyId,
+        secretAccessKey,
+    },
+    region: bucketRegion,
 });
 
 module.exports = s3Client;

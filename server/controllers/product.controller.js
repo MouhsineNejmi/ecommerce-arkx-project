@@ -1,26 +1,34 @@
 const Product = require('../models/product.model');
-import { generateRandomString } from '../utils/generateRandomString';
+const Subcategory = require('../models/subcategories.model');
+const { generateRandomString } = require('../utils/generateRandomString');
+const { uploadImageToS3 } = require('../utils/aws.utils');
 
 //post create product
 exports.addProduct = async (req, res) => {
     const {
-        categoryID,
-        product_image,
+        seller_id,
+        subcategory_id,
         product_name,
         short_description,
         long_description,
         price,
         discount_price,
         options,
+        quantity,
     } = req.body;
 
-    const sku = generateRandomString();
+    const product_image = req.file;
+
+    const sku = generateRandomString(12);
 
     try {
-        const newProduct = await Product({
+        const key = await uploadImageToS3(product_image);
+
+        const newProduct = await Product.create({
             sku,
-            category_id: categoryID,
-            product_image: product_image,
+            seller_id,
+            subcategory_id,
+            product_image: key,
             product_name: product_name,
             short_description: short_description,
             long_description: long_description,
@@ -28,29 +36,39 @@ exports.addProduct = async (req, res) => {
             discount_price: discount_price,
             options,
             active: false,
+            quantity,
         });
 
-        await newProduct.save();
+        // await newProduct.populate('subcategory_id').execPopulate();
 
         return res.status(200).json({
             status: 200,
-            message: 'product created successfully',
             newProduct,
+            message: 'product created successfully',
         });
     } catch (error) {
-        console.log(error);
-        return res.json({ message: error?.message });
+        return res.status(500).json({ message: error?.message });
     }
 };
 // get list of products
 exports.listProduct = async (req, res) => {
     try {
         const page = req.query.page || 1;
-        const itemsPerPage = 10;
+        const itemsPerPage = 20;
         const pageNumber = parseInt(page, 10) || 1;
         const skip = (pageNumber - 1) * itemsPerPage;
 
-        const products = await Product.find().skip(skip).limit(itemsPerPage);
+        const products = await Product.find()
+            .populate('subcategory_id')
+            .skip(skip)
+            .limit(itemsPerPage);
+
+        if (!products) {
+            return res.status(404).json({
+                status: 404,
+                message: 'Products not found!',
+            });
+        }
 
         return res.status(200).json({
             status: 200,
@@ -96,10 +114,12 @@ exports.searchforProduct = async (req, res) => {
 };
 
 // get products by id
-exports.getProductID = async (req, res) => {
+exports.getProductByID = async (req, res) => {
     try {
         const id = req.params.id;
-        const product = await Product.findById(id);
+        const product = await Product.findById(id)
+            .populate('subcategory_id')
+            .exec();
 
         if (!product) {
             res.status(404).json({ message: 'ProductiD not found' });
@@ -118,10 +138,10 @@ exports.getProductID = async (req, res) => {
 // update products
 exports.updateProduct = async (req, res) => {
     try {
-        const idProduct = req.params.id;
+        const productId = req.params.id;
         const updatedProduct = req.body;
         const product = await Product.findOneAndUpdate(
-            { _id: idProduct },
+            { _id: productId },
             updatedProduct,
             { new: true }
         );
@@ -147,12 +167,14 @@ exports.deleteProduct = async (req, res) => {
         const deletedproduct = await Product.findByIdAndDelete(
             idProduct
         ).exec();
+
         if (!deletedproduct) {
             return res.status(404).json({
                 status: 404,
                 message: 'product not found',
             });
         }
+
         return res.status(200).json({
             status: 200,
             message: 'Product deleted successfully',

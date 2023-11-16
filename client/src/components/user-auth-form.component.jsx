@@ -62,7 +62,7 @@ export function UserAuthForm({ className, ...props }) {
                     })
                 );
             } else {
-                toast.error(error.data.message, {
+                toast.error(error.error, {
                     position: 'top-right',
                 });
             }
