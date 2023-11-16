@@ -18,7 +18,7 @@ const ProductToolbar = ({ editor }) => {
         <div className='border border-input bg-transparent rounded-br-md rounded-bl-md p-1 flex flex-row items-center gap-1'>
             <Toggle
                 size='sm'
-                pressed={editor.isActive('heading')}
+                pressed={editor.isActive('heading', { level: 2 })}
                 onPressedChange={() =>
                     editor.chain().focus().toggleHeading({ level: 2 }).run()
                 }
@@ -27,7 +27,7 @@ const ProductToolbar = ({ editor }) => {
             </Toggle>
             <Toggle
                 size='sm'
-                pressed={editor.isActive('heading')}
+                pressed={editor.isActive('heading', { level: 3 })}
                 onPressedChange={() =>
                     editor.chain().focus().toggleHeading({ level: 3 }).run()
                 }

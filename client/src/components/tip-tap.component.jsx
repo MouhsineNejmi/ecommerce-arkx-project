@@ -1,4 +1,3 @@
-// import React from 'react';
 import PropTypes from 'prop-types';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -8,7 +7,14 @@ const TipTap = ({ description, setRichText }) => {
     const editor = useEditor({
         extensions: [
             StarterKit.configure({
-                bulletList: {},
+                bulletList: {
+                    keepMarks: true,
+                    keepAttributes: false,
+                },
+                orderedList: {
+                    keepMarks: true,
+                    keepAttributes: false,
+                },
                 heading: {
                     levels: [2],
                     HTMLAttributes: {
@@ -31,9 +37,9 @@ const TipTap = ({ description, setRichText }) => {
     });
 
     return (
-        <div className='flex flex-col justify-stretch min-h-[250px]'>
+        <div className='flex flex-col justify-stretch'>
             <ProductToolbar editor={editor} />
-            <EditorContent editor={editor} className='h-[200px]' />
+            <EditorContent editor={editor} className='h-52' />{' '}
         </div>
     );
 };
