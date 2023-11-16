@@ -4,7 +4,7 @@ import { userApi } from './user.api';
 
 export const authApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    registerUser: builder.mutation({
+    createUser: builder.mutation({
       query(data) {
         return {
           url: 'auth/register',
@@ -12,6 +12,7 @@ export const authApi = apiSlice.injectEndpoints({
           body: data,
         };
       },
+      invalidatesTags: [{ type: 'Users', id: 'LIST' }],
       transformResponse: (result) => result.data.user,
     }),
     loginUser: builder.mutation({
@@ -57,6 +58,6 @@ export const authApi = apiSlice.injectEndpoints({
 
 export const {
   useLoginUserMutation,
-  useRegisterUserMutation,
+  useCreateUserMutation,
   useLogoutUserMutation,
 } = authApi;

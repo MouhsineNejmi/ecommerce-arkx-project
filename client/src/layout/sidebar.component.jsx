@@ -3,7 +3,6 @@ import { NavLink } from 'react-router-dom';
 
 import sidebarData from '../data/sidebar.data';
 
-import MenuIcon from '../components/menu-icon.component';
 import AfricomLogo from '../components/icons/africom-logo.component';
 
 import {
@@ -12,6 +11,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '../components/ui/accordion';
+import { ChevronRight } from 'lucide-react';
 
 const Sidebar = () => {
   const [expanded, setExpanded] = useState(true);
@@ -31,12 +31,14 @@ const Sidebar = () => {
             className='p-1.5 rounded-lg bg-main-1 transition-all hover:bg-main-2 text-white'
             onClick={toggleExpand}
           >
-            <MenuIcon expanded={expanded} />
+            <ChevronRight
+              className={`${expanded ? 'rotate-180' : 'rotate-0'}`}
+            />
           </button>
         </div>
 
         <ul className='flex-1 px-3'>
-          <div className='space-y-1 p-2'>
+          <div className='space-y-1'>
             {sidebarData?.map((menu, i) => {
               if (menu.isParent) {
                 return (

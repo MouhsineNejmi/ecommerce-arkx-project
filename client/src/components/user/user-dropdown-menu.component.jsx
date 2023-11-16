@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CreditCard, LogOut, Settings, User } from 'lucide-react';
+import { LogOut, Settings, User } from 'lucide-react';
 import { useSelector } from 'react-redux';
 
 import { useToast } from '../ui/use-toast';
@@ -72,11 +72,6 @@ const UserDropDownMenu = () => {
               <User className='mr-2 h-4 w-4' />
               <span>Profile</span>
               <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <CreditCard className='mr-2 h-4 w-4' />
-              <span>Billing</span>
-              <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Settings className='mr-2 h-4 w-4' />

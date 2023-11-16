@@ -9,7 +9,9 @@ const Layout = () => {
       <Sidebar />
       <main className='w-full'>
         <Navbar />
-        <Outlet />
+        <div className='p-4'>
+          <Outlet />
+        </div>
         <Toaster />
       </main>
     </div>
