@@ -1,17 +1,16 @@
 /* eslint-disable react/prop-types */
 import * as React from 'react';
-import * as z from 'zod';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useToast } from './ui/use-toast';
+import { useToast } from '../ui/use-toast';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 
-import { useLoginUserMutation } from '../app/api/auth.api';
+import { useLoginUserMutation } from '../../app/api/auth.api';
 
-import { cn } from '../lib/utils';
-import { Button } from './ui/button';
+import { cn } from '../../lib/utils';
+import { Button } from '../ui/button';
 import {
   Form,
   FormControl,
@@ -19,19 +18,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from './ui/form';
-import { Input } from './ui/input';
+} from '../ui/form';
+import { Input } from '../ui/input';
+import { LoginValidation } from '../../lib/validation';
 
-const AdminLoginFormSchema = z.object({
-  username: z.string().min(1, {
-    message: 'Username must not be empty.',
-  }),
-  password: z.string().min(6, {
-    message: 'password must be at least be 6 characters.',
-  }),
-});
-
-export function UserAuthForm({ className, ...props }) {
+const UserAuthForm = ({ className, ...props }) => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -39,7 +30,7 @@ export function UserAuthForm({ className, ...props }) {
     useLoginUserMutation();
 
   const form = useForm({
-    resolver: zodResolver(AdminLoginFormSchema),
+    resolver: zodResolver(LoginValidation),
     defaultValues: {
       username: '',
       password: '',
@@ -128,4 +119,6 @@ export function UserAuthForm({ className, ...props }) {
       </Form>
     </div>
   );
-}
+};
+
+export default UserAuthForm;

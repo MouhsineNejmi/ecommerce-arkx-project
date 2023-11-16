@@ -1,4 +1,4 @@
-import { UserAuthForm } from '../components/user-auth-form.component';
+import UserAuthForm from '../components/user/user-auth-form.component';
 import DarkAfricomLogo from '../assets/logo/dark-africom.svg';
 
 const AdminLogin = () => {

@@ -23,7 +23,55 @@ export const userApi = apiSlice.injectEndpoints({
         }
       },
     }),
+    getAllUsers: builder.query({
+      query: () => {
+        return {
+          url: 'users/',
+          credentials: 'include',
+        };
+      },
+      transformResponse: (result) => {
+        return result.data;
+      },
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({
+                type: 'Users',
+                id,
+              })),
+              { type: 'Users', id: 'LIST' },
+            ]
+          : [{ type: 'Users', id: 'LIST' }],
+    }),
+    getUserById: builder.query({
+      query: (userId) => {
+        return {
+          url: `users/user/${userId}`,
+          credentials: 'include',
+        };
+      },
+      transformResponse: (result) => result.data,
+      providesTags: (result, error, id) => [{ type: 'Users', id }],
+    }),
+    updateUser: builder.mutation({
+      query: ({ userId, updatedUser }) => {
+        console.log(userId, updatedUser);
+        return {
+          url: `users/user/${userId}`,
+          method: 'PUT',
+          body: updatedUser,
+          credentials: 'include',
+        };
+      },
+    }),
   }),
 });
 
-export const { useGetMyProfileDataQuery } = userApi;
+export const {
+  useGetMyProfileDataQuery,
+  useGetAllUsersQuery,
+  useGetUserByIdQuery,
+  useCreateUserMutation,
+  useUpdateUserMutation,
+} = userApi;

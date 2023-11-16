@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { CreditCard, LogOut, Settings, User } from 'lucide-react';
+import { LogOut, Settings, User } from 'lucide-react';
 import { useSelector } from 'react-redux';
 
-import { useToast } from './ui/use-toast';
+import { useToast } from '../ui/use-toast';
 import { useNavigate } from 'react-router-dom';
-import { useLogoutUserMutation } from '../app/api/auth.api';
+import { useLogoutUserMutation } from '../../app/api/auth.api';
 
 import {
   DropdownMenu,
@@ -15,8 +15,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from './ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+} from '../ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 const UserDropDownMenu = () => {
   const { toast } = useToast();
@@ -72,11 +72,6 @@ const UserDropDownMenu = () => {
               <User className='mr-2 h-4 w-4' />
               <span>Profile</span>
               <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <CreditCard className='mr-2 h-4 w-4' />
-              <span>Billing</span>
-              <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Settings className='mr-2 h-4 w-4' />

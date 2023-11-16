@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
 
-import { cn } from '../lib/utils';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { Button } from './ui/button';
+import { cn } from '../../lib/utils';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Button } from '../ui/button';
 import {
   Command,
   CommandEmpty,
@@ -11,8 +11,8 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from './ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+} from '../ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
 const sellers = [
   {
