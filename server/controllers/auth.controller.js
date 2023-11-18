@@ -1,6 +1,6 @@
 const { genSalt, hash, compare } = require('bcryptjs');
 
-const { uploadImageToS3 } = require('../utils/aws.utils');
+const { uploadImageToS3, getImageLink } = require('../utils/aws.utils');
 const AppError = require('../utils/app-error.utils');
 
 const { createUser, findUser, signToken } = require('../services/user.service');
@@ -15,28 +15,27 @@ const accessTokenCookieOptions = {
 if (process.env.NODE_ENV === 'production')
   accessTokenCookieOptions.secure = true;
 
-exports.registerHandler = async (req, res) => {
+exports.registerHandler = async (req, res, next) => {
   const { account_type, password } = req.body;
-  const { file } = req;
 
   try {
     const salt = await genSalt(12);
     const hashedPassword = await hash(password, salt);
 
-    const key = await uploadImageToS3(file);
-
-    console.log('key: ', key);
-
     let newUser = {};
 
-    if (account_type === 'user') {
-      newUser = await createUser({
-        ...req.body,
-        password: hashedPassword,
-        image_name: key,
-        acc,
-      });
-    }
+    if (req.file)
+      if (account_type === 'user') {
+        newUser = await createUser({
+          ...req.body,
+          account_type,
+          password: hashedPassword,
+          valid_account: false,
+          active: true,
+          creation_date: Date.now(),
+          last_login: Date.now(),
+        });
+      }
     // else if (accountType === 'customer') {
     //   newUser = await Customer.create({
     //     image_name: key,
@@ -79,7 +78,7 @@ exports.registerHandler = async (req, res) => {
         message: 'Email already exist',
       });
     }
-    next(err);
+    next(error);
   }
 };
 
