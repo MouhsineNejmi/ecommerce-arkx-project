@@ -4,11 +4,15 @@ import Layout from '../layout/layout.component';
 import RequireAuth from '../components/require-auth.component';
 
 import Dashboard from '../pages/dashboard.page';
-import AdminUsers from '../pages/admin-users.page';
+
+import AdminUsers from '../pages/users/admin-users.page';
+import AdminUserEdit from '../pages/users/admin-user-edit.page';
+import AdminAddUser from '../pages/users/admin-add-user.page';
+
 import AdminCustomers from '../pages/admin-customers.page';
 import AdminSellers from '../pages/admin-sellers.page';
-import AdminUserEdit from '../pages/admin-user-edit.page';
-import AdminAddUser from '../pages/admin-add-user.page';
+
+import AdminOrders from '../pages/orders/admin-orders.page';
 
 const DashboardRoutes = () => {
   return (
@@ -23,6 +27,7 @@ const DashboardRoutes = () => {
           </Route>
           <Route path='customers' element={<AdminCustomers />} />
           <Route path='sellers' element={<AdminSellers />} />
+          <Route path='orders' element={<AdminOrders />} />
         </Route>
       </Route>
     </Routes>

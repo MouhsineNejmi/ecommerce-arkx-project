@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import { useToast } from '../components/ui/use-toast';
-import { useGetAllUsersQuery } from '../app/api/user.api';
+import { useToast } from '../../components/ui/use-toast';
+import { useGetAllUsersQuery } from '../../app/api/user.api';
 
-import getColumns from '../components/ui/columns';
-import DataTable from '../components/ui/data-table';
+import getColumns from '../../components/ui/columns';
+import DataTable from '../../components/ui/data-table';
 
 const AdminUsers = () => {
   const { toast } = useToast();

@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom';
 
-import { useGetUserByIdQuery } from '../app/api/user.api';
+import { useGetUserByIdQuery } from '../../app/api/user.api';
 
-import UserForm from '../components/user/user-form.component';
+import UserForm from '../../components/user/user-form.component';
 import { Loader2 } from 'lucide-react';
 
 const AdminUserEdit = () => {

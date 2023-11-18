@@ -17,6 +17,7 @@ import DeleteUserDialog from '../user/delete-user-dialog.component';
 
 function DataTableRowActions({ row }) {
   const navigate = useNavigate();
+  // const [deleteUser, {isLoading}] = useDeleteUserMutation();
   const userId = row.original._id;
 
   return (

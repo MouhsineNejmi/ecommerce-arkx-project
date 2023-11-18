@@ -64,6 +64,7 @@ export const userApi = apiSlice.injectEndpoints({
           credentials: 'include',
         };
       },
+      invalidatesTags: ['User'],
     }),
   }),
 });

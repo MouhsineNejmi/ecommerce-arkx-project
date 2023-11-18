@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { Link } from 'react-router-dom';
 import {
   customerStatuses,
   labels,
@@ -55,11 +56,26 @@ const getColumns = ({
           className={'!text-sm'}
         />
       ),
-      cell: ({ row }) => (
-        <Badge className='font-medium' variant={'outline'}>
-          {row.getValue(keyOne)}
-        </Badge>
-      ),
+      cell: ({ row }) => {
+        const orderId = row.original._id;
+
+        if (option === 'orders') {
+          return (
+            <Link
+              to={`admin/orders/${orderId}`}
+              className='text-sm cursor-pointer underline'
+            >
+              {row.getValue(keyOne)}
+            </Link>
+          );
+        }
+
+        return (
+          <Badge className='font-medium' variant={'outline'}>
+            {row.getValue(keyOne)}
+          </Badge>
+        );
+      },
       enableSorting: false,
       enableHiding: false,
     },
