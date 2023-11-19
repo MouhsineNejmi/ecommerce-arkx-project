@@ -48,14 +48,10 @@ const UserAuthForm = ({ className, ...props }) => {
     if (isError) {
       if (Array.isArray(error).data.error) {
         error.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: 'top-right',
-          })
+          toast({ title: el.message, variant: 'destructive' })
         );
       } else {
-        toast.error(error.data.message, {
-          position: 'top-right',
-        });
+        toast({ title: error.data.message, variant: 'destructive' });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

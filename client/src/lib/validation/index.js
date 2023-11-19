@@ -31,3 +31,15 @@ export const ProfileValidation = z.object({
   email: z.string().email(),
   role: z.string().min(1, { message: 'Role is required' }),
 });
+
+export const CustomerValidation = z.object({
+  first_name: z.string(),
+  last_name: z.string(),
+  username: z
+    .string()
+    .min(2, { message: 'Name must be at least 2 characters.' }),
+  email: z.string().email(),
+  password: z
+    .string()
+    .min(8, { message: 'Password must be at least 8 characters.' }),
+});

@@ -27,11 +27,11 @@ function DataTableRowActions({ row }) {
           <MoreHorizontal size={18} className='cursor-pointer' />
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent
-          className='w-56 bg-background p-2 z-10'
-          onClick={() => navigate(`/admin/users/edit/${userId}`)}
-        >
-          <DropdownMenuItem className='w-full'>
+        <DropdownMenuContent className='w-56 bg-background p-2 z-10'>
+          <DropdownMenuItem
+            className='w-full'
+            onClick={() => navigate(`/admin/users/edit/${userId}`)}
+          >
             <Pencil className='mr-2 h-4 w-4' />
             <span>Edit</span>
           </DropdownMenuItem>
@@ -48,7 +48,7 @@ function DataTableRowActions({ row }) {
       </DropdownMenu>
 
       {/* Dialogs */}
-      <DeleteUserDialog userId={userId} action='Edit' />
+      <DeleteUserDialog userId={userId} />
     </AlertDialog>
   );
 }

@@ -14,7 +14,18 @@ export const ordersApi = apiSlice.injectEndpoints({
         return result.data;
       },
     }),
+    getOrderById: builder.query({
+      query: (orderId) => {
+        return {
+          url: `orders/${orderId}`,
+          credentials: 'include',
+        };
+      },
+      transformResponse: (result) => {
+        return result.data;
+      },
+    }),
   }),
 });
 
-export const { useGetAllOrdersQuery } = ordersApi;
+export const { useGetAllOrdersQuery, useGetOrderByIdQuery } = ordersApi;

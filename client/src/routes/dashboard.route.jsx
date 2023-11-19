@@ -9,10 +9,11 @@ import AdminUsers from '../pages/users/admin-users.page';
 import AdminUserEdit from '../pages/users/admin-user-edit.page';
 import AdminAddUser from '../pages/users/admin-add-user.page';
 
-import AdminCustomers from '../pages/admin-customers.page';
+import AdminCustomers from '../pages/customers/admin-customers.page';
 import AdminSellers from '../pages/admin-sellers.page';
 
 import AdminOrders from '../pages/orders/admin-orders.page';
+import AdminOrderDetails from '../pages/orders/admin-order-detail.page';
 
 const DashboardRoutes = () => {
   return (
@@ -27,7 +28,10 @@ const DashboardRoutes = () => {
           </Route>
           <Route path='customers' element={<AdminCustomers />} />
           <Route path='sellers' element={<AdminSellers />} />
-          <Route path='orders' element={<AdminOrders />} />
+          <Route path='orders'>
+            <Route index element={<AdminOrders />} />
+            <Route path=':orderId' element={<AdminOrderDetails />} />
+          </Route>
         </Route>
       </Route>
     </Routes>

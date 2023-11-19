@@ -1,6 +1,6 @@
 import { logout } from '../features/user.slice';
 import { apiSlice } from './api';
-import { userApi } from './user.api';
+import { usersApi } from './users.api';
 
 export const authApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -28,7 +28,7 @@ export const authApi = apiSlice.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           dispatch(
-            userApi.endpoints.getMyProfileData.initiate({
+            usersApi.endpoints.getMyProfileData.initiate({
               data,
             })
           );

@@ -10,6 +10,7 @@ import { Badge } from './badge';
 import { Checkbox } from './checkbox';
 import DataTableColumnHeader from './data-table-column-header';
 import DataTableRowActions from './data-table-row-actions';
+import { Edit2 } from 'lucide-react';
 
 const getColumns = ({
   keyOne,
@@ -57,24 +58,21 @@ const getColumns = ({
         />
       ),
       cell: ({ row }) => {
-        const orderId = row.original._id;
+        const id = row.original._id;
 
-        if (option === 'orders') {
-          return (
-            <Link
-              to={`admin/orders/${orderId}`}
-              className='text-sm cursor-pointer underline'
-            >
-              {row.getValue(keyOne)}
-            </Link>
-          );
-        }
-
+        // if (option === 'orders') {
         return (
-          <Badge className='font-medium' variant={'outline'}>
+          <Link to={`${id}`} className='text-sm cursor-pointer underline'>
             {row.getValue(keyOne)}
-          </Badge>
+          </Link>
         );
+        // }
+
+        // return (
+        //   <Badge className='font-medium' variant={'outline'}>
+        //     {row.getValue(keyOne)}
+        //   </Badge>
+        // );
       },
       enableSorting: false,
       enableHiding: false,
@@ -309,10 +307,16 @@ const getColumns = ({
     {
       id: 'actions',
       cell: ({ row }) => {
+        const id = row.original._id;
+
         if (option === 'users') {
           return <DataTableRowActions row={row} />;
-        } else {
-          null;
+        } else if (option === 'customers') {
+          return (
+            <Link to={`edit/${id}`}>
+              <Edit2 size={16} className='text-main-1 cursor-pointer' />
+            </Link>
+          );
         }
       },
     },

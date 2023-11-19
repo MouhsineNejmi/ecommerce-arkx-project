@@ -1,7 +1,7 @@
 import { setUser } from '../features/user.slice';
 import { apiSlice } from './api';
 
-export const userApi = apiSlice.injectEndpoints({
+export const usersApi = apiSlice.injectEndpoints({
   tagTypes: ['User'],
   endpoints: (builder) => ({
     getMyProfileData: builder.query({
@@ -64,7 +64,17 @@ export const userApi = apiSlice.injectEndpoints({
           credentials: 'include',
         };
       },
-      invalidatesTags: ['User'],
+      invalidatesTags: ['Users'],
+    }),
+    deleteUser: builder.mutation({
+      query: (userId) => {
+        return {
+          url: `users/user/${userId}`,
+          method: 'DELETE',
+          credentials: 'include',
+        };
+      },
+      invalidatesTags: ['Users'],
     }),
   }),
 });
@@ -75,4 +85,5 @@ export const {
   useGetUserByIdQuery,
   useCreateUserMutation,
   useUpdateUserMutation,
-} = userApi;
+  useDeleteUserMutation,
+} = usersApi;

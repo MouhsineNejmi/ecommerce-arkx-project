@@ -1,27 +1,34 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import { useToast } from '../../components/ui/use-toast';
-import { useGetAllOrdersQuery } from '../../app/api/orders.api';
+import { useGetAllCustomersQuery } from '../../app/api/customers.api';
 
 import getColumns from '../../components/ui/columns';
 import DataTable from '../../components/ui/data-table';
 
-const AdminOrders = () => {
+const AdminCustomers = () => {
   const { toast } = useToast();
-  const { data, isLoading, isError, error } = useGetAllOrdersQuery();
+  const {
+    data: customers,
+    isLoading,
+    isError,
+    error,
+  } = useGetAllCustomersQuery();
+  console.log(customers);
 
   const columns = getColumns({
     keyOne: '_id',
-    keyOneTitle: 'Order ID',
-    keyTwo: 'customer_id',
-    keyTwoTitle: 'Customer Email',
-    keyThree: 'status',
-    keyThreeTitle: 'Ordrer Status',
-    keyFour: 'order_date',
-    keyFourTitle: 'Order Date',
-    keyFive: 'cart_total_price',
-    keyFiveTitle: 'Total price',
-    option: 'orders',
+    keyOneTitle: 'Customer Id',
+    keyTwo: 'email',
+    keyTwoTitle: 'Email Address',
+    keyThree: 'valid_account',
+    keyThreeTitle: 'Valid Account',
+    keyFour: 'active',
+    keyFourTitle: 'Active/Inactive',
+    keyFive: 'creation_date',
+    keyFiveTitle: 'Created At',
+    option: 'customers',
   });
 
   useEffect(() => {
@@ -40,14 +47,20 @@ const AdminOrders = () => {
   return (
     <div>
       <div className='flex items-center justify-between mb-5'>
-        <h1 className='text-lg font-bold'>Users</h1>
+        <h1>Customers</h1>
+        <Link
+          to='/admin/customers/add'
+          className='bg-main-1 p-2 rounded-2xl text-white hover:bg-main-2 px-4'
+        >
+          AddUser
+        </Link>
       </div>
 
-      {data && (
+      {customers && (
         <DataTable
-          data={data}
+          data={customers}
           columns={columns}
-          option={'orders'}
+          option={'customers'}
           isLoading={isLoading}
         />
       )}
@@ -55,4 +68,4 @@ const AdminOrders = () => {
   );
 };
 
-export default AdminOrders;
+export default AdminCustomers;

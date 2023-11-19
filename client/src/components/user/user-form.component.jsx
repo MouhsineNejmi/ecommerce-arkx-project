@@ -30,7 +30,7 @@ import { useToast } from '../ui/use-toast';
 
 import { ProfileValidation, UserValidation } from '../../lib/validation';
 import { useCreateUserMutation } from '../../app/api/auth.api';
-import { useUpdateUserMutation } from '../../app/api/user.api';
+import { useUpdateUserMutation } from '../../app/api/users.api';
 
 const UserForm = ({ user, action = 'Create' }) => {
   const navigate = useNavigate();
@@ -64,26 +64,21 @@ const UserForm = ({ user, action = 'Create' }) => {
     if (isErrorCreate || isErrorUpdate) {
       if (Array.isArray(errorCreate).data.error) {
         errorCreate.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: 'top-right',
-          })
+          toast({ title: el.message, variant: 'destructive' })
         );
       } else {
-        toast.error(errorCreate.data.message, {
-          position: 'top-right',
+        toast.error({
+          title: errorCreate.data.message,
+          variant: 'destructive',
         });
       }
 
       if (Array.isArray(errorUpdate).data.error) {
         errorUpdate.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: 'top-right',
-          })
+          toast({ title: el.message, variant: 'destructive' })
         );
       } else {
-        toast.error(errorUpdate.data.message, {
-          position: 'top-right',
-        });
+        toast({ title: errorUpdate.data.message, variant: 'destructive' });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
