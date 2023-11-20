@@ -1,7 +1,7 @@
 import { apiSlice } from './api';
 
 export const customersApi = apiSlice.injectEndpoints({
-  tagTypes: ['User'],
+  tagTypes: ['Customers'],
   endpoints: (builder) => ({
     getAllCustomers: builder.query({
       query: () => {
@@ -36,9 +36,9 @@ export const customersApi = apiSlice.injectEndpoints({
     }),
     updateCustomer: builder.mutation({
       query: ({ customerId, updatedCustomer }) => {
-        console.log(customerId, updatedCustomer);
+        // console.log(customerId, updatedCustomer);
         return {
-          url: `users/user/${customerId}`,
+          url: `customers/customer/${customerId}`,
           method: 'PUT',
           body: updatedCustomer,
           credentials: 'include',

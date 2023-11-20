@@ -5,7 +5,7 @@ import { useGetUserByIdQuery } from '../../app/api/users.api';
 import UserForm from '../../components/user/user-form.component';
 import { Loader2 } from 'lucide-react';
 
-const AdminUserEdit = () => {
+const AdminEditUser = () => {
   const { userId } = useParams();
   const { data: user, isLoading } = useGetUserByIdQuery(userId);
 
@@ -15,10 +15,10 @@ const AdminUserEdit = () => {
       {isLoading ? (
         <Loader2 className='animate-spin' />
       ) : (
-        <UserForm user={user} action='Update' />
+        <UserForm user={user} action='Update' account_type='User' />
       )}
     </div>
   );
 };
 
-export default AdminUserEdit;
+export default AdminEditUser;

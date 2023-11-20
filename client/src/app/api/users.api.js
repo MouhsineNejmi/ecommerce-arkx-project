@@ -2,7 +2,7 @@ import { setUser } from '../features/user.slice';
 import { apiSlice } from './api';
 
 export const usersApi = apiSlice.injectEndpoints({
-  tagTypes: ['User'],
+  tagTypes: ['Users'],
   endpoints: (builder) => ({
     getMyProfileData: builder.query({
       query() {

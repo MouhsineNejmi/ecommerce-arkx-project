@@ -52,7 +52,7 @@ const AdminCustomers = () => {
           to='/admin/customers/add'
           className='bg-main-1 p-2 rounded-2xl text-white hover:bg-main-2 px-4'
         >
-          AddUser
+          Add Customer
         </Link>
       </div>
 

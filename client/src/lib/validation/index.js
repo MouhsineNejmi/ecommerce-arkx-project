@@ -22,7 +22,7 @@ export const LoginValidation = z.object({
     .min(8, { message: 'Password must be at least 8 characters.' }),
 });
 
-export const ProfileValidation = z.object({
+export const UserProfileValidation = z.object({
   first_name: z.string(),
   last_name: z.string(),
   username: z
@@ -42,4 +42,13 @@ export const CustomerValidation = z.object({
   password: z
     .string()
     .min(8, { message: 'Password must be at least 8 characters.' }),
+});
+
+export const CustomerProfileValidation = z.object({
+  first_name: z.string(),
+  last_name: z.string(),
+  username: z
+    .string()
+    .min(2, { message: 'Name must be at least 2 characters.' }),
+  email: z.string().email(),
 });
