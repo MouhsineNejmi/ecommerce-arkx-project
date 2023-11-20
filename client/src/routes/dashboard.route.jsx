@@ -42,10 +42,10 @@ const DashboardRoutes = () => {
             <Route path=':orderId' element={<AdminOrderDetails />} />
           </Route>
           <Route path='products'>
-            <Route index path='products' element={<AdminProducts />} />
-            <Route path='product/:id' element={<AdminProductDetails />} />
-            <Route path='product/add' element={<AddProduct />} />
-            <Route path='product/edit/:id' element={<EditProduct />} />
+            <Route index element={<AdminProducts />} />
+            <Route path=':id' element={<AdminProductDetails />} />
+            <Route path='add' element={<AddProduct />} />
+            <Route path='edit/:id' element={<EditProduct />} />
           </Route>
         </Route>
       </Route>
