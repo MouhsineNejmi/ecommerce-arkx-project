@@ -4,7 +4,20 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 
-import ProfileUploader from '../shared/profile-uploader.component';
+import ProfileUploader from './profile-uploader.component';
+
+import {
+  UserProfileValidation,
+  UserValidation,
+  CustomerProfileValidation,
+  CustomerValidation,
+} from '../../lib/validation';
+import {
+  useCreateCustomerMutation,
+  useCreateUserMutation,
+} from '../../app/api/auth.api';
+import { useUpdateUserMutation } from '../../app/api/users.api';
+import { useUpdateCustomerMutation } from '../../app/api/customers.api';
 
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
@@ -26,16 +39,6 @@ import {
   SelectValue,
 } from '../ui/select';
 import { useToast } from '../ui/use-toast';
-
-import {
-  UserProfileValidation,
-  UserValidation,
-  CustomerProfileValidation,
-  CustomerValidation,
-} from '../../lib/validation';
-import { useCreateUserMutation } from '../../app/api/auth.api';
-import { useUpdateUserMutation } from '../../app/api/users.api';
-import { useUpdateCustomerMutation } from '../../app/api/customers.api';
 
 const UserForm = ({ user, action = 'Create', account_type = 'User' }) => {
   const { toast } = useToast();
@@ -70,6 +73,15 @@ const UserForm = ({ user, action = 'Create', account_type = 'User' }) => {
     updateUser,
     { isLoading: isLoadingUpdate, isError: isErrorUpdate, error: errorUpdate },
   ] = useUpdateUserMutation();
+
+  const [
+    createCustomer,
+    {
+      isLoading: isLoadingCreateCustomer,
+      isError: isErrorCreateCustomer,
+      error: errorCreateCustomer,
+    },
+  ] = useCreateCustomerMutation();
   const [
     updateCustomer,
     {
@@ -80,7 +92,10 @@ const UserForm = ({ user, action = 'Create', account_type = 'User' }) => {
   ] = useUpdateCustomerMutation();
 
   const isLoading =
-    isLoadingCreate || isLoadingUpdate || isLoadingCustomerUpdate;
+    isLoadingCreate ||
+    isLoadingUpdate ||
+    isLoadingCreateCustomer ||
+    isLoadingCustomerUpdate;
 
   useEffect(() => {
     if (isErrorCreate) {
@@ -93,6 +108,13 @@ const UserForm = ({ user, action = 'Create', account_type = 'User' }) => {
     if (isErrorUpdate) {
       toast({
         title: errorUpdate?.data.message,
+        variant: 'destructive',
+      });
+    }
+
+    if (isErrorCreateCustomer) {
+      toast({
+        title: errorCreateCustomer?.data.message,
         variant: 'destructive',
       });
     }
@@ -155,7 +177,7 @@ const UserForm = ({ user, action = 'Create', account_type = 'User' }) => {
           form.reset();
         }
       } else if (account_type === 'Customer') {
-        const newCustomer = await createUser({
+        const newCustomer = await createCustomer({
           ...value,
           account_type: 'customer',
         });
@@ -163,6 +185,7 @@ const UserForm = ({ user, action = 'Create', account_type = 'User' }) => {
         if (!newCustomer || newCustomer.error) {
           toast({
             title: `${action} user failed. Please try again.`,
+            variant: 'destructive',
           });
         }
 

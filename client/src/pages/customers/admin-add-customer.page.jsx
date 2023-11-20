@@ -1,4 +1,4 @@
-import UserForm from '../../components/user/user-form.component';
+import UserForm from '../../components/shared/user-form.component';
 
 const AdminAddCustomer = () => {
   return (
