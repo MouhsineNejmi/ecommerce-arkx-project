@@ -1,14 +1,13 @@
 const {
+  deleteImage,
   uploadImageToS3,
   getImageLink,
-  deleteImage,
 } = require('../utils/aws.utils');
 const User = require('../models/user.model');
 
 exports.getMyProfileData = (req, res, next) => {
   try {
     const user = res.locals.user;
-    console.log(user);
     res.status(200).json({
       status: 'success',
       data: {
@@ -97,13 +96,9 @@ exports.searchUser = async (req, res) => {
 exports.updateUserData = async (req, res) => {
   const { id } = req.params;
   const { first_name, last_name, username, email, password, role } = req.body;
-  const { file } = req;
 
   try {
-    const key = await uploadImageToS3(file);
-
     const updatedFields = {
-      image_name: key,
       first_name,
       last_name,
       username,
@@ -124,8 +119,6 @@ exports.updateUserData = async (req, res) => {
     const user = await User.findByIdAndUpdate(id, updatedFields, {
       new: true,
     });
-
-    user.profile_image = await getImageLink(key);
 
     if (!user) {
       return res.status(404).json({ status: 404, message: 'User not found.' });

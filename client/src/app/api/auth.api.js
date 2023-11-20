@@ -1,6 +1,6 @@
 import { logout } from '../features/user.slice';
 import { apiSlice } from './api';
-import { userApi } from './user.api';
+import { usersApi } from './users.api';
 
 export const authApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -13,6 +13,17 @@ export const authApi = apiSlice.injectEndpoints({
         };
       },
       invalidatesTags: [{ type: 'Users', id: 'LIST' }],
+      transformResponse: (result) => result.data.user,
+    }),
+    createCustomer: builder.mutation({
+      query(data) {
+        return {
+          url: 'auth/register',
+          method: 'POST',
+          body: data,
+        };
+      },
+      invalidatesTags: [{ type: 'Customers', id: 'LIST' }],
       transformResponse: (result) => result.data.user,
     }),
     loginUser: builder.mutation({
@@ -28,7 +39,7 @@ export const authApi = apiSlice.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           dispatch(
-            userApi.endpoints.getMyProfileData.initiate({
+            usersApi.endpoints.getMyProfileData.initiate({
               data,
             })
           );
@@ -59,5 +70,6 @@ export const authApi = apiSlice.injectEndpoints({
 export const {
   useLoginUserMutation,
   useCreateUserMutation,
+  useCreateCustomerMutation,
   useLogoutUserMutation,
 } = authApi;

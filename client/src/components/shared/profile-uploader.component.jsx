@@ -1,8 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Button } from '../ui/button';
-import { Upload } from 'lucide-react';
 
 const ProfileUploader = ({ fieldChange, mediaUrl }) => {
   const [file, setFile] = useState([]);

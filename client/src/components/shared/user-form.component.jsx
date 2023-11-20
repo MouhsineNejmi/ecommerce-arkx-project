@@ -1,11 +1,23 @@
 /* eslint-disable react/prop-types */
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 
-import ProfileUploader from '../shared/profile-uploader.component';
+import ProfileUploader from './profile-uploader.component';
+
+import {
+  UserProfileValidation,
+  UserValidation,
+  CustomerProfileValidation,
+  CustomerValidation,
+} from '../../lib/validation';
+import {
+  useCreateCustomerMutation,
+  useCreateUserMutation,
+} from '../../app/api/auth.api';
+import { useUpdateUserMutation } from '../../app/api/users.api';
+import { useUpdateCustomerMutation } from '../../app/api/customers.api';
 
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
@@ -28,16 +40,18 @@ import {
 } from '../ui/select';
 import { useToast } from '../ui/use-toast';
 
-import { ProfileValidation, UserValidation } from '../../lib/validation';
-import { useCreateUserMutation } from '../../app/api/auth.api';
-import { useUpdateUserMutation } from '../../app/api/user.api';
-
-const UserForm = ({ user, action = 'Create' }) => {
-  const navigate = useNavigate();
+const UserForm = ({ user, action = 'Create', account_type = 'User' }) => {
   const { toast } = useToast();
 
-  const zodValidation =
-    action === 'Update' ? ProfileValidation : UserValidation;
+  let zodValidation = null;
+
+  if (account_type === 'User') {
+    zodValidation =
+      action === 'Update' ? UserProfileValidation : UserValidation;
+  } else if (account_type === 'Customer') {
+    zodValidation =
+      action === 'Update' ? CustomerProfileValidation : CustomerValidation;
+  }
 
   const form = useForm({
     resolver: zodResolver(zodValidation),
@@ -60,71 +74,127 @@ const UserForm = ({ user, action = 'Create' }) => {
     { isLoading: isLoadingUpdate, isError: isErrorUpdate, error: errorUpdate },
   ] = useUpdateUserMutation();
 
-  useEffect(() => {
-    if (isErrorCreate || isErrorUpdate) {
-      if (Array.isArray(errorCreate).data.error) {
-        errorCreate.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: 'top-right',
-          })
-        );
-      } else {
-        toast.error(errorCreate.data.message, {
-          position: 'top-right',
-        });
-      }
+  const [
+    createCustomer,
+    {
+      isLoading: isLoadingCreateCustomer,
+      isError: isErrorCreateCustomer,
+      error: errorCreateCustomer,
+    },
+  ] = useCreateCustomerMutation();
+  const [
+    updateCustomer,
+    {
+      isLoading: isLoadingCustomerUpdate,
+      isError: isErrorCustomerUpdate,
+      error: errorCustomerUpdate,
+    },
+  ] = useUpdateCustomerMutation();
 
-      if (Array.isArray(errorUpdate).data.error) {
-        errorUpdate.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: 'top-right',
-          })
-        );
-      } else {
-        toast.error(errorUpdate.data.message, {
-          position: 'top-right',
-        });
-      }
+  const isLoading =
+    isLoadingCreate ||
+    isLoadingUpdate ||
+    isLoadingCreateCustomer ||
+    isLoadingCustomerUpdate;
+
+  useEffect(() => {
+    if (isErrorCreate) {
+      toast({
+        title: errorCreate?.data.message,
+        variant: 'destructive',
+      });
+    }
+
+    if (isErrorUpdate) {
+      toast({
+        title: errorUpdate?.data.message,
+        variant: 'destructive',
+      });
+    }
+
+    if (isErrorCreateCustomer) {
+      toast({
+        title: errorCreateCustomer?.data.message,
+        variant: 'destructive',
+      });
+    }
+
+    if (isErrorCustomerUpdate) {
+      toast({
+        title: errorCustomerUpdate?.data.message,
+        variant: 'destructive',
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoadingCreate, isLoadingUpdate]);
+  }, [isLoading]);
 
   const handleSubmit = async (value) => {
     // ACTION = UPDATE
     if (user && action === 'Update') {
-      const updatedUser = await updateUser({
-        userId: user._id,
-        updatedUser: value,
-      });
-
-      if (updatedUser.data) {
-        toast({
-          title: `${action} user success`,
+      if (account_type === 'User') {
+        const updatedUser = await updateUser({
+          userId: user._id,
+          updatedUser: value,
         });
-        navigate('/admin/users');
+
+        if (updatedUser.data) {
+          toast({
+            title: `${action} user success`,
+          });
+        }
+      } else if (account_type === 'Customer') {
+        const updatedCustomer = await updateCustomer({
+          customerId: user._id,
+          updatedCustomer: value,
+        });
+
+        if (updatedCustomer.data) {
+          toast({
+            title: `${action} customer success`,
+          });
+        }
       }
     }
 
     // ACTION = CREATE
     if (action === 'Create') {
-      const newUser = await createUser({
-        ...value,
-        account_type: 'user',
-      });
-
-      if (!newUser || newUser.error) {
-        toast({
-          title: `${action} user failed. Please try again.`,
+      if (account_type === 'User') {
+        const newUser = await createUser({
+          ...value,
+          account_type: 'user',
         });
-        navigate('/admin/users');
-      }
 
-      if (newUser.data) {
-        toast({
-          title: `${action} user success!`,
+        if (!newUser || newUser.error) {
+          toast({
+            title: `${action} user failed. Please try again.`,
+          });
+        }
+
+        if (newUser.data) {
+          toast({
+            title: `${action} user success!`,
+          });
+          form.reset();
+        }
+      } else if (account_type === 'Customer') {
+        const newCustomer = await createCustomer({
+          ...value,
+          account_type: 'customer',
         });
-        form.reset();
-        navigate('/admin/users');
+
+        if (!newCustomer || newCustomer.error) {
+          toast({
+            title: `${action} user failed. Please try again.`,
+            variant: 'destructive',
+          });
+        }
+
+        if (newCustomer.data) {
+          toast({
+            title: `${action} customer success!`,
+          });
+          form.reset();
+        }
       }
     }
   };
@@ -225,43 +295,43 @@ const UserForm = ({ user, action = 'Create' }) => {
             />
           )}
 
-          <FormField
-            control={form.control}
-            name='role'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>User Role</FormLabel>
-                <FormControl>
-                  <Select
-                    defaultValue={field.value}
-                    onValueChange={field.onChange}
-                  >
-                    <SelectTrigger className='w-[180px] text-sm'>
-                      <SelectValue placeholder='Select a role' />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>User Role</SelectLabel>
-                        <SelectItem value='admin'>Admin</SelectItem>
-                        <SelectItem value='manager'>Manager</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-              </FormItem>
-            )}
-          />
+          {account_type === 'User' && (
+            <FormField
+              control={form.control}
+              name='role'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>User Role</FormLabel>
+                  <FormControl>
+                    <Select
+                      defaultValue={field.value}
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger className='w-[180px] text-sm'>
+                        <SelectValue placeholder='Select a role' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>User Role</SelectLabel>
+                          <SelectItem value='admin'>Admin</SelectItem>
+                          <SelectItem value='manager'>Manager</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          )}
 
           <div className='flex items-center justify-end'>
             <Button
               type='submit'
               className='whitespace-nowrap bg-main-1 hover:bg-main-2'
-              disabled={isLoadingCreate || isLoadingUpdate}
+              disabled={isLoading}
             >
-              {(isLoadingCreate || isLoadingUpdate) && (
-                <Loader2 className='animate-spin' />
-              )}
-              {action} User
+              {isLoading && <Loader2 className='animate-spin' />}
+              {action} {account_type}
             </Button>
           </div>
         </form>

@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import { useToast } from '../components/ui/use-toast';
-import { useGetAllUsersQuery } from '../app/api/user.api';
+import { useToast } from '../../components/ui/use-toast';
+import { useGetAllUsersQuery } from '../../app/api/users.api';
 
-import getColumns from '../components/ui/columns';
-import DataTable from '../components/ui/data-table';
+import getColumns from '../../components/ui/columns';
+import DataTable from '../../components/ui/data-table';
 
 const AdminUsers = () => {
   const { toast } = useToast();
-  const { data, isLoading, isError, error } = useGetAllUsersQuery();
+  const { data: users, isLoading, isError, error } = useGetAllUsersQuery();
 
   const columns = getColumns({
     keyOne: '_id',
@@ -29,14 +29,10 @@ const AdminUsers = () => {
     if (isError) {
       if (Array.isArray(error).data.error) {
         error.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: 'top-right',
-          })
+          toast({ title: el.message, variant: 'destructive' })
         );
       } else {
-        toast.error(error.data.message, {
-          position: 'top-right',
-        });
+        toast({ title: error.data.message, variant: 'destructive' });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -54,9 +50,9 @@ const AdminUsers = () => {
         </Link>
       </div>
 
-      {data && (
+      {users && (
         <DataTable
-          data={data}
+          data={users}
           columns={columns}
           option={'users'}
           isLoading={isLoading}

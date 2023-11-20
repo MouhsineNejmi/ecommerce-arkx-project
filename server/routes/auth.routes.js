@@ -1,7 +1,4 @@
 const router = require('express').Router();
-const multer = require('multer');
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
 
 const deserializeUser = require('../middlewares/deserialize-user.middleware');
 const requireUser = require('../middlewares/require-user.middleware');
@@ -14,12 +11,7 @@ const {
 } = require('../controllers/auth.controller');
 const { createUserSchema, loginUserSchema } = require('../schemas/user.schema');
 
-router.post(
-  '/register',
-  validate(createUserSchema),
-  upload.single('image'),
-  registerHandler
-);
+router.post('/register', validate(createUserSchema), registerHandler);
 
 router.post('/login', validate(loginUserSchema), loginHandler);
 

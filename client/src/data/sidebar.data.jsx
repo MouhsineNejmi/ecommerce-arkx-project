@@ -6,29 +6,16 @@ const sidebarData = [
     name: 'Dashboard',
     icon: <DashboardIcon />,
     link: '/admin/dashboard',
-    isParent: false,
   },
   {
     name: 'Users',
     icon: <PersonIcon />,
-    isParent: true,
-    sub_menu: [
-      {
-        name: 'Users',
-        icon: <PersonIcon />,
-        link: '/admin/users',
-      },
-      {
-        name: 'Customers',
-        icon: <PersonIcon />,
-        link: '/admin/customers',
-      },
-      {
-        name: 'Sellers',
-        icon: <PersonIcon />,
-        link: '/admin/sellers',
-      },
-    ],
+    link: '/admin/users',
+  },
+  {
+    name: 'Customers',
+    icon: <PersonIcon />,
+    link: '/admin/customers',
   },
   {
     name: 'Products',

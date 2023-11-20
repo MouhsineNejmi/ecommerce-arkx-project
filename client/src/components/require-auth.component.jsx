@@ -3,7 +3,7 @@ import { useCookies } from 'react-cookie';
 import { Navigate, Outlet } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 
-import { useGetMyProfileDataQuery } from '../app/api/user.api';
+import { useGetMyProfileDataQuery } from '../app/api/users.api';
 
 const RequireAuth = ({ allowedRoles }) => {
   const [cookies] = useCookies(['logged_in']);

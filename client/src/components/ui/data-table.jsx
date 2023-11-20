@@ -1,6 +1,8 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import { Skeleton } from '@/components/ui/skeleton';
+import React, { useState } from 'react';
+
+import { Skeleton } from './skeleton';
 import {
   flexRender,
   getCoreRowModel,
@@ -11,7 +13,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import React, { useState } from 'react';
 import DataTablePagination from './data-table-pagination';
 import DataTableToolbar from './data-table-toolbar';
 import {
