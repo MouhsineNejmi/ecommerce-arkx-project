@@ -13,7 +13,10 @@ import AdminCustomers from '../pages/customers/admin-customers.page';
 import AdminAddCustomer from '../pages/customers/admin-add-customer.page';
 import AdminEditCustomer from '../pages/customers/admin-edit-customer.page';
 
-import AdminSellers from '../pages/admin-sellers.page';
+import AdminProducts from '../pages/admin-products.page';
+import AdminProductDetails from '../pages/admin-product-details';
+import AddProduct from '../pages/add-product';
+import EditProduct from '../pages/edit-product';
 
 import AdminOrders from '../pages/orders/admin-orders.page';
 import AdminOrderDetails from '../pages/orders/admin-order-detail.page';
@@ -34,10 +37,15 @@ const DashboardRoutes = () => {
             <Route path='add' element={<AdminAddCustomer />} />
             <Route path='edit/:customerId' element={<AdminEditCustomer />} />
           </Route>
-          <Route path='sellers' element={<AdminSellers />} />
           <Route path='orders'>
             <Route index element={<AdminOrders />} />
             <Route path=':orderId' element={<AdminOrderDetails />} />
+          </Route>
+          <Route path='products'>
+            <Route index element={<AdminProducts />} />
+            <Route path=':id' element={<AdminProductDetails />} />
+            <Route path='add' element={<AddProduct />} />
+            <Route path='edit/:id' element={<EditProduct />} />
           </Route>
         </Route>
       </Route>

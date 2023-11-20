@@ -1,4 +1,4 @@
-const Order = require("../models/order.model");
+const Order = require('../models/order.model');
 
 exports.createOrder = async (req, res) => {
   try {
@@ -26,18 +26,26 @@ exports.createOrder = async (req, res) => {
   }
 };
 
-
 exports.listAllOrders = async (req, res) => {
   try {
     const page = req.query.page || 1;
     const perPage = 10;
     const skip = (page - 1) * perPage;
 
-    const orders = await Order.find().skip(skip).limit(perPage);
+    const orders = await Order.find()
+      .populate('customer_id', {
+        password: 0,
+        creation_date: 0,
+        last_update: 0,
+        last_login: 0,
+        __v: 0,
+      })
+      .skip(skip)
+      .limit(perPage);
 
     return res.status(200).json({
       status: 200,
-      message: "Order created successfully",
+      message: 'Order created successfully',
       data: orders,
     });
   } catch (error) {
@@ -76,7 +84,7 @@ exports.updateOrder = async (req, res) => {
     req.body;
 
   try {
-    const orderId = req.params.id
+    const orderId = req.params.id;
     const updatedOrder = {
       customer_id,
       order_items,
@@ -91,12 +99,12 @@ exports.updateOrder = async (req, res) => {
       return res.status(404).json({
         status: 404,
         message: 'Order not found',
-      })
+      });
     }
 
     return res.status(200).json({
       status: 200,
-      message: "Order status updated successfully",
+      message: 'Order status updated successfully',
     });
   } catch (error) {
     console.error(error);

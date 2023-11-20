@@ -1,6 +1,6 @@
 const { object, string } = require('zod');
 
-exports.createUserSchema = object({
+exports.createCustomerSchema = object({
   body: object({
     first_name: string({ required_error: 'First Name must be a string' }),
     last_name: string({ required_error: 'Last Name must be a string' }),

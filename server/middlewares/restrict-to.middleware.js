@@ -1,6 +1,6 @@
 const AppError = require('../utils/app-error.utils');
 
-const restrictTo =
+exports.restrictTo =
   (...allowedRoles) =>
   (req, res, next) => {
     const user = res.locals.user;
@@ -14,4 +14,14 @@ const restrictTo =
     next();
   };
 
-module.exports = restrictTo;
+exports.restrictToCustomer = (req, res, next) => {
+  const user = res.locals.user;
+
+  if (user.account_type !== 'customer') {
+    return next(
+      new AppError('You are not allowed to perform this action', 403)
+    );
+  }
+
+  next();
+};

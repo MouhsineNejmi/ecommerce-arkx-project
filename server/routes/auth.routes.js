@@ -9,11 +9,13 @@ const {
   loginHandler,
   logoutHandler,
 } = require('../controllers/auth.controller');
-const { createUserSchema, loginUserSchema } = require('../schemas/user.schema');
+
+const { createUserSchema } = require('../schemas/user.schema');
+const { loginSchema } = require('../schemas/auth.schema');
 
 router.post('/register', validate(createUserSchema), registerHandler);
 
-router.post('/login', validate(loginUserSchema), loginHandler);
+router.post('/login', validate(loginSchema), loginHandler);
 
 router.use(deserializeUser, requireUser);
 
