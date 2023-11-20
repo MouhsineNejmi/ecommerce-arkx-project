@@ -1,9 +1,11 @@
-const {
-  uploadImageToS3,
-  getImageLink,
-  deleteImage,
-} = require('../utils/aws.utils');
 const Customer = require('../models/customer.model');
+const {
+  findAllCustomers,
+  findCustomerById,
+  findCustomer,
+  findCustomerByQuery,
+  updateCustomerData,
+} = require('../services/customer.service');
 
 exports.getAllCustomers = async (req, res) => {
   const sort = req.query.sort || 'desc';
@@ -11,14 +13,15 @@ exports.getAllCustomers = async (req, res) => {
   const resultsPerPage = 10;
 
   try {
-    const users = await Customer.find()
-      .sort({ username: sort.toLowerCase() })
-      .skip((page - 1) * resultsPerPage)
-      .limit(page * resultsPerPage);
+    // const customers = await Customer.find()
+    //   .sort({ username: sort.toLowerCase() })
+    //   .skip((page - 1) * resultsPerPage)
+    //   .limit(page * resultsPerPage);
+    const customers = await findAllCustomers({ sort, page, resultsPerPage });
 
     return res.status(200).json({
       status: 200,
-      data: users || [],
+      data: customers,
     });
   } catch (error) {
     return res.status(403).json({
@@ -32,7 +35,8 @@ exports.getCustomerById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const customer = await Customer.findById(id);
+    // const customer = await Customer.findById(id);
+    const customer = await findCustomerById(id);
 
     if (!customer) {
       return res.status(404).json({
@@ -60,12 +64,20 @@ exports.searchCustomer = async (req, res) => {
   const resultsPerPage = 10;
 
   try {
-    const customer = await Customer.findOne({
-      username: { $regex: new RegExp(query, 'i') },
-    })
-      .sort({ username: sort.toLowerCase() })
-      .skip((page - 1) * resultsPerPage)
-      .limit(page * resultsPerPage);
+    // const customer = await Customer.findOne({
+    //   username: { $regex: new RegExp(query, 'i') },
+    // })
+    //   .sort({ username: sort.toLowerCase() })
+    //   .skip((page - 1) * resultsPerPage)
+    //   .limit(page * resultsPerPage);
+    const customer = await findCustomer({
+      query: {
+        username: { $regex: new RegExp(query, 'i') },
+      },
+      sort,
+      page,
+      resultsPerPage,
+    });
 
     return res.status(200).json({
       status: 200,
@@ -79,15 +91,12 @@ exports.searchCustomer = async (req, res) => {
   }
 };
 
-exports.updateCustomerData = async (req, res) => {
+exports.updateCustomer = async (req, res) => {
   const id = req.params.id || req.customer._id;
   const { first_name, last_name, username, email, password } = req.body;
-  const { file } = req;
 
   try {
-    const key = await uploadImageToS3(file);
     const updatedFields = {
-      image_name: key,
       first_name,
       last_name,
       username,
@@ -95,7 +104,10 @@ exports.updateCustomerData = async (req, res) => {
       password,
     };
 
-    const existingCustomer = await Customer.findOne({ username });
+    const existingCustomer = await findCustomerByQuery({
+      username,
+    });
+
     if (existingCustomer) {
       return res.status(400).json({
         status: 400,
@@ -104,11 +116,9 @@ exports.updateCustomerData = async (req, res) => {
       });
     }
 
-    const customer = await Customer.findByIdAndUpdate(id, updatedFields, {
+    const customer = await updateCustomerData(id, updatedFields, {
       new: true,
     });
-
-    customer.profile_image = await getImageLink(key);
 
     if (!customer) {
       return res
@@ -153,9 +163,7 @@ exports.getCustomerProfile = async (req, res) => {
   const id = req.customer._id;
 
   try {
-    const customer = await Customer.findById(id);
-
-    customer.image_name && (await deleteImage(customer.image_name));
+    const customer = await customerProfile(id);
 
     if (!customer) {
       return res

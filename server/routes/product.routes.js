@@ -10,7 +10,7 @@ const {
 
 const deserializeUser = require('../middlewares/deserialize-user.middleware');
 const requireUser = require('../middlewares/require-user.middleware');
-const restrictTo = require('../middlewares/restrict-to.middleware');
+const { restrictTo } = require('../middlewares/restrict-to.middleware');
 
 router.use(deserializeUser, requireUser);
 

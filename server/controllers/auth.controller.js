@@ -1,9 +1,13 @@
 const { genSalt, hash, compare } = require('bcryptjs');
 
-const { uploadImageToS3, getImageLink } = require('../utils/aws.utils');
 const AppError = require('../utils/app-error.utils');
 
-const { createUser, findUser, signToken } = require('../services/user.service');
+const {
+  signToken,
+  createCustomer,
+  createUser,
+} = require('../services/auth.service');
+const { findUser } = require('../services/user.service');
 
 const accessTokenCookieOptions = {
   expires: new Date(Date.now() * 86400 * 1000),
@@ -24,47 +28,26 @@ exports.registerHandler = async (req, res, next) => {
 
     let newUser = {};
 
-    if (req.file)
-      if (account_type === 'user') {
-        newUser = await createUser({
-          ...req.body,
-          account_type,
-          password: hashedPassword,
-          valid_account: false,
-          active: true,
-          creation_date: Date.now(),
-          last_login: Date.now(),
-        });
-      }
-    // else if (accountType === 'customer') {
-    //   newUser = await Customer.create({
-    //     image_name: key,
-    //     first_name: firstName,
-    //     last_name: lastName,
-    //     email,
-    //     username,
-    //     password: hashedPassword,
-    //     account_type,
-    //     creation_date: Date.now(),
-    //     last_login: Date.now(),
-    //     valid_account: false,
-    //     active: true,
-    //   });
-    // } else if (accountType === 'seller') {
-    //   newUser = await Seller.create({
-    //     image_name: key,
-    //     first_name: firstName,
-    //     last_name: lastName,
-    //     email,
-    //     username,
-    //     password: hashedPassword,
-    //     accountType,
-    //     creation_date: Date.now(),
-    //     last_login: Date.now(),
-    //     last_update: null,
-    //     active: true,
-    //   });
-    // }
+    if (account_type === 'user') {
+      newUser = await createUser({
+        ...req.body,
+        password: hashedPassword,
+        valid_account: false,
+        active: true,
+        creation_date: Date.now(),
+        last_login: Date.now(),
+      });
+    } else if (account_type === 'customer') {
+      newUser = await createCustomer({
+        ...req.body,
+        password: hashedPassword,
+        account_type,
+        creation_date: Date.now(),
+        last_login: Date.now(),
+        valid_account: false,
+        active: true,
+      });
+    }
 
     return res.json({
       status: 'success',

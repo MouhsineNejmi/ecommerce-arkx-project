@@ -1,8 +1,3 @@
-const {
-  deleteImage,
-  uploadImageToS3,
-  getImageLink,
-} = require('../utils/aws.utils');
 const User = require('../models/user.model');
 
 exports.getMyProfileData = (req, res, next) => {
@@ -140,8 +135,6 @@ exports.deleteUserAccount = async (req, res) => {
 
   try {
     const user = await User.findByIdAndDelete(id);
-
-    user.image_name && (await deleteImage(user.image_name));
 
     if (!user) {
       return res.status(404).json({ status: 404, message: 'User not found' });
