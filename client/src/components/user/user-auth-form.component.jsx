@@ -81,7 +81,11 @@ const UserAuthForm = ({ className, ...props }) => {
                   <FormItem>
                     <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input placeholder='Enter your username' {...field} />
+                      <Input
+                        className='dark:border-white'
+                        placeholder='Enter your username'
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
