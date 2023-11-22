@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
 
-import { useToast } from '../../components/ui/use-toast';
-import { useGetAllUsersQuery } from '../../app/api/users.api';
+import { useToast } from '../components/ui/use-toast';
+import { useGetAllUsersQuery } from '../app/api/users.api';
 
-import getColumns from '../../components/ui/columns';
-import DataTable from '../../components/ui/data-table';
+import { Button } from '../components/ui/button';
+import getColumns from '../components/ui/columns';
+import DataTable from '../components/ui/data-table';
+import UserDialog from '../components/shared/user-dialog.component';
 
 const AdminUsers = () => {
   const { toast } = useToast();
@@ -42,12 +43,15 @@ const AdminUsers = () => {
     <div>
       <div className='flex items-center justify-between mb-5'>
         <h1>Users</h1>
-        <Link
-          to='/admin/users/add'
-          className='bg-main-1 p-2 rounded-2xl text-white hover:bg-main-2 px-4'
-        >
-          AddUser
-        </Link>
+        <UserDialog
+          trigger={
+            <Button className='bg-main-1 p-2 rounded-2xl text-white hover:bg-main-2 px-4'>
+              Add User
+            </Button>
+          }
+          action='Create'
+          account_type='User'
+        />
       </div>
 
       {users && (

@@ -1,9 +1,8 @@
-import { Button } from '@/components/ui/button';
-import { Loader2, Plus } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
-import SearchProduct from '../components/search-product.component';
-import SelectProduct from '../components/select-product.component';
-import ProductCard from '../components/product-card.component';
+import SearchProduct from '../components/products/search-product.component';
+import SelectProduct from '../components/products/select-product.component';
+import ProductCard from '../components/products/product-card.component';
 
 import { useGetAllProductsQuery } from '../app/api/products.api';
 import { Link } from 'react-router-dom';
@@ -37,15 +36,11 @@ const AdminProducts = () => {
           </div>
 
           {/* Add Product Button */}
-          <Link to='/admin/products/add' className='flex items-center'>
-            <Button
-              disabled={isLoading}
-              className='flex items-center gap-1 pr-5 bg-main-1 text-white hover:bg-main-2'
-            >
-              {loading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
-              <Plus size={18} />
-              <span className='capitalize'>Add New</span>
-            </Button>
+          <Link
+            to='/admin/products/add'
+            className='bg-main-1 p-2 rounded-md text-white hover:bg-main-2 px-4'
+          >
+            Add Products
           </Link>
         </div>
       </div>

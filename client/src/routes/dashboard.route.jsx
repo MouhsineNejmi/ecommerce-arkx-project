@@ -5,13 +5,9 @@ import RequireAuth from '../components/require-auth.component';
 
 import Dashboard from '../pages/dashboard.page';
 
-import AdminUsers from '../pages/users/admin-users.page';
-import AdminAddUser from '../pages/users/admin-add-user.page';
-import AdminEditUser from '../pages/users/admin-edit-user.page';
+import AdminUsers from '../pages/admin-users.page';
 
-import AdminCustomers from '../pages/customers/admin-customers.page';
-import AdminAddCustomer from '../pages/customers/admin-add-customer.page';
-import AdminEditCustomer from '../pages/customers/admin-edit-customer.page';
+import AdminCustomers from '../pages/admin-customers.page';
 
 import AdminProducts from '../pages/admin-products.page';
 import AdminProductDetails from '../pages/admin-product-details';
@@ -20,6 +16,7 @@ import EditProduct from '../pages/edit-product';
 
 import AdminOrders from '../pages/orders/admin-orders.page';
 import AdminOrderDetails from '../pages/orders/admin-order-detail.page';
+import AdminProfile from '../pages/admin-profile.page';
 
 const DashboardRoutes = () => {
   return (
@@ -27,20 +24,15 @@ const DashboardRoutes = () => {
       <Route element={<Layout />}>
         <Route element={<RequireAuth allowedRoles={['admin', 'manager']} />}>
           <Route index path='dashboard' element={<Dashboard />} />
-          <Route path='users'>
-            <Route index element={<AdminUsers />} />
-            <Route path='add' element={<AdminAddUser />} />
-            <Route path='edit/:userId' element={<AdminEditUser />} />
-          </Route>
-          <Route path='customers'>
-            <Route index element={<AdminCustomers />} />
-            <Route path='add' element={<AdminAddCustomer />} />
-            <Route path='edit/:customerId' element={<AdminEditCustomer />} />
-          </Route>
+          <Route path='profile' element={<AdminProfile />} />
+          <Route path='users' element={<AdminUsers />} />
+          <Route path='customers' element={<AdminCustomers />} />
+
           <Route path='orders'>
             <Route index element={<AdminOrders />} />
             <Route path=':orderId' element={<AdminOrderDetails />} />
           </Route>
+
           <Route path='products'>
             <Route index element={<AdminProducts />} />
             <Route path=':id' element={<AdminProductDetails />} />

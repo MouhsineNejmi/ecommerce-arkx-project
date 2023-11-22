@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-import { Link } from 'react-router-dom';
 import {
   customerStatuses,
   labels,
@@ -10,7 +9,6 @@ import { Badge } from './badge';
 import { Checkbox } from './checkbox';
 import DataTableColumnHeader from './data-table-column-header';
 import DataTableRowActions from './data-table-row-actions';
-import { Edit2 } from 'lucide-react';
 
 const getColumns = ({
   keyOne,
@@ -24,7 +22,6 @@ const getColumns = ({
   keyThreeTitle,
   keyFourTitle,
   keyFiveTitle,
-  path,
 }) => {
   return [
     {
@@ -60,19 +57,11 @@ const getColumns = ({
       cell: ({ row }) => {
         const id = row.original._id;
 
-        // if (option === 'orders') {
         return (
-          <Link to={`${id}`} className='text-sm cursor-pointer underline'>
+          <Badge className='font-medium' variant={'outline'}>
             {row.getValue(keyOne)}
-          </Link>
+          </Badge>
         );
-        // }
-
-        // return (
-        //   <Badge className='font-medium' variant={'outline'}>
-        //     {row.getValue(keyOne)}
-        //   </Badge>
-        // );
       },
       enableSorting: false,
       enableHiding: false,
@@ -303,20 +292,13 @@ const getColumns = ({
       enableSorting: false,
       enableHiding: false,
     },
-
     {
       id: 'actions',
       cell: ({ row }) => {
-        const id = row.original._id;
+        if (option === 'users' || option === 'customers') {
+          const id = row.original._id;
 
-        if (option === 'users') {
-          return <DataTableRowActions row={row} />;
-        } else if (option === 'customers') {
-          return (
-            <Link to={`edit/${id}`}>
-              <Edit2 size={16} className='text-main-1 cursor-pointer' />
-            </Link>
-          );
+          return <DataTableRowActions option={option} row={row} />;
         }
       },
     },

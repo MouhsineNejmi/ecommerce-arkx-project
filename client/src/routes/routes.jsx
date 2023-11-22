@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AdminLogin from '@/pages/admin-login.page';
 import DashboardRoutes from './dashboard.route';
 import Unauthorized from '../pages/unauthorized.page';
+import AccountProfile from '../pages/account-profile.page';
 
 const ConfigRoutes = () => {
   return (
@@ -10,6 +11,9 @@ const ConfigRoutes = () => {
         <Route path='/admin/login' element={<AdminLogin />} />
         <Route path='/admin/*' element={<DashboardRoutes />} />
         <Route path='/unauthorized' element={<Unauthorized />} />
+        <Route path='/profile'>
+          <Route index element={<AccountProfile />} />
+        </Route>
       </Routes>
     </Router>
   );

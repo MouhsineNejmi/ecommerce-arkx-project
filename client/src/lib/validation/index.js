@@ -28,7 +28,6 @@ export const UserProfileValidation = z.object({
   username: z
     .string()
     .min(2, { message: 'Name must be at least 2 characters.' }),
-  email: z.string().email(),
   role: z.string().min(1, { message: 'Role is required' }),
 });
 
@@ -50,5 +49,4 @@ export const CustomerProfileValidation = z.object({
   username: z
     .string()
     .min(2, { message: 'Name must be at least 2 characters.' }),
-  email: z.string().email(),
 });

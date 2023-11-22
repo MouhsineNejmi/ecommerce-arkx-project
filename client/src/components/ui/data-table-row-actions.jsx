@@ -1,54 +1,45 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { Edit2, Trash2 } from 'lucide-react';
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from './dropdown-menu';
 import { AlertDialog, AlertDialogTrigger } from './alert-dialog';
 
 import DeleteUserDialog from '../user/delete-user-dialog.component';
+import UserDialog from '../shared/user-dialog.component';
 
-function DataTableRowActions({ row }) {
-  const navigate = useNavigate();
+import { useGetUserByIdQuery } from '../../app/api/users.api';
+import { useGetCustomerByIdQuery } from '../../app/api/customers.api';
+
+function DataTableRowActions({ row, option }) {
   const userId = row.original._id;
+  const { data: user } = useGetUserByIdQuery(userId);
+  const { data: customer } = useGetCustomerByIdQuery(userId);
 
-  return (
-    <AlertDialog>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <MoreHorizontal size={18} className='cursor-pointer' />
-        </DropdownMenuTrigger>
+  return option === 'users' ? (
+    <div className='flex gap-2 items-center'>
+      <UserDialog
+        trigger={<Edit2 size={18} className='cursor-pointer mr-2' />}
+        user={user}
+        account_type='User'
+        action='Update'
+      />
 
-        <DropdownMenuContent className='w-56 bg-background p-2 z-10'>
-          <DropdownMenuItem
-            className='w-full'
-            onClick={() => navigate(`/admin/users/edit/${userId}`)}
-          >
-            <Pencil className='mr-2 h-4 w-4' />
-            <span>Edit</span>
-          </DropdownMenuItem>
+      <AlertDialog>
+        <AlertDialogTrigger className='w-full flex'>
+          <Trash2 size={16} className='mr-2 color-red-400' />
+        </AlertDialogTrigger>
 
-          <DropdownMenuSeparator />
-
-          <DropdownMenuItem className='w-full text-red-500 focus:bg-red-100 focus:text-red-500'>
-            <AlertDialogTrigger className='w-full flex'>
-              <Trash2 className='mr-2 h-4 w-4' />
-              <span>Delete</span>
-            </AlertDialogTrigger>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-
-      {/* Dialogs */}
-      <DeleteUserDialog userId={userId} />
-    </AlertDialog>
+        <DeleteUserDialog userId={userId} />
+      </AlertDialog>
+    </div>
+  ) : (
+    <UserDialog
+      trigger={<Edit2 size={14} className='cursor-pointer mr-2' />}
+      user={customer}
+      account_type='Customer'
+      action='Update'
+    />
   );
 }
 
