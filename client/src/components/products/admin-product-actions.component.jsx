@@ -3,7 +3,7 @@ import { Pencil, Trash2 } from 'lucide-react';
 import React from 'react';
 import { useToast } from '@/components/ui/use-toast';
 
-import { useDeleteProductMutation } from '../app/api/products.api';
+import { useDeleteProductMutation } from '../../app/api/products.api';
 import { Link } from 'react-router-dom';
 
 const AdminProductAction = ({ productId }) => {

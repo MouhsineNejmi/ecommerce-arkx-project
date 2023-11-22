@@ -64,7 +64,7 @@ const UserDropDownMenu = () => {
           <DropdownMenuLabel>My account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate('/admin/profile')}>
               <User className='mr-2 h-4 w-4' />
               <span>Profile</span>
               <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>

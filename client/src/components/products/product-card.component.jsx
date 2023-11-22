@@ -1,12 +1,10 @@
 import PropTypes from 'prop-types';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
-import { calculateDiscountedPrice } from '../helpers/calculateDiscountedPrice';
-import { sliceText } from '../helpers/sliceText';
+import { calculateDiscountedPrice } from '../../helpers/calculateDiscountedPrice';
+import { sliceText } from '../../helpers/sliceText';
 
 const ProductCard = ({ product }) => {
-  console.log(product);
-
   return (
     <Link to={`/admin/products/${product._id}`}>
       <div className='flex items-center justify-between'>

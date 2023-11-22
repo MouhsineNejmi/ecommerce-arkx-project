@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-const CardItem = ({ name, icon, amount, growth }) => {
+const StatsItem = ({ name, icon, amount, growth }) => {
   return (
     <Card className='shadow-sm border-slate-300'>
       <CardHeader className='flex flex-row items-center justify-between space-y-0 pt-4 pb-2'>
@@ -16,4 +16,4 @@ const CardItem = ({ name, icon, amount, growth }) => {
   );
 };
 
-export default CardItem;
+export default StatsItem;

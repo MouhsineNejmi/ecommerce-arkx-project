@@ -200,11 +200,11 @@ const UserForm = ({ user, action = 'Create', account_type = 'User' }) => {
   };
 
   return (
-    <div>
+    <div className='w-full flex justify-center'>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
-          className='flex flex-col gap-8 w-full  max-w-5xl'
+          className='flex flex-col gap-8 w-full max-w-5xl'
         >
           <FormField
             control={form.control}
@@ -268,6 +268,7 @@ const UserForm = ({ user, action = 'Create', account_type = 'User' }) => {
           <FormField
             control={form.control}
             name='email'
+            disabled={action === 'edit' ? true : false}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>

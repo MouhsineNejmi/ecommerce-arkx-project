@@ -40,7 +40,7 @@ const AdminOrders = () => {
   return (
     <div>
       <div className='flex items-center justify-between mb-5'>
-        <h1 className='text-lg font-bold'>Users</h1>
+        <h1 className='text-lg font-bold'>Orders</h1>
       </div>
 
       {data && (
