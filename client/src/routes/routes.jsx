@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AdminLogin from '@/pages/admin-login.page';
 import DashboardRoutes from './dashboard.route';
 import Unauthorized from '../pages/unauthorized.page';
-import AccountProfile from '../pages/account-profile.page';
+import AccountProfile from '../pages/profile/customer-profile.page';
 
 const ConfigRoutes = () => {
   return (

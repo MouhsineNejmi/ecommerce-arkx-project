@@ -10,9 +10,9 @@ import {
 } from '@/components/ui/select';
 import Parser from 'html-react-parser';
 
-import { useGetProductByIdQuery } from '../app/api/products.api';
+import { useGetProductByIdQuery } from '../../app/api/products.api';
 import { Loader2, Star } from 'lucide-react';
-import AdminProductAction from '../components/products/admin-product-actions.component';
+import AdminProductAction from '../../components/products/admin-product-actions.component';
 
 const AdminProductDetails = () => {
   const { id } = useParams();

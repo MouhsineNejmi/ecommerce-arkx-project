@@ -1,4 +1,4 @@
-import { useState } from 'react';
+/* eslint-disable react/prop-types */
 import { Link, NavLink } from 'react-router-dom';
 
 import sidebarData from '../data/sidebar.data';
@@ -7,14 +7,12 @@ import AfricomLogo from '../components/icons/africom-logo.component';
 
 import { ChevronRight } from 'lucide-react';
 
-const Sidebar = () => {
-  const [expanded, setExpanded] = useState(true);
-
-  const toggleExpand = () => setExpanded((prev) => !prev);
-
+const Sidebar = ({ expanded, toggleExpand }) => {
   return (
-    <aside className={`h-screen ${expanded ? 'w-2/12' : 'w-20'}`}>
-      <nav className='h-full flex flex-col border-r border-slate-300 shadow-sm'>
+    <aside
+      className={`fixed left-0 bg-white h-screen ${expanded ? 'w-52' : 'w-20'}`}
+    >
+      <nav className='h-full w-full flex flex-col border-r border-slate-300 shadow-sm'>
         <div
           className={`flex items-center h-[80px] ${
             !expanded ? 'w-full justify-center' : ''

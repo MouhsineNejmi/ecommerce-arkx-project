@@ -1,8 +1,8 @@
 import { Loader2 } from 'lucide-react';
-import { useGetMyProfileDataQuery } from '../app/api/users.api';
-import UserForm from '../components/shared/user-form.component';
+import { useGetMyProfileDataQuery } from '../../app/api/users.api';
+import UserForm from '../../components/shared/user-form.component';
 
-const AdminProfile = () => {
+const UserProfile = () => {
   const { data: user, isLoading } = useGetMyProfileDataQuery();
 
   return isLoading ? (
@@ -17,4 +17,4 @@ const AdminProfile = () => {
   );
 };
 
-export default AdminProfile;
+export default UserProfile;
