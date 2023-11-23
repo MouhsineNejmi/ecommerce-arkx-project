@@ -70,17 +70,19 @@ const UserPreview = ({ id, account_type }) => {
 
             <div className='flex items-center gap-2'>
               <p className='text-sm underline font-semibold'>Account Status:</p>
-              <Badge
-                variant='outline'
-                className={`font-medium ${account_status.badgeColor}`}
-              >
-                {account_status.icon && (
-                  <account_status.icon
-                    className={`mr-2 h-4 w-4 ${account_status.color}`}
-                  />
-                )}
-                {account_status.label}
-              </Badge>
+              {account_status && (
+                <Badge
+                  variant='outline'
+                  className={`font-medium ${account_status?.badgeColor}`}
+                >
+                  {account_status?.icon && (
+                    <account_status.icon
+                      className={`mr-2 h-4 w-4 ${account_status?.color}`}
+                    />
+                  )}
+                  {account_status.label}
+                </Badge>
+              )}
             </div>
 
             <div className='flex items-center gap-2'>
