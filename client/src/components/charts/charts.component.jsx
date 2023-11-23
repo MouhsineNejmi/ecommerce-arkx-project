@@ -15,11 +15,11 @@ import CalendarDateRangePicker from '../date-range-picker.component';
 
 const Charts = () => {
   return (
-    <div className='w-1/2 h-[400px] bg-secondary p-4 pb-0 rounded-xl'>
+    <div className='h-[400px] bg-secondary p-4 pb-0 rounded-xl'>
       <div className='pb-6 flex items-center justify-between text-sm'>
         <h3 className='font-semibold'>Earning Analytics</h3>
         <div className='flex items-center gap-5'>
-          <CustomLegend />
+          <CustomLegend className={'bg-main-1'} legend={'Earning'} />
           <CalendarDateRangePicker />
         </div>
       </div>

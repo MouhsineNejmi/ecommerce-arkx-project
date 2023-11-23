@@ -5,6 +5,8 @@ import {
   orderStatuses,
   userLabels,
 } from '../../data/table-data';
+import SidebarDialog from '../shared/sidebar-dialog.componenet';
+import UserPreview from '../user/user-preview.component';
 import { Badge } from './badge';
 import { Checkbox } from './checkbox';
 import DataTableColumnHeader from './data-table-column-header';
@@ -55,7 +57,15 @@ const getColumns = ({
         />
       ),
       cell: ({ row }) => {
-        const id = row.original._id;
+        const { _id: id, account_type } = row.original;
+
+        if (option === 'users' || option === 'customers') {
+          return (
+            <SidebarDialog id={id}>
+              <UserPreview id={id} account_type={account_type} />
+            </SidebarDialog>
+          );
+        }
 
         return (
           <Badge className='font-medium' variant={'outline'}>
@@ -175,9 +185,6 @@ const getColumns = ({
                     {label.label}
                   </Badge>
                 )}
-                {/* <span className="max-w-[500px] truncate font-medium">
-                  {row.getValue(keyThree)}
-                </span> */}
               </div>
             );
           },
@@ -296,13 +303,11 @@ const getColumns = ({
       id: 'actions',
       cell: ({ row }) => {
         if (option === 'users' || option === 'customers') {
-          const id = row.original._id;
-
           return <DataTableRowActions option={option} row={row} />;
         }
       },
     },
   ];
 };
-// <DeleteUser id={row.getValue(keyFive)} row={row} />
+
 export default getColumns;

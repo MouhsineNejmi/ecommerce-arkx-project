@@ -1,11 +1,11 @@
+import { Link } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 
-import SearchProduct from '../components/products/search-product.component';
-import SelectProduct from '../components/products/select-product.component';
-import ProductCard from '../components/products/product-card.component';
+import SearchProduct from '../../components/products/search-product.component';
+import SelectProduct from '../../components/products/select-product.component';
+import ProductCard from '../../components/products/product-card.component';
 
-import { useGetAllProductsQuery } from '../app/api/products.api';
-import { Link } from 'react-router-dom';
+import { useGetAllProductsQuery } from '../../app/api/products.api';
 
 const AdminProducts = () => {
   const {

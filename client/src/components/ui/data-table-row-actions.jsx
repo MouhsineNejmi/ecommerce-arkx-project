@@ -7,14 +7,22 @@ import { AlertDialog, AlertDialogTrigger } from './alert-dialog';
 
 import DeleteUserDialog from '../user/delete-user-dialog.component';
 import UserDialog from '../shared/user-dialog.component';
+import { isAccountTypeUser } from '../../helpers/isAccountTypeUser';
 
 import { useGetUserByIdQuery } from '../../app/api/users.api';
 import { useGetCustomerByIdQuery } from '../../app/api/customers.api';
 
 function DataTableRowActions({ row, option }) {
-  const userId = row.original._id;
-  const { data: user } = useGetUserByIdQuery(userId);
-  const { data: customer } = useGetCustomerByIdQuery(userId);
+  const { _id: id, account_type } = row.original;
+
+  const isUser = isAccountTypeUser(account_type);
+  const userId = isUser ? id : null;
+  const customerId = !isUser ? id : null;
+
+  const { data: user } = useGetUserByIdQuery(userId, { skip: !isUser });
+  const { data: customer } = useGetCustomerByIdQuery(customerId, {
+    skip: isUser,
+  });
 
   return option === 'users' ? (
     <div className='flex gap-2 items-center'>
@@ -30,7 +38,7 @@ function DataTableRowActions({ row, option }) {
           <Trash2 size={16} className='mr-2 color-red-400' />
         </AlertDialogTrigger>
 
-        <DeleteUserDialog userId={userId} />
+        <DeleteUserDialog userId={id} />
       </AlertDialog>
     </div>
   ) : (

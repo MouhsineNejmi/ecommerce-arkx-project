@@ -3,10 +3,11 @@ import { useEffect } from 'react';
 import { useToast } from '../components/ui/use-toast';
 import { useGetAllCustomersQuery } from '../app/api/customers.api';
 
+import { Button } from '../components/ui/button';
 import getColumns from '../components/ui/columns';
 import DataTable from '../components/ui/data-table';
+
 import UserDialog from '../components/shared/user-dialog.component';
-import { Button } from '../components/ui/button';
 
 const AdminCustomers = () => {
   const { toast } = useToast();

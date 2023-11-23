@@ -9,14 +9,15 @@ import AdminUsers from '../pages/admin-users.page';
 
 import AdminCustomers from '../pages/admin-customers.page';
 
-import AdminProducts from '../pages/admin-products.page';
-import AdminProductDetails from '../pages/admin-product-details';
-import AddProduct from '../pages/add-product';
-import EditProduct from '../pages/edit-product';
+import AdminProducts from '../pages/products/admin-products.page';
+import AdminProductDetails from '../pages/products/admin-product-details';
+import AdminAddProduct from '../pages/products/admin-add-product';
+import AdminEditProduct from '../pages/products/admin-edit-product';
 
 import AdminOrders from '../pages/orders/admin-orders.page';
 import AdminOrderDetails from '../pages/orders/admin-order-detail.page';
-import AdminProfile from '../pages/admin-profile.page';
+
+import UserProfile from '../pages/profile/user-profile.page';
 
 const DashboardRoutes = () => {
   return (
@@ -24,7 +25,7 @@ const DashboardRoutes = () => {
       <Route element={<Layout />}>
         <Route element={<RequireAuth allowedRoles={['admin', 'manager']} />}>
           <Route index path='dashboard' element={<Dashboard />} />
-          <Route path='profile' element={<AdminProfile />} />
+          <Route path='profile' element={<UserProfile />} />
           <Route path='users' element={<AdminUsers />} />
           <Route path='customers' element={<AdminCustomers />} />
 
@@ -36,8 +37,8 @@ const DashboardRoutes = () => {
           <Route path='products'>
             <Route index element={<AdminProducts />} />
             <Route path=':id' element={<AdminProductDetails />} />
-            <Route path='add' element={<AddProduct />} />
-            <Route path='edit/:id' element={<EditProduct />} />
+            <Route path='add' element={<AdminAddProduct />} />
+            <Route path='edit/:id' element={<AdminEditProduct />} />
           </Route>
         </Route>
       </Route>

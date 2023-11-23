@@ -44,16 +44,6 @@ const UserAuthForm = ({ className, ...props }) => {
       });
       navigate('/admin/dashboard');
     }
-
-    if (isError) {
-      if (Array.isArray(error).data.error) {
-        error.data.error.forEach((el) =>
-          toast({ title: el.message, variant: 'destructive' })
-        );
-      } else {
-        toast({ title: error.data.message, variant: 'destructive' });
-      }
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
 
@@ -73,6 +63,11 @@ const UserAuthForm = ({ className, ...props }) => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className='grid gap-4'>
+            {(isError || error) && (
+              <h2 className='text-center text-red-500'>
+                {error?.data.message}
+              </h2>
+            )}
             <div className='grid gap-2'>
               <FormField
                 control={form.control}

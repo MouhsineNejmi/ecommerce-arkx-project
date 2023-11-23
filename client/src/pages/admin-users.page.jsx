@@ -28,13 +28,10 @@ const AdminUsers = () => {
 
   useEffect(() => {
     if (isError) {
-      if (Array.isArray(error).data.error) {
-        error.data.error.forEach((el) =>
-          toast({ title: el.message, variant: 'destructive' })
-        );
-      } else {
-        toast({ title: error.data.message, variant: 'destructive' });
-      }
+      toast({
+        title: error?.data.message || 'Something went wrong please try again!',
+        variant: 'destructive',
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);

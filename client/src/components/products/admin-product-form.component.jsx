@@ -1,4 +1,17 @@
 // import React from 'react';
+import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  // Controller,
+  // FormProvider,
+  // SubmitHandler,
+  useForm,
+} from 'react-hook-form';
+import { Loader2 } from 'lucide-react';
+
+import TipTap from './tip-tap.component';
+import { useGetAllSubcategoryQuery } from '../../app/api/subcategories.api';
+
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -18,18 +31,6 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-
-import * as z from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  // Controller,
-  // FormProvider,
-  // SubmitHandler,
-  useForm,
-} from 'react-hook-form';
-import { useGetAllSubcategoryQuery } from '../../app/api/subcategories.api';
-import { Loader2 } from 'lucide-react';
-import TipTap from '../tip-tap.component';
 
 const productSchema = z.object({
   product_name: z
