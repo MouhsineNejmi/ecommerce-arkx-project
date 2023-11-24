@@ -1,13 +1,13 @@
 /* eslint-disable react/prop-types */
 import { Link, NavLink } from 'react-router-dom';
 
-import sidebarData from '../data/sidebar.data';
+import sidebarData from '../../data/sidebar.data';
 
-import AfricomLogo from '../components/icons/africom-logo.component';
+import AfricomLogo from '../../components/icons/africom-logo.component';
 
 import { ChevronRight } from 'lucide-react';
 
-const Sidebar = ({ expanded, toggleExpand }) => {
+const DashboardSidebar = ({ expanded, toggleExpand }) => {
   return (
     <aside
       className={`fixed left-0 bg-white h-screen ${expanded ? 'w-52' : 'w-20'}`}
@@ -75,4 +75,4 @@ const Sidebar = ({ expanded, toggleExpand }) => {
   );
 };
 
-export default Sidebar;
+export default DashboardSidebar;

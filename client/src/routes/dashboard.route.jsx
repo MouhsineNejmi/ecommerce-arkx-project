@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 
-import Layout from '../layout/layout.component';
+import DashboardLayout from '../layout/dashboard/dashboard-layout.component';
 import RequireAuth from '../components/require-auth.component';
 
 import Dashboard from '../pages/dashboard.page';
@@ -22,7 +22,7 @@ import UserProfile from '../pages/profile/user-profile.page';
 const DashboardRoutes = () => {
   return (
     <Routes>
-      <Route element={<Layout />}>
+      <Route element={<DashboardLayout />}>
         <Route element={<RequireAuth allowedRoles={['admin', 'manager']} />}>
           <Route index path='dashboard' element={<Dashboard />} />
           <Route path='profile' element={<UserProfile />} />
