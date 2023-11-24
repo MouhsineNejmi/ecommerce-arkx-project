@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import ModeToggle from '../components/ui/mode-toggle.component';
-import UserDropDownMenu from '../components/user/user-dropdown-menu.component';
+import ModeToggle from '../../components/ui/mode-toggle.component';
+import UserDropDownMenu from '../../components/user/user-dropdown-menu.component';
 
-const Navbar = () => {
+const DashboardNavbar = () => {
   const [preview, setPreview] = useState(false);
   const togglePage = () => setPreview((prev) => !prev);
 
@@ -51,4 +51,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default DashboardNavbar;

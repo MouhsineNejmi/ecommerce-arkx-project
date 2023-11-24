@@ -1,19 +1,18 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Toaster } from '../components/ui/toaster';
-import Sidebar from './sidebar.component';
-import Navbar from './navbar.component';
+import { Toaster } from '../../components/ui/toaster';
+import DashboardSidebar from './dashboard-sidebar.component';
+import DashboardNavbar from './dashboard-navbar.component';
 
-const Layout = () => {
+const DashboardLayout = () => {
   const [expanded, setExpanded] = useState(true);
-
   const toggleExpand = () => setExpanded((prev) => !prev);
 
   return (
     <div className='flex'>
-      <Sidebar expanded={expanded} toggleExpand={toggleExpand} />
+      <DashboardSidebar expanded={expanded} toggleExpand={toggleExpand} />
       <main className={`${expanded ? 'ml-52' : 'ml-20'} w-full`}>
-        <Navbar />
+        <DashboardNavbar />
         <div className='p-4'>
           <Outlet />
         </div>
@@ -23,4 +22,4 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+export default DashboardLayout;
