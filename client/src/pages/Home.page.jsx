@@ -1,4 +1,5 @@
-import Carousel from '../components/carousel.component';
+import Slider from '../components/slider.component';
+import JustIn from '../components/just-in.component';
 
 const slides = [
   {
@@ -22,7 +23,8 @@ const slides = [
 const Home = () => {
   return (
     <>
-      <Carousel slides={slides} />
+      <Slider slides={slides} />
+      <JustIn />
     </>
   );
 };

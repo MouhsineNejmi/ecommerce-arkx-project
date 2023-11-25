@@ -110,4 +110,8 @@
   .nav-link {
     @apply font-semibold text-black underline transition-all duration-300;
   }
+
+  .customer-container {
+    @apply px-20;
+  }
 }

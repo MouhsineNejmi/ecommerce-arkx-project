@@ -8,7 +8,7 @@ const StoreLayout = () => {
     <>
       <DiscountBar />
       <StoreNavbar />
-      <main className='px-20'>
+      <main>
         <Outlet />
       </main>
     </>

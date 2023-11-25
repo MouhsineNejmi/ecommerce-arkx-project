@@ -20,12 +20,12 @@ const navbarItems = [
 
 const StoreNavbar = () => {
   return (
-    <nav className='flex justify-between bg-gray-800 py-8 px-20'>
+    <nav className='flex justify-between items-center bg-gray-800 h-20 px-20'>
       <div className='flex items-center'>
         <AfricomLogo expanded={true} />
       </div>
 
-      <ul className='flex items-center space-x-4 ml-8'>
+      <ul className='flex items-center space-x-4'>
         {navbarItems.map(({ link, title }) => (
           <li key={title}>
             <NavLink
