@@ -1,7 +1,10 @@
-/* eslint-disable react/prop-types */
-import ProductCard from './test/product-card.component';
+import JustIn from './just-in.component';
+import ShopByCategories from './shop-by-categories.component';
 
-import { ScrollArea, ScrollBar } from './ui/scroll-area';
+// import Slider from '../../components/slider.component';
+import Collections from './collections.component';
+import BestSelling from './best-selling.component';
+import Hero from './hero.component';
 
 const products = [
   {
@@ -40,24 +43,31 @@ const products = [
     name: 'Chilliwack jacket Bomber HUMANATURE',
     price: '$349.99',
   },
+  {
+    image:
+      'https://images.unsplash.com/photo-1540932239986-30128078f3c5?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    name: 'Chilliwack jacket Bomber HUMANATURE',
+    price: '$349.99',
+  },
+  {
+    image:
+      'https://images.unsplash.com/photo-1540932239986-30128078f3c5?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    name: 'Chilliwack jacket Bomber HUMANATURE',
+    price: '$349.99',
+  },
 ];
 
-const JustIn = () => {
+const Home = () => {
   return (
-    <div className='my-10 pl-20'>
-      <h1 className='text-2xl font-semibold mb-4'>Just In</h1>
-      <div className='relative'>
-        <ScrollArea>
-          <div className='flex gap-4'>
-            {products.map((product, index) => (
-              <ProductCard key={index} product={product} showDetails={false} />
-            ))}
-            <ScrollBar orientation='horizontal' />
-          </div>
-        </ScrollArea>
-      </div>
-    </div>
+    <>
+      {/* <Slider /> */}
+      <Hero />
+      <JustIn products={products} />
+      <ShopByCategories />
+      <Collections />
+      <BestSelling products={products} />
+    </>
   );
 };
 
-export default JustIn;
+export default Home;

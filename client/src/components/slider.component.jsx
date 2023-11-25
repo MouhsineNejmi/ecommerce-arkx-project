@@ -1,8 +1,27 @@
 /* eslint-disable react/prop-types */
-import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
+import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 
-const Slider = ({ slides }) => {
+const slides = [
+  {
+    title: 'Slide 1',
+    description: 'Description for Slide 1',
+    image:
+      'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  },
+  {
+    title: 'Slide 2',
+    description: 'Description for Slide 2',
+    image: 'https://placekitten.com/800/401',
+  },
+  {
+    title: 'Slide 3',
+    description: 'Description for Slide 3',
+    image: 'https://placekitten.com/800/402',
+  },
+];
+
+const Slider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const goToPrevSlide = () => {
@@ -18,7 +37,7 @@ const Slider = ({ slides }) => {
   };
 
   return (
-    <div className='customer-container'>
+    <div className='custom-container'>
       <div className='relative w-full overflow-hidden'>
         {/* Carousel Slides */}
         <div
@@ -28,7 +47,7 @@ const Slider = ({ slides }) => {
           {slides.map((slide, index) => (
             <img
               key={index}
-              className='w-full h-[450px] bg-cover bg-center flex-shrink-0 relative'
+              className='w-full h-[600px] bg-cover bg-center flex-shrink-0 relative'
               style={{ backgroundImage: `url(${slide.image})` }}
             />
           ))}

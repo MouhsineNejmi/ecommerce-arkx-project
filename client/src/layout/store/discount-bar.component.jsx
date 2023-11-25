@@ -9,14 +9,14 @@ const DiscountBar = () => {
     <div
       className={`${
         isHidden ? 'hidden' : ''
-      } relative h-10 bg-slate-200 flex justify-center items-center overflow-hidden`}
+      } relative h-10 bg-violet-500 text-white flex justify-center items-center overflow-hidden`}
     >
       <div className='flex items-center gap-2 font-semibold'>
         <TicketIcon className='w-6 h-6' />
         <h3 className='text-sm'>30% off storewide - Limited Time!</h3>
       </div>
 
-      <Link to='/shop' className='ml-4 underline text-main-2 text-sm'>
+      <Link to='/shop' className='ml-4 underline text-sm font-bold'>
         Shop now &rarr;
       </Link>
 

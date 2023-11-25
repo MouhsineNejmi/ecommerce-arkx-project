@@ -108,10 +108,14 @@
 
 @layer components {
   .nav-link {
-    @apply font-semibold text-black underline transition-all duration-300;
+    @apply font-semibold text-violet-700 underline transition-all duration-300;
   }
 
-  .customer-container {
+  .custom-container {
     @apply px-20;
+  }
+
+  .text-shadow {
+    text-shadow: 1px 1px 2px #fff;
   }
 }
