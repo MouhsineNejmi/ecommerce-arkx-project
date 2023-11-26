@@ -45,7 +45,7 @@ const SellersSwitcher = () => {
           role='combobox'
           aria-expanded={open}
           aria-label='Select a seller'
-          className='justify-between mb-4 p-2 hover:bg-main-1'
+          className='justify-between mb-4 p-2 hover:bg-gold'
         >
           <Avatar className='mr-3 h-5 w-5'>
             <AvatarImage

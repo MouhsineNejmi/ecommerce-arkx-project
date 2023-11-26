@@ -6,6 +6,8 @@ import Unauthorized from '../pages/unauthorized.page';
 import DashboardRoutes from './dashboard.route';
 import StoreRoutes from './store.route';
 
+import AuthPage from '../pages/auth';
+
 const ConfigRoutes = () => {
   return (
     <Router>
@@ -14,6 +16,7 @@ const ConfigRoutes = () => {
         <Route path='unauthorized' element={<Unauthorized />} />
         <Route path='/admin/*' element={<DashboardRoutes />} />
         <Route path='/*' element={<StoreRoutes />} />
+        <Route path='auth' element={<AuthPage />} />
       </Routes>
     </Router>
   );

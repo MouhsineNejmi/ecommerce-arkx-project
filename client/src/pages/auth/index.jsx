@@ -1,20 +1,37 @@
-import UserAuthForm from '../components/user/user-auth-form.component';
+import { useState } from 'react';
 
-const AdminLogin = () => {
+import SwitcherButton from './switcher-button.component';
+import CustomerLogin from './customer-login.component';
+
+const AuthPage = () => {
+  const [isLogin, setIsLogin] = useState(true);
+
+  const toggleForm = () => {
+    setIsLogin((prevIsLogin) => !prevIsLogin);
+  };
+
   return (
     <div className='container relative min-h-screen flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0'>
       <div className='lg:p-8'>
         <div className='mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]'>
-          <div className='flex flex-col space-y-2 text-center'>
-            <h1 className='text-2xl font-semibold tracking-tight'>
-              Welcome to the dashboard <br />
-              Login to continue
-            </h1>
-            <p className='text-sm text-muted-foreground'>
-              {"Let's"} get back to your business
-            </p>
+          <h1 className='text-2xl text-center font-semibold tracking-tight'>
+            Welcome to the Design Elegance <br />
+          </h1>
+
+          <SwitcherButton isLogin={isLogin} onToggle={toggleForm} />
+
+          {isLogin ? <CustomerLogin /> : <h1>Register</h1>}
+
+          <div className='text-center'>
+            <button
+              onClick={toggleForm}
+              className='text-gold underline hover:text-dark-gold focus:outline-none'
+            >
+              {isLogin
+                ? "Don't have an account? Register here"
+                : 'Already have an account? Login here'}
+            </button>
           </div>
-          <UserAuthForm />
         </div>
       </div>
       <div className='relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex'>
@@ -38,4 +55,4 @@ const AdminLogin = () => {
   );
 };
 
-export default AdminLogin;
+export default AuthPage;

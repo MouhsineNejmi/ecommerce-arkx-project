@@ -68,7 +68,7 @@ const ChartBar = () => {
       <div className='pb-6 flex items-center justify-between text-sm'>
         <h3 className='font-semibold'>Registered Customers Analytics</h3>
         <div className='flex items-center gap-5'>
-          <CustomLegend className={'bg-main-1'} legend={'Customers'} />
+          <CustomLegend className={'bg-gold'} legend={'Customers'} />
         </div>
       </div>
       <ResponsiveContainer width='100%' height={350}>
@@ -91,7 +91,7 @@ const ChartBar = () => {
             content={<CustomTooltip />}
             cursor={{ strokeDasharray: 5 }}
           />
-          <Bar dataKey='total' fill='#2965ff' radius={[4, 4, 0, 0]} />
+          <Bar dataKey='total' fill='#E5B906' radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

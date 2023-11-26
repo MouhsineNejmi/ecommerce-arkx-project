@@ -42,7 +42,7 @@ const AdminUsers = () => {
         <h1>Users</h1>
         <UserDialog
           trigger={
-            <Button className='bg-main-1 p-2 rounded-2xl text-white hover:bg-main-2 px-4'>
+            <Button className='bg-gold p-2 rounded-2xl text-white hover:bg-light-gold px-4'>
               Add User
             </Button>
           }

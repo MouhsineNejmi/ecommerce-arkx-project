@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import ProductCard from '../../components/store-products/product-card.component';
+import ProductCard from '../../components/products/product-card.component';
 
 import { ScrollArea, ScrollBar } from '../../components/ui/scroll-area';
 

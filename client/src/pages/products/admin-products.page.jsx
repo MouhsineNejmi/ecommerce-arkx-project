@@ -38,7 +38,7 @@ const AdminProducts = () => {
           {/* Add Product Button */}
           <Link
             to='/admin/products/add'
-            className='bg-main-1 p-2 rounded-md text-white hover:bg-main-2 px-4'
+            className='bg-gold p-2 rounded-md text-white hover:bg-light-gold px-4'
           >
             Add Products
           </Link>
@@ -46,11 +46,9 @@ const AdminProducts = () => {
       </div>
 
       <div className='pt-6 grid grid-flow-row grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
-        <div className='cursor-pointer group p-4 rounded-md border border-slate-300 dark:border-slate-700'>
-          {products.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
-        </div>
+        {products.map((product) => (
+          <ProductCard key={product._id} product={product} />
+        ))}
       </div>
     </div>
   );

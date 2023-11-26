@@ -5,7 +5,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 
   if (active && payload && payload.length) {
     return (
-      <div className='bg-main-1 text-xs text-white p-1 rounded-sm'>
+      <div className='bg-gold text-xs text-white p-2 rounded-sm'>
         <p>{`$ ${payload[0].value}`}</p>
       </div>
     );

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import ProductItems from '../../components/store-products/product-items.component';
+import ProductItems from '../../components/products/product-items.component';
 
 const BestSelling = ({ products }) => {
   return (

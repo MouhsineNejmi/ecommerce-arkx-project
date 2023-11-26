@@ -34,7 +34,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
@@ -313,7 +312,6 @@ const UserForm = ({ user, action = 'Create', account_type = 'User' }) => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectLabel>User Role</SelectLabel>
                           <SelectItem value='admin'>Admin</SelectItem>
                           <SelectItem value='manager'>Manager</SelectItem>
                         </SelectGroup>
@@ -328,7 +326,7 @@ const UserForm = ({ user, action = 'Create', account_type = 'User' }) => {
           <div className='flex items-center justify-end'>
             <Button
               type='submit'
-              className='whitespace-nowrap bg-main-1 hover:bg-main-2'
+              className='whitespace-nowrap bg-gold hover:bg-light-gold'
               disabled={isLoading}
             >
               {isLoading && <Loader2 className='animate-spin' />}

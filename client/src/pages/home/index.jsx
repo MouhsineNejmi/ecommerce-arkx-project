@@ -5,6 +5,7 @@ import Collections from './collections.component';
 import BestSelling from './best-selling.component';
 import BrandValues from './brand-values.component';
 import PromotionBanner from './promotion-banner.component';
+import { useSelector } from 'react-redux';
 
 const products = [
   {
@@ -58,6 +59,10 @@ const products = [
 ];
 
 const Home = () => {
+  const user = useSelector((state) => state.userSlice.user);
+
+  console.log(user);
+
   return (
     <>
       {/* <Slider /> */}

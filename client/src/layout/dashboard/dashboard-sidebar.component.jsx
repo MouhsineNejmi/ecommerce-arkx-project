@@ -3,8 +3,6 @@ import { Link, NavLink } from 'react-router-dom';
 
 import sidebarData from '../../data/sidebar.data';
 
-import AfricomLogo from '../../components/icons/africom-logo.component';
-
 import { ChevronRight } from 'lucide-react';
 
 const DashboardSidebar = ({ expanded, toggleExpand }) => {
@@ -18,11 +16,15 @@ const DashboardSidebar = ({ expanded, toggleExpand }) => {
             !expanded ? 'w-full justify-center' : ''
           } ${expanded ? 'justify-between p-4' : ''}`}
         >
-          <Link to='/admin/dashboard'>
-            <AfricomLogo expanded={expanded} />
-          </Link>
+          {expanded && (
+            <Link to='/admin/dashboard'>
+              <h2 className='font-bold w-[100px] font-bold text-md'>
+                Desing <span className='text-gold text-md'>Elegance</span>
+              </h2>
+            </Link>
+          )}
           <button
-            className='p-1.5 rounded-lg bg-main-1 transition-all hover:bg-main-2 text-white'
+            className='p-1.5 rounded-lg bg-gold transition-all hover:bg-light-gold text-white'
             onClick={toggleExpand}
           >
             <ChevronRight
@@ -45,12 +47,10 @@ const DashboardSidebar = ({ expanded, toggleExpand }) => {
                   className={({ isActive }) =>
                     `flex items-center justify-between font-medium transition p-3 rounded-2xl
                         ${
-                          isActive
-                            ? 'bg-main-1 text-white'
-                            : 'text-variant-black'
+                          isActive ? 'bg-gold text-white' : 'text-variant-black'
                         } ${
                       expanded ? 'w-full' : ''
-                    } hover:bg-main-2 hover:text-white`
+                    } hover:bg-light-gold hover:text-white`
                   }
                 >
                   <div className='flex'>
@@ -61,7 +61,7 @@ const DashboardSidebar = ({ expanded, toggleExpand }) => {
 
                 {!expanded && (
                   <div
-                    className={`absolute z-10 left-full rounded-md px-2 py-1 ml-6 bg-main-2 text-white text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:-translate-x-0`}
+                    className={`absolute z-10 left-full rounded-md px-2 py-1 ml-6 z-20 bg-gold text-white text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:-translate-x-0`}
                   >
                     {menu.name}
                   </div>

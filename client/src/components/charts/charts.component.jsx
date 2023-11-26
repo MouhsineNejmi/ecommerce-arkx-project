@@ -19,7 +19,7 @@ const Charts = () => {
       <div className='pb-6 flex items-center justify-between text-sm'>
         <h3 className='font-semibold'>Earning Analytics</h3>
         <div className='flex items-center gap-5'>
-          <CustomLegend className={'bg-main-1'} legend={'Earning'} />
+          <CustomLegend className={'bg-gold'} legend={'Earning'} />
           <CalendarDateRangePicker />
         </div>
       </div>
@@ -28,8 +28,8 @@ const Charts = () => {
         <AreaChart data={chartsData}>
           <defs>
             <linearGradient id='color' x1='0' y1='0' x2='0' y2='1'>
-              <stop offset='0%' stopColor='#2965ff' stopOpacity={0.2}></stop>
-              <stop offset='100%' stopColor='#2965ff' stopOpacity={0}></stop>
+              <stop offset='0%' stopColor='#E5B906' stopOpacity={0.2}></stop>
+              <stop offset='100%' stopColor='#E5B906' stopOpacity={0}></stop>
             </linearGradient>
           </defs>
 
@@ -47,10 +47,10 @@ const Charts = () => {
           <Area
             type='monotone'
             dataKey='sales'
-            stroke='#2965ff'
+            stroke='#E5B906'
             fill='url(#color)'
             style={{
-              filter: `drop-shadow(0px 0px 4px #2965ff)`,
+              filter: `drop-shadow(0px 0px 4px #E5B906)`,
             }}
             activeDot={{ r: 6 }}
             className='shadow-lg text-black'
