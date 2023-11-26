@@ -9,7 +9,7 @@ const DiscountBar = () => {
     <div
       className={`${
         isHidden ? 'hidden' : ''
-      } relative h-10 bg-violet-500 text-white flex justify-center items-center overflow-hidden`}
+      } relative h-10 bg-gold text-white flex justify-center items-center overflow-hidden`}
     >
       <div className='flex items-center gap-2 font-semibold'>
         <TicketIcon className='w-6 h-6' />

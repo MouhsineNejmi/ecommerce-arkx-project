@@ -3,15 +3,20 @@ import ProductCard from '../../components/store-products/product-card.component'
 
 import { ScrollArea, ScrollBar } from '../../components/ui/scroll-area';
 
-const JustIn = ({ products }) => {
+const NewArrival = ({ products }) => {
   return (
-    <div className='my-10 pl-20'>
-      <h1 className='text-2xl font-semibold mb-4'>Just In</h1>
+    <div className='py-20 pl-20'>
+      <h2 className='text-center mb-10 font-bold text-3xl'>Just In</h2>
       <div className='relative'>
         <ScrollArea>
           <div className='flex gap-4'>
             {products.map((product, index) => (
-              <ProductCard key={index} product={product} showDetails={false} />
+              <ProductCard
+                key={index}
+                product={product}
+                extended={true}
+                showDetails={false}
+              />
             ))}
             <ScrollBar orientation='horizontal' />
           </div>
@@ -21,4 +26,4 @@ const JustIn = ({ products }) => {
   );
 };
 
-export default JustIn;
+export default NewArrival;

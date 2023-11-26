@@ -108,7 +108,7 @@
 
 @layer components {
   .nav-link {
-    @apply font-semibold text-violet-700 underline transition-all duration-300;
+    @apply font-semibold text-gold underline transition-all duration-300;
   }
 
   .custom-container {

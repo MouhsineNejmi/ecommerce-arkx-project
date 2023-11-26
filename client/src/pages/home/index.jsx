@@ -1,10 +1,10 @@
-import JustIn from './just-in.component';
+import Hero from './hero.component';
+import NewArrival from './new-arrival.component';
 import ShopByCategories from './shop-by-categories.component';
-
-// import Slider from '../../components/slider.component';
 import Collections from './collections.component';
 import BestSelling from './best-selling.component';
-import Hero from './hero.component';
+import BrandValues from './brand-values.component';
+import PromotionBanner from './promotion-banner.component';
 
 const products = [
   {
@@ -62,10 +62,12 @@ const Home = () => {
     <>
       {/* <Slider /> */}
       <Hero />
-      <JustIn products={products} />
+      <NewArrival products={products} />
+      <BrandValues />
       <ShopByCategories />
       <Collections />
       <BestSelling products={products} />
+      <PromotionBanner />
     </>
   );
 };

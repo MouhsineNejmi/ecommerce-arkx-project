@@ -2,22 +2,32 @@ import { Link } from 'react-router-dom';
 
 const Hero = () => {
   return (
-    <div className='custom-container relative h-[650px] overflow-hidden flex'>
-      <div className='absolute max-w-2xl h-full left-20 flex flex-col justify-center z-10 text-shadow'>
-        <h1 className='font-bold text-[50px] text-violet-700 pb-6'>
-          Design your dream home with modern interior design
+    <div className='custom-container relative flex w-full h-[600px] overflow-hidden'>
+      <div className='w-[40%] h-full left-20 flex flex-col justify-center gap-4 z-20'>
+        <p className='text-lg text-zinc-500'>
+          Transform and Redesign Your Home
+        </p>
+        <h1 className='max-w-2xl text-foreground font-bold text-[50px]'>
+          Your{' '}
+          <span className='text-[50px] bg-gold px-1 rounded-lg text-white'>
+            Dream Home
+          </span>{' '}
+          Start Right Here
         </h1>
-        <Link to='/shop' className='font-medium underline text-xl'>
-          Discover More &rarr;
+        <Link
+          to='/shop'
+          className='border border-white w-max py-4 px-8 w-40 bg-gold transition-all duration-300 hover:bg-light-dark hover:scale-105 text-white font-semibold text-md rounded-full'
+        >
+          Shop Now
         </Link>
       </div>
 
-      <div className='w-full h-full relative overflow-hidden rounded-2xl'>
-        <div className='w-[80%] h-full absolute rounded-2xl right-0 z-10 bg-black opacity-20' />
+      <div className='w-[60%] h-full overflow-hidden rounded-2xl'>
         <img
-          src='https://images.unsplash.com/photo-1537726235470-8504e3beef77?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+          src='https://mir-s3-cdn-cf.behance.net/project_modules/fs/35799a131274935.61922fce67c1d.jpg'
+          // src='https://mir-s3-cdn-cf.behance.net/project_modules/fs/919ce286589849.5d9e06ac97b8b.jpg'
           alt='Hero Section'
-          className='w-[80%] h-full rounded-2xl translate-x-1/4 bg-contain bg-center'
+          className=' h-full rounded-2xl bg-cover bg-center'
         />
       </div>
     </div>

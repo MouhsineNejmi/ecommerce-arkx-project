@@ -5,9 +5,13 @@ import { HeartIcon as HeartIconFilled } from '@heroicons/react/24/solid';
 
 import { Button } from '../ui/button';
 
-const ProductCard = ({ product, showDetails }) => {
+const ProductCard = ({ product, showDetails, extended = false }) => {
   return (
-    <div className='relative w-[300px] flex flex-col group'>
+    <div
+      className={`relative flex flex-col ${
+        !extended ? 'flex-1' : 'w-[250px]'
+      } group`}
+    >
       <div className='relative w-full overflow-hidden rounded-md'>
         <div className='absolute w-full h-full bg-black opacity-30 hidden z-10 group-hover:block' />
         <img
@@ -20,7 +24,7 @@ const ProductCard = ({ product, showDetails }) => {
       <div className='space-y-1 text-sm mt-4'>
         <div className='flex mb-2'>
           {[1, 2, 3, 4, 5].map((index) => (
-            <StarIcon key={index} className='w-4 h-4 text-violet-700' />
+            <StarIcon key={index} className='w-4 h-4 text-gold' />
           ))}
         </div>
         <h3 className='font-semibold text-md leading-none pb-1'>
@@ -36,9 +40,7 @@ const ProductCard = ({ product, showDetails }) => {
           <HeartIconFilled className='w-6 h-6 text-red-500 hidden' />
         </div>
         <div className='w-full flex justify-center absolute bottom-24'>
-          <Button className='w-full h-12 mx-4 bg-violet-700'>
-            Add To Cart
-          </Button>
+          <Button className='w-full h-12 mx-4 bg-gold'>Add To Cart</Button>
         </div>
       </div>
 
