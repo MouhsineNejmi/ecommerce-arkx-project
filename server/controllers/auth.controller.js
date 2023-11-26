@@ -7,7 +7,9 @@ const {
   createCustomer,
   createUser,
 } = require('../services/auth.service');
+
 const { findUser } = require('../services/user.service');
+const { findCustomerByQuery } = require('../services/customer.service');
 
 const accessTokenCookieOptions = {
   expires: new Date(Date.now() * 86400 * 1000),
@@ -67,10 +69,18 @@ exports.registerHandler = async (req, res, next) => {
 
 exports.loginHandler = async (req, res, next) => {
   try {
-    const user = await findUser({ username: req.body.username });
+    const { account_type, username, password } = req.body;
+
+    let user = '';
+
+    if (account_type) {
+      user = await findUser({ username: username });
+    } else {
+      user = await findCustomerByQuery({ username: username });
+    }
 
     // Check if user exist and password is correct
-    if (!user || !compare(user.password, req.body.password)) {
+    if (!user || !compare(user.password, password)) {
       return next(new AppError('Invalid username or password', 401));
     }
 

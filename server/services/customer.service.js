@@ -23,10 +23,10 @@ exports.findCustomer = async ({ query, sort, page, resultsPerPage }) => {
   return customer;
 };
 
-exports.findCustomerByQuery = async (query) => {
-  const customer = await Customer.findOne(query);
-  console.log('query', query);
-  console.log('customer', customer);
+exports.findCustomerByQuery = async (query, options = {}) => {
+  const customer = await Customer.findOne(query, {}, options).select(
+    '+password'
+  );
 
   return customer;
 };
