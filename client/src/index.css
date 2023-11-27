@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+
+*{
+
+  font-family: "Poppins", sans-serif;
+
+}
 @layer base {
   :root {
     --text-color: #050301;
@@ -25,3 +31,4 @@
     --bg-color: #050301;
   }
 }
+
