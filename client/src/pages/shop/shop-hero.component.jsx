@@ -2,7 +2,7 @@ import Breadcrumb from '../../components/shared/bread-crumb.component';
 
 const ShopHero = () => {
   return (
-    <div className='relative custom-container h-[600px] mb-10'>
+    <div className='relative h-[600px] mb-10'>
       <div className='relative h-full w-full overflow-hidden'>
         <div className='absolute w-full h-full bg-black opacity-50 rounded-lg' />
         <img

@@ -7,6 +7,8 @@ const TriggerView = () => {
   const handleSelectedView = () =>
     setSelectedView((prev) => (prev === 'grid' ? 'list' : 'grid'));
 
+  console.log(selectedView);
+
   return (
     <ToggleGroup
       type='single'

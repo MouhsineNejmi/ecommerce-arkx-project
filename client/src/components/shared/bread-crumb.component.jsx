@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { Fragment } from 'react';
 import { HomeIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom'; // Assuming you're using React Router
 
@@ -14,9 +15,9 @@ const Breadcrumb = ({ className }) => {
     <nav className={cn('p-4', className)}>
       <ul className='flex'>
         {paths.map((path, index) => (
-          <>
+          <Fragment key={index}>
             {path.label === 'Home' ? (
-              <li key={index} className='flex items-center'>
+              <li className='flex items-center'>
                 <Link
                   to={path.link}
                   className='flex items-center gap-2 text-gold hover:underline text-lg'
@@ -27,7 +28,7 @@ const Breadcrumb = ({ className }) => {
                 <span className='mx-2 font-semibold text-lg'>/</span>
               </li>
             ) : (
-              <li key={index} className='flex items-center'>
+              <li className='flex items-center'>
                 {index < paths.length - 1 ? (
                   <>
                     <Link
@@ -43,7 +44,7 @@ const Breadcrumb = ({ className }) => {
                 )}
               </li>
             )}
-          </>
+          </Fragment>
         ))}
       </ul>
     </nav>

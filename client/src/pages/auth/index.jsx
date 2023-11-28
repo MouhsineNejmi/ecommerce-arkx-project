@@ -2,13 +2,12 @@ import { useState } from 'react';
 
 import SwitcherButton from './switcher-button.component';
 import CustomerLogin from './customer-login.component';
+import CustomerRegister from './customer-register.component';
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
 
-  const toggleForm = () => {
-    setIsLogin((prevIsLogin) => !prevIsLogin);
-  };
+  const toggleForm = () => setIsLogin((prevIsLogin) => !prevIsLogin);
 
   return (
     <div className='container relative min-h-screen flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0'>
@@ -20,7 +19,7 @@ const AuthPage = () => {
 
           <SwitcherButton isLogin={isLogin} onToggle={toggleForm} />
 
-          {isLogin ? <CustomerLogin /> : <h1>Register</h1>}
+          {isLogin ? <CustomerLogin /> : <CustomerRegister />}
 
           <div className='text-center'>
             <button

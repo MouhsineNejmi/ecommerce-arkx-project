@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import * as React from 'react';
 import { LogOut, Settings, User } from 'lucide-react';
 import { useSelector } from 'react-redux';
@@ -18,7 +19,7 @@ import {
 } from '../ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
-const UserDropDownMenu = () => {
+const UserDropDownMenu = ({ isUser }) => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -36,7 +37,7 @@ const UserDropDownMenu = () => {
       toast({
         title: 'User Logged out Successfully!',
       });
-      navigate('/admin/login');
+      isUser ? navigate('/admin/login') : navigate('/');
     }
 
     if (isError) {
@@ -55,7 +56,9 @@ const UserDropDownMenu = () => {
     user && (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Avatar className='cursor-pointer'>
+          <Avatar
+            className={`cursor-pointer ${isUser ? 'w-10 h-10' : 'w-8 h-8'}`}
+          >
             <AvatarImage src='https://github.com/shadcn.png' />
             <AvatarFallback>{user.username}</AvatarFallback>
           </Avatar>
@@ -64,7 +67,11 @@ const UserDropDownMenu = () => {
           <DropdownMenuLabel>My account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem onClick={() => navigate('/admin/profile')}>
+            <DropdownMenuItem
+              onClick={() =>
+                isUser ? navigate('/admin/profile') : navigate('/')
+              }
+            >
               <User className='mr-2 h-4 w-4' />
               <span>Profile</span>
               <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
