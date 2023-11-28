@@ -1,7 +1,9 @@
-import React from 'react';
-
 const CustomerRegister = () => {
-  return <div>CustomerRegister</div>;
+  return (
+    <div>
+      <h1>Register</h1>
+    </div>
+  );
 };
 
 export default CustomerRegister;

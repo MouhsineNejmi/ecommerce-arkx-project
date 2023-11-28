@@ -8,7 +8,7 @@ import { Button } from '../ui/button';
 const ProductCard = ({
   product,
   showDetails,
-  showActions,
+  showActions = true,
   extended = false,
 }) => {
   return (

@@ -4,6 +4,7 @@ import StoreLayout from '../layout/store/store-layout.component';
 
 import Home from '../pages/home';
 import AccountProfile from '../pages/profile/customer-profile.page';
+import ShopPage from '../pages/shop';
 
 const StoreRoutes = () => {
   return (
@@ -11,6 +12,7 @@ const StoreRoutes = () => {
       <Route element={<StoreLayout />}>
         <Route path='/' element={<Home />} />
         <Route path='profile' element={<AccountProfile />} />
+        <Route path='shop' element={<ShopPage />} />
       </Route>
     </Routes>
   );
