@@ -1,17 +1,19 @@
-import { NavLink } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link, NavLink } from 'react-router-dom';
 import {
   MagnifyingGlassIcon,
   UserCircleIcon,
   ShoppingBagIcon,
+  ArrowPathIcon,
 } from '@heroicons/react/24/outline';
 
 import UserDropDownMenu from '../../components/user/user-dropdown-menu.component';
 
+import { useGetMyProfileDataQuery } from '../../app/api/users.api';
 import { navbarData } from '../../data/navigation-data';
+// import { useEffect } from 'react';
 
 const StoreNavbar = () => {
-  const user = useSelector((state) => state.userSlice.user);
+  const { data: user, isLoading } = useGetMyProfileDataQuery();
 
   return (
     <nav className='flex justify-between items-center h-20 px-20'>
@@ -40,12 +42,14 @@ const StoreNavbar = () => {
       <div className='flex items-center space-x-4'>
         <MagnifyingGlassIcon className='w-5 h-5 cursor-pointer' />
         {user ? (
-          <UserDropDownMenu />
+          <UserDropDownMenu user={user} />
+        ) : !user && isLoading ? (
+          <ArrowPathIcon className='w-6 h-6 animate-spin' />
         ) : (
-          <div className='flex items-center gap-2'>
+          <Link to='/auth' className='flex items-center gap-2'>
             <UserCircleIcon className='w-6 h-6' />
             <p>Login</p>
-          </div>
+          </Link>
         )}
         <div className='flex items-center gap-1'>
           <ShoppingBagIcon className='w-5 h-5 cursor-pointer' />

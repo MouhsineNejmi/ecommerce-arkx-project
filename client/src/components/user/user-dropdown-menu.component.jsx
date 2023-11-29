@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import * as React from 'react';
 import { LogOut, Settings, User } from 'lucide-react';
-import { useSelector } from 'react-redux';
 
 import { useToast } from '../ui/use-toast';
 import { useNavigate } from 'react-router-dom';
@@ -19,16 +18,14 @@ import {
 } from '../ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
-const UserDropDownMenu = ({ isUser }) => {
+const UserDropDownMenu = ({ user }) => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const user = useSelector((state) => state.userSlice.user);
   const [logoutUser, { isLoading, isError, error, isSuccess }] =
     useLogoutUserMutation();
 
-  const handleLogout = async () => {
-    console.log('isLoading', isLoading);
+  const handleLogout = () => {
     logoutUser();
   };
 
@@ -37,17 +34,13 @@ const UserDropDownMenu = ({ isUser }) => {
       toast({
         title: 'User Logged out Successfully!',
       });
-      isUser ? navigate('/admin/login') : navigate('/');
+      user.account_type === 'User'
+        ? navigate('/admin/login')
+        : navigate('/auth');
     }
 
     if (isError) {
-      if (Array.isArray(error).data.error) {
-        error.data.error.forEach((el) =>
-          toast({ title: el.message, variant: 'destructive' })
-        );
-      } else {
-        toast({ title: error.data.message, variant: 'destructive' });
-      }
+      toast({ title: error.data.message, variant: 'destructive' });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
@@ -57,7 +50,9 @@ const UserDropDownMenu = ({ isUser }) => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar
-            className={`cursor-pointer ${isUser ? 'w-10 h-10' : 'w-8 h-8'}`}
+            className={`cursor-pointer ${
+              user.account_type === 'User' ? 'w-10 h-10' : 'w-8 h-8'
+            }`}
           >
             <AvatarImage src='https://github.com/shadcn.png' />
             <AvatarFallback>{user.username}</AvatarFallback>
@@ -69,7 +64,9 @@ const UserDropDownMenu = ({ isUser }) => {
           <DropdownMenuGroup>
             <DropdownMenuItem
               onClick={() =>
-                isUser ? navigate('/admin/profile') : navigate('/')
+                user.account_type === 'User'
+                  ? navigate('/admin/profile')
+                  : navigate('/')
               }
             >
               <User className='mr-2 h-4 w-4' />
