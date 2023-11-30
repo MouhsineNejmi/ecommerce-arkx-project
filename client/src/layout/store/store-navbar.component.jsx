@@ -2,15 +2,14 @@ import { Link, NavLink } from 'react-router-dom';
 import {
   MagnifyingGlassIcon,
   UserCircleIcon,
-  ShoppingBagIcon,
   ArrowPathIcon,
 } from '@heroicons/react/24/outline';
 
 import UserDropDownMenu from '../../components/user/user-dropdown-menu.component';
+import Cart from '../cart/cart.component';
 
 import { useGetMyProfileDataQuery } from '../../app/api/users.api';
 import { navbarData } from '../../data/navigation-data';
-// import { useEffect } from 'react';
 
 const StoreNavbar = () => {
   const { data: user, isLoading } = useGetMyProfileDataQuery();
@@ -52,10 +51,7 @@ const StoreNavbar = () => {
           </Link>
         )}
         <div className='flex items-center gap-1'>
-          <ShoppingBagIcon className='w-5 h-5 cursor-pointer' />
-          <p className='flex items-center justify-center w-5 h-5 bg-gold text-background rounded-full'>
-            <span className='block font-medium text-sm'>2</span>
-          </p>
+          <Cart />
         </div>
       </div>
     </nav>

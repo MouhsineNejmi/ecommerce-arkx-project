@@ -34,7 +34,7 @@ const UserDropDownMenu = ({ user }) => {
       toast({
         title: 'User Logged out Successfully!',
       });
-      user.account_type === 'User'
+      user.account_type === 'user'
         ? navigate('/admin/login')
         : navigate('/auth');
     }
