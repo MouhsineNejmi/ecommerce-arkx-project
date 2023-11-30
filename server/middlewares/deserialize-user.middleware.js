@@ -1,4 +1,6 @@
 const { findUserById } = require('../services/user.service');
+const { findCustomerById } = require('../services/customer.service');
+
 const { verifyJwt } = require('../utils/jwt.utils');
 const AppError = require('../utils/app-error.utils');
 
@@ -24,7 +26,10 @@ const deserializeUser = async (req, res, next) => {
       return next(new AppError("Invalid token or user doesn't exist", 401));
     }
 
-    const user = await findUserById(decoded.sub);
+    const user =
+      decoded.account_type === 'user'
+        ? await findUserById(decoded.sub)
+        : await findCustomerById(decoded.sub);
 
     if (!user) {
       return next(new AppError('User with that token no longer exist', 401));

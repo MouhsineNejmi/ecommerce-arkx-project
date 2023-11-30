@@ -57,10 +57,12 @@ exports.registerHandler = async (req, res, next) => {
       data: { user: newUser },
     });
   } catch (error) {
+    console.log(error);
+
     if (error.code === 11000) {
       return res.status(409).json({
         status: 'fail',
-        message: 'Email already exist',
+        message: 'Email or Username already exist',
       });
     }
     next(error);
@@ -73,7 +75,7 @@ exports.loginHandler = async (req, res, next) => {
 
     let user = '';
 
-    if (account_type) {
+    if (account_type === 'user') {
       user = await findUser({ username: username });
     } else {
       user = await findCustomerByQuery({ username: username });

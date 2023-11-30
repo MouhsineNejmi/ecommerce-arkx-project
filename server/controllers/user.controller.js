@@ -3,6 +3,7 @@ const User = require('../models/user.model');
 exports.getMyProfileData = (req, res, next) => {
   try {
     const user = res.locals.user;
+
     res.status(200).json({
       status: 'success',
       data: {
