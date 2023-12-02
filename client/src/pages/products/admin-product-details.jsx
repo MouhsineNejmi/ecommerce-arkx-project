@@ -41,8 +41,8 @@ const AdminProductDetails = () => {
         <div className='w-2/5 overflow-hidden rounded-md'>
           <img
             src={
-              !product.product_image
-                ? product.product_image
+              !product.product_images
+                ? product.product_images
                 : 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=1408&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
             }
             alt={product.product_name}

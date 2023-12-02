@@ -37,7 +37,7 @@ const productSchema = z.object({
     .string()
     .min(2, { message: 'Must be 2 or more characters long' })
     .max(50, { message: 'Must be 50 or fewer characters long' }),
-  product_image: z.instanceof(File),
+  product_images: z.instanceof(File),
   subcategory_id: z
     .string()
     .min(1, { message: 'Subcategory field is required' }),
@@ -89,7 +89,7 @@ const AdminProductForm = () => {
       price: 0,
       quantity: 0,
       discount_price: 0,
-      product_image: '',
+      product_images: '',
     },
   });
 
