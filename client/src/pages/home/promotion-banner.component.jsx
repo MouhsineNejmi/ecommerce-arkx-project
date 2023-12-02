@@ -14,7 +14,7 @@ const PromotionBanner = () => {
         <h4 className='uppercase font-semibold text-gold'>
           Save up to 30% off
         </h4>
-        <h2 className='uppercase font-bold text-2xl max-w-md'>
+        <h2 className='uppercase font-bold text-3xl text-black max-w-md'>
           Hunder of new pieces with modern designs.
         </h2>
         <Link

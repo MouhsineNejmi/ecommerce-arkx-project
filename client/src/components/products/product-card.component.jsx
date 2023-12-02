@@ -41,12 +41,14 @@ const ProductCard = ({
       {/* Actions */}
       {showActions && (
         <div className='hidden z-20 group-hover:block'>
-          <div className='absolute right-2 top-2 bg-white p-2 rounded-full cursor-pointer'>
+          <div className='absolute right-2 top-2 bg-background p-2 rounded-full cursor-pointer'>
             <HeartIcon className='w-6 h-6' />
             <HeartIconFilled className='w-6 h-6 text-red-500 hidden' />
           </div>
           <div className='w-full flex justify-center absolute bottom-24'>
-            <Button className='w-full h-12 mx-4 bg-gold'>Add To Cart</Button>
+            <Button className='w-full h-12 mx-4 bg-gold dark:text-white'>
+              Add To Cart
+            </Button>
           </div>
         </div>
       )}

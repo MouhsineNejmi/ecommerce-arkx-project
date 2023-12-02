@@ -326,7 +326,7 @@ const UserForm = ({ user, action = 'Create', account_type = 'User' }) => {
           <div className='flex items-center justify-end'>
             <Button
               type='submit'
-              className='whitespace-nowrap bg-gold hover:bg-light-gold'
+              className='whitespace-nowrap bg-gold hover:bg-light-gold dark:text-white'
               disabled={isLoading}
             >
               {isLoading && <Loader2 className='animate-spin' />}

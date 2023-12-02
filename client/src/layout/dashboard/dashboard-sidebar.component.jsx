@@ -8,7 +8,9 @@ import { ChevronRight } from 'lucide-react';
 const DashboardSidebar = ({ expanded, toggleExpand }) => {
   return (
     <aside
-      className={`fixed left-0 bg-white h-screen ${expanded ? 'w-52' : 'w-20'}`}
+      className={`fixed left-0 h-screen bg-background ${
+        expanded ? 'w-52' : 'w-20'
+      }`}
     >
       <nav className='h-full w-full flex flex-col border-r border-slate-300 shadow-sm'>
         <div

@@ -4,6 +4,7 @@ import { LogOut, Settings, User } from 'lucide-react';
 
 import { useToast } from '../ui/use-toast';
 import { useNavigate } from 'react-router-dom';
+import { useGetMyProfileDataQuery } from '../../app/api/users.api';
 import { useLogoutUserMutation } from '../../app/api/auth.api';
 
 import {
@@ -18,14 +19,15 @@ import {
 } from '../ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
-const UserDropDownMenu = ({ user }) => {
+const UserDropDownMenu = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  const { data: user } = useGetMyProfileDataQuery();
   const [logoutUser, { isLoading, isError, error, isSuccess }] =
     useLogoutUserMutation();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     logoutUser();
   };
 
@@ -34,7 +36,7 @@ const UserDropDownMenu = ({ user }) => {
       toast({
         title: 'User Logged out Successfully!',
       });
-      user.account_type === 'user'
+      user.account_type === 'User'
         ? navigate('/admin/login')
         : navigate('/auth');
     }
@@ -54,7 +56,7 @@ const UserDropDownMenu = ({ user }) => {
               user.account_type === 'User' ? 'w-10 h-10' : 'w-8 h-8'
             }`}
           >
-            <AvatarImage src='https://github.com/shadcn.png' />
+            <AvatarImage src={user.profile_image} />
             <AvatarFallback>{user.username}</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
@@ -64,9 +66,9 @@ const UserDropDownMenu = ({ user }) => {
           <DropdownMenuGroup>
             <DropdownMenuItem
               onClick={() =>
-                user.account_type === 'User'
+                user.account_type === 'user'
                   ? navigate('/admin/profile')
-                  : navigate('/')
+                  : navigate('/profile')
               }
             >
               <User className='mr-2 h-4 w-4' />

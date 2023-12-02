@@ -7,6 +7,7 @@ const OrdersTable = ({ orders }) => {
     const status = orderStatuses.find(
       (status) => status.value === order.status
     );
+
     if (!status) {
       return null;
     }
@@ -24,6 +25,7 @@ const OrdersTable = ({ orders }) => {
       </div>
     );
   };
+
   return (
     <div className='relative overflow-x-auto rounded-sm border border-slate-300'>
       <table className='w-full text-sm text-left text-gray-500 dark:text-gray-400 '>
@@ -46,7 +48,10 @@ const OrdersTable = ({ orders }) => {
         <tbody>
           {orders.map((order, index) => {
             return (
-              <tr className='bg-white border-b border-slate-300' key={index}>
+              <tr
+                className='bg-background border-b border-slate-300'
+                key={index}
+              >
                 <td className='px-6 py-4'>
                   <Badge variant={'outline'} className={'font-medium'}>
                     {order._id}

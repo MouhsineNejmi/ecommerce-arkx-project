@@ -7,6 +7,7 @@ import {
 
 import UserDropDownMenu from '../../components/user/user-dropdown-menu.component';
 import Cart from '../cart/cart.component';
+import ModeToggle from '../../components/ui/mode-toggle.component';
 
 import { useGetMyProfileDataQuery } from '../../app/api/users.api';
 import { navbarData } from '../../data/navigation-data';
@@ -39,9 +40,10 @@ const StoreNavbar = () => {
 
       {/* Icons */}
       <div className='flex items-center space-x-4'>
+        <ModeToggle />
         <MagnifyingGlassIcon className='w-5 h-5 cursor-pointer' />
         {user ? (
-          <UserDropDownMenu user={user} />
+          <UserDropDownMenu />
         ) : !user && isLoading ? (
           <ArrowPathIcon className='w-6 h-6 animate-spin' />
         ) : (

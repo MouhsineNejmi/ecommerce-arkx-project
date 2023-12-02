@@ -56,7 +56,7 @@ const DataTable = ({ columns, data, option, isLoading }) => {
       <DataTableToolbar table={table} option={option} />
       <main className='whitespace-nowrap w-full rounded-md border '>
         <Table className=' min-w-[800px]'>
-          <TableHeader className='bg-[#fafafa]'>
+          <TableHeader className='bg-background'>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup?.id}>
                 {headerGroup.headers.map((header) => {

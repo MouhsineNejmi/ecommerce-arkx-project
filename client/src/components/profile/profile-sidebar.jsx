@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 
 const ProfileSidebar = ({ className, items, ...props }) => {
@@ -11,20 +11,18 @@ const ProfileSidebar = ({ className, items, ...props }) => {
       )}
       {...props}
     >
-      {items.map((item) => (
-        <Link
-          key={item.link}
+      {items.map((item, index) => (
+        <NavLink
+          key={index}
           to={item.link}
           className={({ isActive }) =>
             `justify-start ${
-              isActive
-                ? 'bg-muted hover:bg-muted'
-                : 'hover:bg-transparent hover:underline'
+              isActive ? 'bg-muted' : 'hover:bg-transparent hover:underline'
             }`
           }
         >
           {item.title}
-        </Link>
+        </NavLink>
       ))}
     </nav>
   );

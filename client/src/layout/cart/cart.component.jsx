@@ -28,7 +28,7 @@ const Cart = () => {
           className='w-9/12 bg-black opacity-20'
           onClick={handleOpenDialog}
         />
-        <div className='w-3/12 bg-white py-6'>
+        <div className='w-3/12 bg-background py-6'>
           <div className='flex justify-between items-center mb-4 px-4'>
             <h1 className='font-bold text-xl'>Cart</h1>
             <XMarkIcon

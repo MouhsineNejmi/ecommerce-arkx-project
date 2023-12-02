@@ -7,12 +7,13 @@ import { navbarData } from '../../data/navigation-data';
 
 const StoreFooter = () => {
   return (
-    <footer className='custom-container bg-foreground text-white py-8'>
+    <footer className='custom-container bg-foreground dark:bg-gold text-white py-8'>
       <div className='flex flex-col md:flex-row py-8'>
         {/* First Part: Logo and Social Media Links */}
         <div className='mb-4 flex w-1/2 flex-col gap-2'>
           <h2 className='font-bold mb-4 font-bold text-lg'>
-            Desing <span className='text-gold text-lg'>Elegance</span>
+            Desing{' '}
+            <span className='text-gold dark:text-black text-lg'>Elegance</span>
           </h2>
 
           <h3 className='font-semibold text-md w-[200px] mb-4'>
