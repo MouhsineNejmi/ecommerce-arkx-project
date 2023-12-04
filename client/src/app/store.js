@@ -5,7 +5,7 @@ import { authApi } from './api/auth.api';
 import { usersApi } from './api/users.api';
 import { customersApi } from './api/customers.api';
 import { productsApi } from './api/products.api';
-import { subcategoriesApi } from './api/subcategories.api';
+import { categoriesApi } from './api/categories.api';
 
 import userReducer from './features/user.slice';
 
@@ -15,7 +15,7 @@ export const store = configureStore({
     [usersApi.reducerPath]: usersApi.reducer,
     [customersApi.reducerPath]: customersApi.reducer,
     [productsApi.reducerPath]: productsApi.reducer,
-    [subcategoriesApi.reducerPath]: subcategoriesApi.reducer,
+    [categoriesApi.reducerPath]: categoriesApi.reducer,
     userSlice: userReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -24,6 +24,6 @@ export const store = configureStore({
       usersApi.middleware,
       customersApi.middleware,
       productsApi.middleware,
-      subcategoriesApi.middleware,
+      categoriesApi.middleware,
     ]),
 });

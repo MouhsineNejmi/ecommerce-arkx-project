@@ -23,6 +23,9 @@ module.exports = {
         4: '#85ceff',
         5: '#a8f1ff',
       },
+      gold: '#E5B906',
+      'light-gold': '#E5B90695',
+      'dark-gold': '#ba9500',
     },
     fontFamily: {
       poppins: "'Poppins', sans-serif",

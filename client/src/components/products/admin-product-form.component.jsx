@@ -1,16 +1,11 @@
 // import React from 'react';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  // Controller,
-  // FormProvider,
-  // SubmitHandler,
-  useForm,
-} from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { Loader2 } from 'lucide-react';
 
 import TipTap from './tip-tap.component';
-import { useGetAllSubcategoryQuery } from '../../app/api/subcategories.api';
+import { useGetAllCategoriesQuery } from '../../app/api/categories.api';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -38,9 +33,7 @@ const productSchema = z.object({
     .min(2, { message: 'Must be 2 or more characters long' })
     .max(50, { message: 'Must be 50 or fewer characters long' }),
   product_images: z.instanceof(File),
-  subcategory_id: z
-    .string()
-    .min(1, { message: 'Subcategory field is required' }),
+  category_id: z.string().min(1, { message: 'Category field is required' }),
   short_description: z
     .string()
     .min(1, { message: 'Short description field is required' }),
@@ -67,12 +60,12 @@ const productSchema = z.object({
 
 const AdminProductForm = () => {
   const {
-    data: subcategories,
+    data: categories,
     isLoading,
     isFetching,
     isError,
     error,
-  } = useGetAllSubcategoryQuery();
+  } = useGetAllCategoriesQuery();
 
   const loading = isLoading || isFetching;
 
@@ -104,8 +97,6 @@ const AdminProductForm = () => {
   if (isError) {
     console.error(error);
   }
-
-  console.log(subcategories);
 
   return (
     <Form {...form}>
@@ -202,22 +193,22 @@ const AdminProductForm = () => {
 
         <FormField
           control={form.control}
-          name='subcategory_id'
+          name='category_id'
           // eslint-disable-next-line no-unused-vars
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Select a subcategory:</FormLabel>
+              <FormLabel>Select a category:</FormLabel>
               <FormControl>
                 <Select>
                   <SelectTrigger className='w-[250px]'>
-                    <SelectValue placeholder='Select a subcategory' />
+                    <SelectValue placeholder='Select a category' />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      {subcategories &&
-                        subcategories.map(({ _id, subcategory_name }) => (
+                      {categories &&
+                        categories.map(({ _id, category_name }) => (
                           <SelectItem key={_id} value={_id}>
-                            {subcategory_name}
+                            {category_name}
                           </SelectItem>
                         ))}
                     </SelectGroup>

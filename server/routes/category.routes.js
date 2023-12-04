@@ -1,16 +1,20 @@
 const express = require('express');
 const router = express.Router();
 
-const {
-    createNewCategory,
-    listAllCategories,
-    searchCategories,
-    getCategoryByID,
-    updateCategoryData,
-    deleteCategory
-} = require('../controllers/category.controller')
+const { uploadSingleImage } = require('../upload/single.upload');
 
-router.post('/', createNewCategory);
+const handleUpload = require('../config/cloudinary');
+
+const {
+  createNewCategory,
+  listAllCategories,
+  searchCategories,
+  getCategoryByID,
+  updateCategoryData,
+  deleteCategory,
+} = require('../controllers/category.controller');
+
+router.post('/', uploadSingleImage, createNewCategory);
 router.get('/', listAllCategories);
 router.get('/', searchCategories);
 router.get('/:id', getCategoryByID);
