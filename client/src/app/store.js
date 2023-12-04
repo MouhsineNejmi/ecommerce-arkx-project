@@ -6,6 +6,7 @@ import { usersApi } from './api/users.api';
 import { customersApi } from './api/customers.api';
 import { productsApi } from './api/products.api';
 import { categoriesApi } from './api/categories.api';
+import { cartApi } from './api/cart';
 
 import userReducer from './features/user.slice';
 
@@ -16,6 +17,7 @@ export const store = configureStore({
     [customersApi.reducerPath]: customersApi.reducer,
     [productsApi.reducerPath]: productsApi.reducer,
     [categoriesApi.reducerPath]: categoriesApi.reducer,
+    [cartApi.reducerPath]: cartApi.reducer,
     userSlice: userReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -25,5 +27,6 @@ export const store = configureStore({
       customersApi.middleware,
       productsApi.middleware,
       categoriesApi.middleware,
+      cartApi.middleware,
     ]),
 });

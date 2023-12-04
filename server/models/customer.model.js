@@ -2,12 +2,9 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 
 const CustomerSchema = new Schema({
-  image_name: {
-    type: String,
-  },
   profile_image: {
     type: String,
-    default: 'https://fontawesome.com/icons/user?f=classic&s=regular&sz=lg',
+    default: 'https://github.com/shadcn.png',
   },
   first_name: {
     type: String,
@@ -29,9 +26,10 @@ const CustomerSchema = new Schema({
     type: String,
     required: true,
   },
-  accountType: {
+  account_type: {
     enum: ['user', 'customer', 'seller'],
     type: String,
+    required: true,
   },
   creation_date: {
     type: Date,

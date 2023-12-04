@@ -2,12 +2,12 @@ import { Link, NavLink } from 'react-router-dom';
 import {
   MagnifyingGlassIcon,
   UserCircleIcon,
-  ArrowPathIcon,
 } from '@heroicons/react/24/outline';
 
 import UserDropDownMenu from '../../components/user/user-dropdown-menu.component';
 import Cart from '../cart/cart.component';
 import ModeToggle from '../../components/ui/mode-toggle.component';
+import { Skeleton } from '../../components/ui/skeleton';
 
 import { useGetMyProfileDataQuery } from '../../app/api/users.api';
 import { navbarData } from '../../data/navigation-data';
@@ -45,7 +45,7 @@ const StoreNavbar = () => {
         {user ? (
           <UserDropDownMenu />
         ) : !user && isLoading ? (
-          <ArrowPathIcon className='w-6 h-6 animate-spin' />
+          <Skeleton className='h-12 w-12 rounded-full' />
         ) : (
           <Link to='/auth' className='flex items-center gap-2'>
             <UserCircleIcon className='w-6 h-6' />

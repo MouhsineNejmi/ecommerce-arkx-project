@@ -2,9 +2,6 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 
 const UserSchema = new Schema({
-  image_name: {
-    type: String,
-  },
   profile_image: {
     type: String,
     default: 'https://github.com/shadcn.png',

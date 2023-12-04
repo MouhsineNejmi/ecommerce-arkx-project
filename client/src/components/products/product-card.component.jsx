@@ -4,8 +4,21 @@ import { HeartIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconFilled } from '@heroicons/react/24/solid';
 
 import { Button } from '../ui/button';
+import { useAddToCartMutation } from '../../app/api/cart';
+import { useEffect } from 'react';
+import { useToast } from '../ui/use-toast';
 
 const ProductCard = ({ product, showActions = true, extended = false }) => {
+  const { toast } = useToast();
+  const [addToCart, { isSuccess }] = useAddToCartMutation();
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast({ title: 'Product added to cart successfully!' });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess]);
+
   return (
     product && (
       <div
@@ -42,7 +55,10 @@ const ProductCard = ({ product, showActions = true, extended = false }) => {
               <HeartIconFilled className='w-6 h-6 text-red-500 hidden' />
             </div>
             <div className='w-full flex justify-center absolute bottom-24'>
-              <Button className='w-full h-12 mx-4 bg-gold dark:text-white'>
+              <Button
+                className='w-full h-12 mx-4 bg-gold dark:text-white'
+                onClick={() => addToCart(product._id)}
+              >
                 Add To Cart
               </Button>
             </div>
