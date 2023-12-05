@@ -9,6 +9,7 @@ import { categoriesApi } from './api/categories.api';
 import { cartApi } from './api/cart';
 
 import userReducer from './features/user.slice';
+import cartReducer from './features/cart.slice';
 
 export const store = configureStore({
   reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
     [categoriesApi.reducerPath]: categoriesApi.reducer,
     [cartApi.reducerPath]: cartApi.reducer,
     userSlice: userReducer,
+    cartSlice: cartReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({}).concat([

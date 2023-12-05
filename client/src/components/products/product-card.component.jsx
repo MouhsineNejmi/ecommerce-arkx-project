@@ -1,16 +1,23 @@
 /* eslint-disable react/prop-types */
+import { useEffect } from 'react';
+import { useToast } from '../ui/use-toast';
+import { useAddToCartMutation } from '../../app/api/cart';
+
 import { StarIcon } from '@heroicons/react/24/solid';
 import { HeartIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconFilled } from '@heroicons/react/24/solid';
 
 import { Button } from '../ui/button';
-import { useAddToCartMutation } from '../../app/api/cart';
-import { useEffect } from 'react';
-import { useToast } from '../ui/use-toast';
+import { Loader2 } from 'lucide-react';
+import { useDispatch } from 'react-redux';
+
+import { addProductToCart } from '../../app/features/cart.slice';
 
 const ProductCard = ({ product, showActions = true, extended = false }) => {
+  const dispatch = useDispatch();
   const { toast } = useToast();
-  const [addToCart, { isSuccess }] = useAddToCartMutation();
+  const [addToCart, { isLoading: isAddingProductToCart, isSuccess }] =
+    useAddToCartMutation();
 
   useEffect(() => {
     if (isSuccess) {
@@ -18,6 +25,11 @@ const ProductCard = ({ product, showActions = true, extended = false }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
+
+  const handleAddToCart = async (product) => {
+    dispatch(addProductToCart(product));
+    await addToCart(product._id);
+  };
 
   return (
     product && (
@@ -57,8 +69,10 @@ const ProductCard = ({ product, showActions = true, extended = false }) => {
             <div className='w-full flex justify-center absolute bottom-24'>
               <Button
                 className='w-full h-12 mx-4 bg-gold dark:text-white'
-                onClick={() => addToCart(product._id)}
+                disabled={isAddingProductToCart}
+                onClick={() => handleAddToCart(product)}
               >
+                {isAddingProductToCart && <Loader2 className='animte-spin' />}
                 Add To Cart
               </Button>
             </div>

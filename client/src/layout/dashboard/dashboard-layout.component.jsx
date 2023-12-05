@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Toaster } from '../../components/ui/toaster';
 import DashboardSidebar from './dashboard-sidebar.component';
 import DashboardNavbar from './dashboard-navbar.component';
 
@@ -16,7 +15,6 @@ const DashboardLayout = () => {
         <div className='p-4'>
           <Outlet />
         </div>
-        <Toaster />
       </main>
     </div>
   );

@@ -5,7 +5,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 import UserDropDownMenu from '../../components/user/user-dropdown-menu.component';
-import Cart from '../cart/cart.component';
+import Cart from '../../components/cart';
 import ModeToggle from '../../components/ui/mode-toggle.component';
 import { Skeleton } from '../../components/ui/skeleton';
 
@@ -52,9 +52,11 @@ const StoreNavbar = () => {
             <p>Login</p>
           </Link>
         )}
-        <div className='flex items-center gap-1'>
-          <Cart />
-        </div>
+        {user && (
+          <div className='flex items-center gap-1'>
+            <Cart />
+          </div>
+        )}
       </div>
     </nav>
   );
