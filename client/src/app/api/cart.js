@@ -46,11 +46,10 @@ export const cartApi = apiSlice.injectEndpoints({
       providesTags: ['Cart'],
     }),
     removeFromCart: builder.mutation({
-      query(data) {
+      query(productId) {
         return {
-          url: 'cart/remove',
+          url: `cart/remove/${productId}`,
           method: 'DELETE',
-          body: data,
           credentials: 'include',
         };
       },
