@@ -4,7 +4,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Button } from '../../components/ui/button';
 
 import { useDispatch } from 'react-redux';
-import { useRemoveFromCartMutation } from '../../app/api/cart';
+import { useRemoveFromCartMutation } from '../../app/api/cart.api';
 import { removeProductFromCart } from '../../app/features/cart.slice';
 
 const CheckoutItem = ({ product }) => {

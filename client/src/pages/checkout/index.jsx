@@ -1,11 +1,23 @@
 import React from 'react';
-import CheckoutTable from './checkout-table.component';
+import { useSelector } from 'react-redux';
+
 import CheckoutProcess from './checkout-process.component';
-import { Button } from '../../components/ui/button';
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
+import CheckoutTable from './checkout-table.component';
 import CheckoutDetails from './checkout-details.component';
 
+// import { useStripePaymentMutation } from '../../app/api/payment.api';
+// import { useCreateOrderMutation } from '../../app/api/orders.api';
+// import { useGetMyProfileDataQuery } from '../../app/api/users.api';
+
+import { cartSelector, selectTotalAmount } from '../../app/features/cart.slice';
+
 const CheckoutPage = () => {
+  const cart = useSelector(cartSelector);
+  const totalAmount = useSelector(selectTotalAmount);
+
+  // const { data: customer } = useGetMyProfileDataQuery();
+  // const [stripePayment] = useStripePaymentMutation();
+
   const [currentStep, setCurrentStep] = React.useState(1);
   const [completedSteps, setCompletedSteps] = React.useState([]);
 
@@ -45,19 +57,15 @@ const CheckoutPage = () => {
       </div>
 
       <div className='w-full'>
-        {currentStep === 1 && <CheckoutTable />}
+        {currentStep === 1 && (
+          <CheckoutTable
+            cart={cart}
+            totalAmount={totalAmount}
+            handleStepChange={handleStepChange}
+          />
+        )}
         {currentStep === 2 && <CheckoutDetails />}
         {currentStep === 3 && <h3>Order Complete</h3>}
-
-        <div className='flex justify-end mt-4'>
-          <Button
-            className='gap-2'
-            onClick={() => handleStepChange((prev) => prev + 1)}
-          >
-            Checkout
-            <ArrowRightIcon className='w-4 h-4' />
-          </Button>
-        </div>
       </div>
     </div>
   );

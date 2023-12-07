@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useDispatch } from 'react-redux';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -19,8 +20,7 @@ import {
   useAddToCartMutation,
   useDecreaseQuantityMutation,
   useRemoveFromCartMutation,
-} from '../../app/api/cart';
-import { useDispatch } from 'react-redux';
+} from '../../app/api/cart.api';
 import {
   addProductToCart,
   decreaseProductQuantity,

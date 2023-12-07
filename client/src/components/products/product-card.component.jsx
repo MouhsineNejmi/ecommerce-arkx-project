@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useEffect } from 'react';
 import { useToast } from '../ui/use-toast';
-import { useAddToCartMutation } from '../../app/api/cart';
+import { useAddToCartMutation } from '../../app/api/cart.api';
 
 import { StarIcon } from '@heroicons/react/24/solid';
 import { HeartIcon } from '@heroicons/react/24/outline';

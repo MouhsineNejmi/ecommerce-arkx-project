@@ -3,6 +3,15 @@ import { apiSlice } from './api';
 export const ordersApi = apiSlice.injectEndpoints({
   tags: ['Orders'],
   endpoints: (builder) => ({
+    createOrder: builder.mutation({
+      query: (data) => {
+        return {
+          url: 'orders',
+          method: 'POST',
+          body: data,
+        };
+      },
+    }),
     getAllOrders: builder.query({
       query: () => {
         return {
@@ -28,4 +37,8 @@ export const ordersApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetAllOrdersQuery, useGetOrderByIdQuery } = ordersApi;
+export const {
+  useGetAllOrdersQuery,
+  useGetOrderByIdQuery,
+  useCreateOrderMutation,
+} = ordersApi;

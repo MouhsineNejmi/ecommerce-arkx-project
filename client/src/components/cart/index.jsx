@@ -6,7 +6,7 @@ import { Loader2 } from 'lucide-react';
 import { useSelector } from 'react-redux';
 
 import { cartSelector, selectTotalAmount } from '../../app/features/cart.slice';
-import { useGetCartQuery } from '../../app/api/cart';
+import { useGetCartQuery } from '../../app/api/cart.api';
 
 import { Separator } from '../ui/separator';
 import CartItems from './cart-items.component';

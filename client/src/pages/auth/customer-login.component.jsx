@@ -64,7 +64,7 @@ const CustomerLogin = () => {
           <div className='grid gap-4'>
             {(isError || error) && (
               <h2 className='text-center text-red-500'>
-                {error?.data.message}
+                {error?.error || error?.data.message}
               </h2>
             )}
             <div className='grid gap-2'>
