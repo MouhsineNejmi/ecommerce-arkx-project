@@ -27,8 +27,23 @@ export const paymentApi = apiSlice.injectEndpoints({
       transformResponse: (result) => result.data,
       providesTags: ['Payment'],
     }),
+    createPayment: builder.mutation({
+      query(data) {
+        return {
+          url: 'payment/create-payment',
+          method: 'POST',
+          body: data,
+          credentials: 'include',
+        };
+      },
+      transformResponse: (result) => result.data,
+      providesTags: ['Payment'],
+    }),
   }),
 });
 
-export const { useStripePaymentMutation, useCreatePaymentIntentMutation } =
-  paymentApi;
+export const {
+  useStripePaymentMutation,
+  useCreatePaymentIntentMutation,
+  useCreatePaymentMutation,
+} = paymentApi;

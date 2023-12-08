@@ -7,17 +7,28 @@ import { Loader2 } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 
-import { useCreatePaymentIntentMutation } from '../../app/api/payment.api';
-import { selectTotalAmount } from '../../app/features/cart.slice';
+import {
+  useCreatePaymentIntentMutation,
+  useCreatePaymentMutation,
+} from '../../app/api/payment.api';
+import { useCreateOrderMutation } from '../../app/api/orders.api';
+import { useGetMyProfileDataQuery } from '../../app/api/users.api';
+import { useClearCartMutation } from '../../app/api/cart.api';
+import { cartSelector, selectTotalAmount } from '../../app/features/cart.slice';
 
 import { CheckoutValidation } from '../../lib/validation/checkout';
 
 import { Button } from '../../components/ui/button';
 import FormInput from '../../components/form-input.component';
 
-const CheckoutFormComponent = () => {
+const CheckoutFormComponent = ({ handleStepChange }) => {
+  const cart = useSelector(cartSelector);
   const totalAmount = useSelector(selectTotalAmount);
   const [createPaymentIntent] = useCreatePaymentIntentMutation();
+  const [createOrder] = useCreateOrderMutation();
+  const [createPayment] = useCreatePaymentMutation();
+  const [clearCart] = useClearCartMutation();
+  const { data: customer } = useGetMyProfileDataQuery();
 
   const stripe = useStripe();
   const elements = useElements();
@@ -57,7 +68,9 @@ const CheckoutFormComponent = () => {
       },
     };
 
-    const { data: client_secret } = await createPaymentIntent(totalAmount);
+    const { data: client_secret } = await createPaymentIntent(
+      Math.floor(totalAmount)
+    );
 
     setIsProcessing(true);
 
@@ -73,12 +86,34 @@ const CheckoutFormComponent = () => {
       payment_method: paymentMethodReq.paymentMethod.id,
     });
 
-    console.log('paymentMethod: ', paymentMethodReq);
-    console.log('confirmCardPayment: ', confirmCardPayment);
+    // console.log('paymentMethod: ', paymentMethodReq);
+    // console.log('confirmCardPayment: ', confirmCardPayment);
 
     if (paymentMethodReq.error) {
       setMessage(paymentMethodReq.error.message);
-    } else if (paymentMethodReq) {
+    } else if (
+      paymentMethodReq &&
+      confirmCardPayment.paymentIntent.status === 'succeeded'
+    ) {
+      const { data: order } = await createOrder({
+        customer_id: customer._id,
+        order_items: cart,
+        total: totalAmount,
+        delivery_status: 'Pending',
+        shipping: paymentMethodReq.paymentMethod.billing_details,
+      });
+
+      await createPayment({
+        order_id: order._id,
+        amount: confirmCardPayment.paymentIntent.amount,
+        payment_date: confirmCardPayment.paymentIntent.created,
+        payment_method: paymentMethodReq.paymentMethod.type,
+        card: paymentMethodReq.paymentMethod.card,
+        status: 'Completed',
+      });
+
+      handleStepChange(3);
+      await clearCart();
       setMessage('Payment successful!');
     } else {
       setMessage('Unexpected state');
@@ -124,7 +159,7 @@ const CheckoutFormComponent = () => {
         />
 
         <FormInput
-          // type='email'
+          type='email'
           name='email'
           customLabel='Email Address'
           placeholder='Your Email'
@@ -179,7 +214,6 @@ const CheckoutFormComponent = () => {
       </div>
 
       <div className='border border-zinc-300 p-6 py-8 mb-8'>
-        {/* <PaymentElement /> */}
         <CardElement />
       </div>
 

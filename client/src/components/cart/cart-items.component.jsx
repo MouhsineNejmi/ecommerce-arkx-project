@@ -7,7 +7,7 @@ const CartItems = ({ cartItems }) => {
       {cartItems ? (
         cartItems.map((cartItem) => (
           <CartItem
-            key={cartItem._id}
+            key={cartItem.product._id}
             product={cartItem.product}
             quantity={cartItem.quantity}
           />

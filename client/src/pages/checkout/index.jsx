@@ -5,18 +5,11 @@ import CheckoutProcess from './checkout-process.component';
 import CheckoutTable from './checkout-table.component';
 import CheckoutDetails from './checkout-details.component';
 
-// import { useStripePaymentMutation } from '../../app/api/payment.api';
-// import { useCreateOrderMutation } from '../../app/api/orders.api';
-// import { useGetMyProfileDataQuery } from '../../app/api/users.api';
-
 import { cartSelector, selectTotalAmount } from '../../app/features/cart.slice';
 
 const CheckoutPage = () => {
   const cart = useSelector(cartSelector);
   const totalAmount = useSelector(selectTotalAmount);
-
-  // const { data: customer } = useGetMyProfileDataQuery();
-  // const [stripePayment] = useStripePaymentMutation();
 
   const [currentStep, setCurrentStep] = React.useState(1);
   const [completedSteps, setCompletedSteps] = React.useState([]);
@@ -45,14 +38,14 @@ const CheckoutPage = () => {
           label='Checkout Details'
           isActive={currentStep === 2}
           isCompleted={completedSteps.includes(2)}
-          onClick={() => handleStepChange(2)}
+          onClick={() => handleStepChange(cart.items ? 2 : 1)}
         />
         <CheckoutProcess
           step={3}
           label='Order Complete'
           isActive={currentStep === 3}
           isCompleted={completedSteps.includes(3)}
-          onClick={() => handleStepChange(3)}
+          onClick={() => handleStepChange(cart.items ? 3 : 1)}
         />
       </div>
 
@@ -64,8 +57,10 @@ const CheckoutPage = () => {
             handleStepChange={handleStepChange}
           />
         )}
-        {currentStep === 2 && <CheckoutDetails />}
-        {currentStep === 3 && <h3>Order Complete</h3>}
+        {currentStep === 2 && (
+          <CheckoutDetails handleStepChange={handleStepChange} />
+        )}
+        {currentStep === 3 && <h1>Thank you for your order</h1>}
       </div>
     </div>
   );

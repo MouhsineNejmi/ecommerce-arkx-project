@@ -1,9 +1,11 @@
 /* eslint-disable react/prop-types */
+import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import {
   ArrowRightIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
 
 import {
@@ -15,23 +17,17 @@ import {
   TableHeader,
   TableRow,
 } from '../../components/ui/table';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../../components/ui/select';
 import { Button } from '../../components/ui/button';
 
 import {
   useAddToCartMutation,
+  useClearCartMutation,
   useDecreaseQuantityMutation,
 } from '../../app/api/cart.api';
 import {
   addProductToCart,
   decreaseProductQuantity,
+  clearCartItems,
 } from '../../app/features/cart.slice';
 
 import CheckoutItem from './checkout-item.component';
@@ -42,6 +38,7 @@ const CheckoutTable = ({ cart, totalAmount, handleStepChange }) => {
   const [addToCart, { isLoading: isAddingToCart }] = useAddToCartMutation();
   const [decreaseQuantity, { isLoading: isDecreasingQuantity }] =
     useDecreaseQuantityMutation();
+  const [clearCart, { isLoading: isClearingCart }] = useClearCartMutation();
 
   const handleAddToCart = async (product) => {
     dispatch(addProductToCart(product));
@@ -53,15 +50,20 @@ const CheckoutTable = ({ cart, totalAmount, handleStepChange }) => {
     await decreaseQuantity(productId);
   };
 
-  return (
+  const handleClearCart = async () => {
+    dispatch(clearCartItems());
+    await clearCart();
+  };
+
+  return cart.items ? (
     <div>
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Product</TableHead>
-            <TableHead>Option</TableHead>
             <TableHead>Quantity</TableHead>
             <TableHead>Amount</TableHead>
+            <TableHead>Total</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -70,24 +72,6 @@ const CheckoutTable = ({ cart, totalAmount, handleStepChange }) => {
               <TableRow key={product._id}>
                 <TableCell className='font-medium'>
                   <CheckoutItem product={product} />
-                </TableCell>
-
-                <TableCell>
-                  <Select>
-                    <SelectTrigger className='w-24 h-8 text-xs'>
-                      <SelectValue placeholder='Color' />
-                    </SelectTrigger>
-
-                    <SelectContent>
-                      <SelectGroup>
-                        {product.options.map((option) => (
-                          <SelectItem key={option} value={option}>
-                            {option}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
                 </TableCell>
 
                 <TableCell>
@@ -115,6 +99,7 @@ const CheckoutTable = ({ cart, totalAmount, handleStepChange }) => {
                 </TableCell>
 
                 <TableCell>${product.price}</TableCell>
+                <TableHead>${product.price * quantity}</TableHead>
               </TableRow>
             ))}
         </TableBody>
@@ -128,7 +113,16 @@ const CheckoutTable = ({ cart, totalAmount, handleStepChange }) => {
         </TableFooter>
       </Table>
 
-      <div className='flex justify-end mt-4'>
+      <div className='flex justify-between items-center mt-4'>
+        <Button
+          className='bg-transparent border border-gold text-gold hover:text-white hover:bg-gold'
+          disabled={isClearingCart}
+          onClick={handleClearCart}
+        >
+          <XMarkIcon className='w-4 h-4' />
+          Clear Items
+        </Button>
+
         <Button
           className='gap-2'
           onClick={() => handleStepChange((prev) => prev + 1)}
@@ -137,6 +131,15 @@ const CheckoutTable = ({ cart, totalAmount, handleStepChange }) => {
           <ArrowRightIcon className='w-4 h-4' />
         </Button>
       </div>
+    </div>
+  ) : (
+    <div className='flex flex-col justify-center items-center h-96'>
+      <h1 className='font-bold text-2xl mb-2'>
+        There&apos;s no items in your cart
+      </h1>
+      <Link to='/shop' className='font-semibold underline'>
+        Go To Shop
+      </Link>
     </div>
   );
 };

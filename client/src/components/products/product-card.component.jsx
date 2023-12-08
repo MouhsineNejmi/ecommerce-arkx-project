@@ -27,6 +27,7 @@ const ProductCard = ({ product, showActions = true, extended = false }) => {
   }, [isSuccess]);
 
   const handleAddToCart = async (product) => {
+    // console.log(product);
     dispatch(addProductToCart(product));
     await addToCart(product._id);
   };
