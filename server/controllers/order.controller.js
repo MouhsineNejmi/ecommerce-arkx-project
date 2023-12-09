@@ -2,14 +2,15 @@ const Order = require('../models/order.model');
 
 exports.createOrder = async (req, res) => {
   try {
-    const { customer_id, order_items, cart_total_price, status } = req.body;
+    const { customer_id, order_items, total, status, shipping } = req.body;
 
     const newOrder = await Order.create({
       customer_id,
       order_items,
       order_date: Date.now(),
-      cart_total_price,
+      total,
       status,
+      shipping,
     });
 
     console.log(newOrder);
@@ -33,11 +34,9 @@ exports.listAllOrders = async (req, res) => {
     const skip = (page - 1) * perPage;
 
     const orders = await Order.find()
+      .populate('order_items.product')
       .populate('customer_id', {
         password: 0,
-        creation_date: 0,
-        last_update: 0,
-        last_login: 0,
         __v: 0,
       })
       .skip(skip)
@@ -59,7 +58,12 @@ exports.listAllOrders = async (req, res) => {
 exports.getOrderByID = async (req, res) => {
   try {
     const orderId = req.params.id;
-    const order = await Order.findById(orderId);
+    const order = await Order.findById(orderId)
+      .populate('order_items.product')
+      .populate('customer_id', {
+        password: 0,
+        __v: 0,
+      });
 
     if (!order) {
       return res.status(404).json({
@@ -80,8 +84,7 @@ exports.getOrderByID = async (req, res) => {
 };
 
 exports.updateOrder = async (req, res) => {
-  const { customer_id, order_items, order_date, cart_total_price, status } =
-    req.body;
+  const { customer_id, order_items, order_date, total, status } = req.body;
 
   try {
     const orderId = req.params.id;
@@ -89,7 +92,7 @@ exports.updateOrder = async (req, res) => {
       customer_id,
       order_items,
       order_date,
-      cart_total_price,
+      total,
       status,
     };
 

@@ -5,6 +5,7 @@ const userRoutes = require('./user.routes');
 const customerRoutes = require('./customer.routes');
 const productRoutes = require('./product.routes');
 const orderRoutes = require('./order.routes');
+const paymentRoutes = require('./payment.routes');
 const categoriesRoutes = require('./category.routes');
 const cartRoutes = require('./cart.routes');
 
@@ -13,6 +14,7 @@ router.use('/users', userRoutes);
 router.use('/customers', customerRoutes);
 router.use('/products', productRoutes);
 router.use('/orders', orderRoutes);
+router.use('/payment', paymentRoutes);
 router.use('/categories', categoriesRoutes);
 router.use('/cart', cartRoutes);
 

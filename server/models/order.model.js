@@ -7,19 +7,28 @@ const orderSchema = new Schema({
     ref: 'Customer',
     required: true,
   },
-  order_items: {
-    type: Array,
-  },
+  order_items: [
+    {
+      product: { type: Schema.Types.ObjectId, ref: 'Product' },
+      quantity: Number,
+    },
+  ],
   order_date: {
     type: Date,
+    default: Date.now(),
   },
-  cart_total_price: {
+  total: {
     type: Number,
+    required: true,
   },
-  status: {
+  delivery_status: {
     type: String,
-    enum: ['Open', 'Shipped', 'Paid', 'Closed', 'Canceled'],
-    default: 'Open',
+    enum: ['Pending', 'Shipped', 'Refund'],
+    default: 'Pending',
+    required: true,
+  },
+  shipping: {
+    type: Object,
     required: true,
   },
 });
