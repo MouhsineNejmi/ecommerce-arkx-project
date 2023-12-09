@@ -1,10 +1,9 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { Loader2 } from 'lucide-react';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 
 import {
@@ -14,14 +13,17 @@ import {
 import { useCreateOrderMutation } from '../../app/api/orders.api';
 import { useGetMyProfileDataQuery } from '../../app/api/users.api';
 import { useClearCartMutation } from '../../app/api/cart.api';
-import { cartSelector, selectTotalAmount } from '../../app/features/cart.slice';
-
-import { CheckoutValidation } from '../../lib/validation/checkout';
+import {
+  cartSelector,
+  clearCartItems,
+  selectTotalAmount,
+} from '../../app/features/cart.slice';
 
 import { Button } from '../../components/ui/button';
 import FormInput from '../../components/form-input.component';
 
 const CheckoutFormComponent = ({ handleStepChange }) => {
+  const dispatch = useDispatch();
   const cart = useSelector(cartSelector);
   const totalAmount = useSelector(selectTotalAmount);
   const [createPaymentIntent] = useCreatePaymentIntentMutation();
@@ -35,23 +37,7 @@ const CheckoutFormComponent = ({ handleStepChange }) => {
   const [message, setMessage] = React.useState('');
   const [isProcessing, setIsProcessing] = React.useState(false);
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(CheckoutValidation),
-    defaultValues: {
-      first_name: '',
-      last_name: '',
-      phone: '',
-      email: '',
-      street_address: '',
-      country: '',
-      city: '',
-      state: '',
-    },
-  });
+  const { control, handleSubmit } = useForm();
 
   const onSubmit = async (values) => {
     if (!stripe || !elements) {
@@ -63,6 +49,7 @@ const CheckoutFormComponent = ({ handleStepChange }) => {
       email: values.email,
       address: {
         city: values.city,
+        country: 'ma',
         line1: values.street_address,
         state: values.state,
       },
@@ -112,8 +99,9 @@ const CheckoutFormComponent = ({ handleStepChange }) => {
         status: 'Completed',
       });
 
-      handleStepChange(3);
+      dispatch(clearCartItems());
       await clearCart();
+      handleStepChange(3);
       setMessage('Payment successful!');
     } else {
       setMessage('Unexpected state');
@@ -137,9 +125,6 @@ const CheckoutFormComponent = ({ handleStepChange }) => {
             control={control}
             className='w-1/2'
           />
-          {errors.first_name && (
-            <p className='text-red-500'>{errors.first_name.message}</p>
-          )}
 
           <FormInput
             name='last_name'
@@ -182,9 +167,6 @@ const CheckoutFormComponent = ({ handleStepChange }) => {
           placeholder='Your Country'
           control={control}
         />
-        {errors.country && (
-          <p className='text-red-500'>{errors.country.message}</p>
-        )}
 
         <FormInput
           name='city'
@@ -192,25 +174,13 @@ const CheckoutFormComponent = ({ handleStepChange }) => {
           placeholder='Town / City'
           control={control}
         />
-        {errors.city && <p className='text-red-500'>{errors.city.message}</p>}
 
-        <div className='flex gap-4'>
-          <FormInput
-            name='state'
-            className='w-1/2'
-            customLabel='State'
-            placeholder='State'
-            control={control}
-          />
-
-          <FormInput
-            name='zip_code'
-            className='w-1/2'
-            customLabel='Zip Code'
-            placeholder='Zip Code'
-            control={control}
-          />
-        </div>
+        <FormInput
+          name='state'
+          customLabel='State'
+          placeholder='State'
+          control={control}
+        />
       </div>
 
       <div className='border border-zinc-300 p-6 py-8 mb-8'>

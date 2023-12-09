@@ -13,5 +13,4 @@ export const CheckoutValidation = z.object({
   country: z.string({ message: 'Country is required' }),
   city: z.string({ message: 'City is required' }),
   state: z.string().optional(),
-  zip_code: z.number().optional(),
 });

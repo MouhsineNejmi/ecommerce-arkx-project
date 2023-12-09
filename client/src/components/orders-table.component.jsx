@@ -5,12 +5,13 @@ import { Badge } from './ui/badge';
 const OrdersTable = ({ orders }) => {
   const getStatus = (order) => {
     const status = orderStatuses.find(
-      (status) => status.value === order.status
+      (status) => status.value === order.delivery_status
     );
 
     if (!status) {
       return null;
     }
+
     return (
       <div className='flex w-[100px] items-center'>
         {status.icon && (
@@ -67,9 +68,7 @@ const OrdersTable = ({ orders }) => {
                   {/* <Badge variant={"outline"}>{order.status}</Badge> */}
                 </td>
                 <td className='px-6 py-4 whitespace-nowrap'>
-                  <p className={'font-medium'}>
-                    {`${order.cart_total_price},00 MAD`}
-                  </p>
+                  <p className={'font-medium'}>{`$${order.total}`}</p>
                 </td>
               </tr>
             );

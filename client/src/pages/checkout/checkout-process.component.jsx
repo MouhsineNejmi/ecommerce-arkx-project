@@ -1,13 +1,14 @@
 /* eslint-disable react/prop-types */
 import { CheckIcon } from '@heroicons/react/24/outline';
 
-const CheckoutProcess = ({ step, label, isActive, isCompleted, onClick }) => {
+const CheckoutProcess = ({ step, label, isActive, isCompleted }) => {
+  // console.log(isCompleted);
+
   return (
     <div
       className={`cursor-pointer w-72 h-14 pl-0 ${isActive && 'border-b-2'} ${
         isCompleted && 'border-b-2 border-green-400'
       }`}
-      onClick={onClick}
     >
       <p
         className={`flex items-center gap-2 font-bold ${

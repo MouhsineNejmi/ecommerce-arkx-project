@@ -1,33 +1,44 @@
-import { DashboardIcon, PersonIcon } from '@radix-ui/react-icons';
-import { Store, Tags } from 'lucide-react';
+import {
+  BuildingStorefrontIcon,
+  CreditCardIcon,
+  SquaresPlusIcon,
+  TagIcon,
+  UserGroupIcon,
+  UsersIcon,
+} from '@heroicons/react/24/outline';
 
 const sidebarData = [
   {
     name: 'Dashboard',
-    icon: <DashboardIcon />,
+    icon: <SquaresPlusIcon className='w-5 h-5' />,
     link: '/admin/dashboard',
   },
   {
     name: 'Users',
-    icon: <PersonIcon />,
+    icon: <UsersIcon className='w-5 h-5' />,
     link: '/admin/users',
   },
   {
     name: 'Customers',
-    icon: <PersonIcon />,
+    icon: <UserGroupIcon className='w-5 h-5' />,
     link: '/admin/customers',
   },
   {
     name: 'Products',
-    icon: <Store size={14} strokeWidth={2} />,
+    icon: <BuildingStorefrontIcon className='w-5 h-5' />,
     link: '/admin/products',
     isParent: false,
   },
   {
     name: 'Orders',
-    icon: <Tags size={14} strokeWidth={2} />,
+    icon: <TagIcon className='w-5 h-5' />,
     link: '/admin/orders',
     isParent: false,
+  },
+  {
+    name: 'Payment',
+    icon: <CreditCardIcon className='w-5 h-5' />,
+    link: '/admin/payment',
   },
 ];
 

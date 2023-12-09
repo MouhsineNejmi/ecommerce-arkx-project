@@ -17,6 +17,8 @@ import AdminEditProduct from '../pages/products/admin-edit-product';
 import AdminOrders from '../pages/orders/admin-orders.page';
 import AdminOrderDetails from '../pages/orders/admin-order-detail.page';
 
+import PaymentPage from '../pages/payment';
+
 import UserProfile from '../pages/profile/user-profile.page';
 
 const DashboardRoutes = () => {
@@ -32,6 +34,11 @@ const DashboardRoutes = () => {
           <Route path='orders'>
             <Route index element={<AdminOrders />} />
             <Route path=':orderId' element={<AdminOrderDetails />} />
+          </Route>
+
+          <Route path='payment'>
+            <Route index element={<PaymentPage />} />
+            {/* <Route path=':paymentId' element={<PaymentDetailsPage />} /> */}
           </Route>
 
           <Route path='products'>

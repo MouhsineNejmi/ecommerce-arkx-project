@@ -15,11 +15,11 @@ const AdminOrders = () => {
     keyOneTitle: 'Order ID',
     keyTwo: 'customer_id',
     keyTwoTitle: 'Customer Email',
-    keyThree: 'status',
+    keyThree: 'delivery_status',
     keyThreeTitle: 'Ordrer Status',
     keyFour: 'order_date',
     keyFourTitle: 'Order Date',
-    keyFive: 'cart_total_price',
+    keyFive: 'total',
     keyFiveTitle: 'Total price',
     option: 'orders',
   });

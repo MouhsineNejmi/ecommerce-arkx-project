@@ -18,9 +18,9 @@ const StoreNavbar = () => {
   return (
     <nav className='flex justify-between items-center h-20 px-20'>
       {/* Logo */}
-      <h2 className='font-bold'>
+      <Link to='/' className='font-bold'>
         Desing <span className='text-gold'>Elegance</span>
-      </h2>
+      </Link>
 
       {/* NavList */}
       <ul className='flex items-center space-x-4'>

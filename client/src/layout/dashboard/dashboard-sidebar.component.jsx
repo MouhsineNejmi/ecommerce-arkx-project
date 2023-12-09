@@ -49,15 +49,19 @@ const DashboardSidebar = ({ expanded, toggleExpand }) => {
                   className={({ isActive }) =>
                     `flex items-center justify-between font-medium transition p-3 rounded-2xl
                         ${
-                          isActive ? 'bg-gold text-white' : 'text-variant-black'
+                          isActive
+                            ? 'bg-gold text-white font-semibold'
+                            : 'text-variant-black'
                         } ${
                       expanded ? 'w-full' : ''
                     } hover:bg-light-gold hover:text-white`
                   }
                 >
-                  <div className='flex'>
+                  <div className='flex items-center'>
                     {menu.icon}
-                    {expanded && <h3 className='ml-3 text-xs'>{menu.name}</h3>}
+                    {expanded && (
+                      <h3 className='ml-3 text-[11px]'>{menu.name}</h3>
+                    )}
                   </div>
                 </NavLink>
 

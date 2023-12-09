@@ -116,7 +116,6 @@ const DataTable = ({ columns, data, option, isLoading }) => {
                 </TableRow>
               ))
             ) : (
-              // Display "No results" message
               <TableRow>
                 <TableCell colSpan={columns.length} className='text-center'>
                   No results.

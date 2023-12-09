@@ -2,7 +2,14 @@
 import { Controller } from 'react-hook-form';
 import { cn } from '../lib/utils';
 
-const FormInput = ({ customLabel, name, control, className, ...props }) => {
+const FormInput = ({
+  customLabel,
+  name,
+  control,
+  className,
+  handleChange,
+  ...props
+}) => {
   return (
     <div className={cn('relative flex flex-col', className)}>
       {customLabel ? (
@@ -14,6 +21,7 @@ const FormInput = ({ customLabel, name, control, className, ...props }) => {
         render={({ field }) => (
           <input
             className='border rounded-md p-2 px-4 mb-8'
+            onChange={handleChange}
             {...field}
             {...props}
           />

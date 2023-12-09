@@ -11,6 +11,7 @@ export const ordersApi = apiSlice.injectEndpoints({
           body: data,
         };
       },
+      transformResponse: (result) => result.data,
     }),
     getAllOrders: builder.query({
       query: () => {

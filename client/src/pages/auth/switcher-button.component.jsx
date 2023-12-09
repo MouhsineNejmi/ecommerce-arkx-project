@@ -4,7 +4,7 @@ const SwitcherButton = ({ isLogin, onToggle }) => {
     <div className='flex items-center bg-light-gray text-background rounded-full p-1 cursor-pointer'>
       <div
         className={`flex-1 text-center py-3 rounded-full ${
-          isLogin ? 'bg-gold text-white' : ''
+          isLogin ? 'bg-gold text-white' : 'text-black'
         }`}
         onClick={onToggle}
       >
@@ -12,7 +12,7 @@ const SwitcherButton = ({ isLogin, onToggle }) => {
       </div>
       <div
         className={`flex-1 text-center py-3 rounded-full ${
-          !isLogin ? 'bg-gold text-white' : ''
+          !isLogin ? 'bg-gold text-white' : 'text-black'
         }`}
         onClick={onToggle}
       >

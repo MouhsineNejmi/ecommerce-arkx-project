@@ -291,7 +291,7 @@ const getColumns = ({
             </Badge>
           );
         } else if (option === 'orders') {
-          return <>{`${row.getValue(keyFive)},00 MAD`}</>;
+          return <>{`$${row.getValue(keyFive)}`}</>;
         }
 
         return null;

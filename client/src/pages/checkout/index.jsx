@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import CheckoutProcess from './checkout-process.component';
@@ -22,7 +23,7 @@ const CheckoutPage = () => {
     setCurrentStep(step);
   };
 
-  return (
+  return cart ? (
     <div className='custom-container my-32'>
       <h1 className='font-bold text-2xl text-center my-4'>Checkout Page</h1>
       <div className='my-10 flex justify-center gap-8'>
@@ -31,21 +32,18 @@ const CheckoutPage = () => {
           label='Shopping Cart'
           isActive={currentStep === 1}
           isCompleted={completedSteps.includes(1)}
-          onClick={() => handleStepChange(1)}
         />
         <CheckoutProcess
           step={2}
           label='Checkout Details'
           isActive={currentStep === 2}
           isCompleted={completedSteps.includes(2)}
-          onClick={() => handleStepChange(cart.items ? 2 : 1)}
         />
         <CheckoutProcess
           step={3}
           label='Order Complete'
           isActive={currentStep === 3}
           isCompleted={completedSteps.includes(3)}
-          onClick={() => handleStepChange(cart.items ? 3 : 1)}
         />
       </div>
 
@@ -60,8 +58,21 @@ const CheckoutPage = () => {
         {currentStep === 2 && (
           <CheckoutDetails handleStepChange={handleStepChange} />
         )}
-        {currentStep === 3 && <h1>Thank you for your order</h1>}
+        {currentStep === 3 && (
+          <h1 className='font-bold text-center text-2xl mt-4'>
+            Thank you for your order.
+          </h1>
+        )}
       </div>
+    </div>
+  ) : (
+    <div className='flex flex-col justify-center items-center h-96'>
+      <h1 className='font-bold text-2xl mb-2'>
+        There&apos;s no items in your cart
+      </h1>
+      <Link to='/shop' className='font-semibold underline'>
+        Go To Shop
+      </Link>
     </div>
   );
 };

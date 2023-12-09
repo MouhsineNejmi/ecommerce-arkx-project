@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import {
   ArrowRightIcon,
@@ -55,7 +54,7 @@ const CheckoutTable = ({ cart, totalAmount, handleStepChange }) => {
     await clearCart();
   };
 
-  return cart.items ? (
+  return (
     <div>
       <Table>
         <TableHeader>
@@ -99,7 +98,7 @@ const CheckoutTable = ({ cart, totalAmount, handleStepChange }) => {
                 </TableCell>
 
                 <TableCell>${product.price}</TableCell>
-                <TableHead>${product.price * quantity}</TableHead>
+                <TableHead>${(product.price * quantity).toFixed(2)}</TableHead>
               </TableRow>
             ))}
         </TableBody>
@@ -123,23 +122,11 @@ const CheckoutTable = ({ cart, totalAmount, handleStepChange }) => {
           Clear Items
         </Button>
 
-        <Button
-          className='gap-2'
-          onClick={() => handleStepChange((prev) => prev + 1)}
-        >
+        <Button className='gap-2' onClick={() => handleStepChange(2)}>
           Checkout
           <ArrowRightIcon className='w-4 h-4' />
         </Button>
       </div>
-    </div>
-  ) : (
-    <div className='flex flex-col justify-center items-center h-96'>
-      <h1 className='font-bold text-2xl mb-2'>
-        There&apos;s no items in your cart
-      </h1>
-      <Link to='/shop' className='font-semibold underline'>
-        Go To Shop
-      </Link>
     </div>
   );
 };
