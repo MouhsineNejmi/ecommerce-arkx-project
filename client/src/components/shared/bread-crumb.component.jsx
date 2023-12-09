@@ -8,6 +8,7 @@ import { cn } from '../../lib/utils';
 const paths = [
   { label: 'Home', link: '/' },
   { label: 'Shop', link: '/shop' },
+  { label: 'Orders', link: '/admin/orders' },
 ];
 
 const Breadcrumb = ({ className }) => {

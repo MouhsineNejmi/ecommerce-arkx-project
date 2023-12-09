@@ -12,7 +12,7 @@ const DashboardLayout = () => {
       <DashboardSidebar expanded={expanded} toggleExpand={toggleExpand} />
       <main className={`${expanded ? 'ml-52' : 'ml-20'} w-full`}>
         <DashboardNavbar />
-        <div className='p-4'>
+        <div className='p-4 min-h-screen bg-[#f9f9f9]'>
           <Outlet />
         </div>
       </main>

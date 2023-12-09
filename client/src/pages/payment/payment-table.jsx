@@ -1,18 +1,33 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { ChevronDownIcon, DotsHorizontalIcon } from '@radix-ui/react-icons';
+// import { useNavigate } from 'react-router-dom';
+import {
+  ChevronDownIcon,
+  EllipsisHorizontalIcon,
+} from '@heroicons/react/24/outline';
+import { toast } from '../../components/ui/use-toast';
 
 import { Button } from '../../components/ui/button';
 import { Checkbox } from '../../components/ui/checkbox';
 import { Input } from '../../components/ui/input';
+
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from '@tanstack/react-table';
+
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
+  DropdownMenuTrigger,
   DropdownMenuContent,
+  DropdownMenuCheckboxItem,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
 } from '../../components/ui/dropdown-menu';
 import {
   Table,
@@ -22,20 +37,12 @@ import {
   TableHeader,
   TableRow,
 } from '../../components/ui/table';
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
+
 import { Badge } from '../../components/ui/badge';
-import { useToast } from '../../components/ui/use-toast';
 
 import { paymentStatuses } from '../../data/table-data';
 
-export const columns = [
+const columns = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -138,15 +145,14 @@ export const columns = [
     enableHiding: false,
     cell: ({ row }) => {
       const payment = row.original;
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const { toast } = useToast();
+      // const navigate = useNavigate();
 
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant='ghost' className='h-8 w-8 p-0'>
               <span className='sr-only'>Open menu</span>
-              <DotsHorizontalIcon className='h-4 w-4' />
+              <EllipsisHorizontalIcon className='h-4 w-4' />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
@@ -154,14 +160,26 @@ export const columns = [
             <DropdownMenuItem
               onClick={() => {
                 navigator.clipboard.writeText(payment.order_id);
-                toast({ title: 'Order Id Copied To Clipboard' });
+                toast({ title: 'Order id copied to clipboard successfully' });
               }}
             >
-              Copy Order ID
+              Copy order ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                (window.location.href = `/admin/orders/${payment.order_id}`)
+              }
+            >
+              View order details
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                (window.location.href = `/admin/payment/${payment._id}`)
+              }
+            >
+              View payment details
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
