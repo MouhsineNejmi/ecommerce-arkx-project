@@ -20,6 +20,7 @@ import AdminOrderDetails from '../pages/orders/admin-order-detail.page';
 import PaymentPage from '../pages/payment';
 
 import UserProfile from '../pages/profile/user-profile.page';
+import PaymentDetailsPage from '../pages/payment/payment-details';
 
 const DashboardRoutes = () => {
   return (
@@ -38,14 +39,14 @@ const DashboardRoutes = () => {
 
           <Route path='payment'>
             <Route index element={<PaymentPage />} />
-            {/* <Route path=':paymentId' element={<PaymentDetailsPage />} /> */}
+            <Route path=':paymentId' element={<PaymentDetailsPage />} />
           </Route>
 
           <Route path='products'>
             <Route index element={<AdminProducts />} />
-            <Route path=':id' element={<AdminProductDetails />} />
+            <Route path=':productId' element={<AdminProductDetails />} />
             <Route path='add' element={<AdminAddProduct />} />
-            <Route path='edit/:id' element={<AdminEditProduct />} />
+            <Route path='edit/:productId' element={<AdminEditProduct />} />
           </Route>
         </Route>
       </Route>

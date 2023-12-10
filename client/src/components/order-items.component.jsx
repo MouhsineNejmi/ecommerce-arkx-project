@@ -10,6 +10,8 @@ import {
 } from './ui/table';
 
 const OrderItemsComponent = ({ orders, total }) => {
+  console.log(orders);
+
   return (
     <>
       <Table>

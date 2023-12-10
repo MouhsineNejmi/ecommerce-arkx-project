@@ -93,7 +93,6 @@ const CheckoutFormComponent = ({ handleStepChange }) => {
       await createPayment({
         order_id: order._id,
         amount: confirmCardPayment.paymentIntent.amount,
-        payment_date: confirmCardPayment.paymentIntent.created,
         payment_method: paymentMethodReq.paymentMethod.type,
         card: paymentMethodReq.paymentMethod.card,
         status: 'Completed',

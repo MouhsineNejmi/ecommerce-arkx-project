@@ -1,15 +1,20 @@
-import PropTypes from 'prop-types';
-import { Pencil, Trash2 } from 'lucide-react';
+/* eslint-disable react/prop-types */
 import React from 'react';
+
+import { Button } from '../../components/ui/button';
+import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
+import { EyeIcon } from '@heroicons/react/24/outline';
+
 import { useToast } from '@/components/ui/use-toast';
 
 import { useDeleteProductMutation } from '../../app/api/products.api';
+
 import { Link } from 'react-router-dom';
 
 const AdminProductAction = ({ productId }) => {
   const { toast } = useToast();
 
-  const [deletePost, { isLoading, error, isSuccess, isError }] =
+  const [deleteProduct, { isLoading, error, isSuccess, isError }] =
     useDeleteProductMutation();
 
   React.useEffect(() => {
@@ -33,29 +38,31 @@ const AdminProductAction = ({ productId }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
 
-  const onDeleteHandler = (id) => {
-    if (window.confirm('Are you sure you want to delete this product?')) {
-      deletePost(id);
-    }
+  const handleDeleteProduct = async (id) => {
+    await deleteProduct(id);
   };
 
   return (
-    <div className='flex gap-2'>
+    <div className='flex gap-2 mt-4'>
+      <Link to={`/admin/products/${productId}`}>
+        <Button className='group p-3 border-gold hover:bg-gold'>
+          <EyeIcon className='text-gold w-4 h-4 group group-hover:text-white' />
+        </Button>
+      </Link>
       <Link to={`/admin/products/edit/${productId}`}>
-        <Pencil size={16} className='text-green-500 cursor-pointer' />
+        <Button className='group p-3 border-gold hover:bg-gold'>
+          <PencilIcon className='text-gold w-4 h-4 group group-hover:text-white' />
+        </Button>
       </Link>
 
-      <Trash2
-        size={16}
-        className='text-red-500 cursor-pointer'
-        onClick={() => onDeleteHandler(productId)}
-      />
+      <Button
+        onClick={handleDeleteProduct}
+        className='group p-3 bg-transparent text-red-500 border border-red-500 hover:bg-red-500'
+      >
+        <TrashIcon className='w-4 h-4 group group-hover:text-white' />
+      </Button>
     </div>
   );
 };
 
 export default AdminProductAction;
-
-AdminProductAction.propTypes = {
-  productId: PropTypes.string,
-};

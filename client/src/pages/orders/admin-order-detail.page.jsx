@@ -21,7 +21,7 @@ const AdminOrderDetails = () => {
   return isLoading ? (
     <Loader2 className='animate-spin' />
   ) : (
-    <div>
+    <>
       <div className='mb-4 flex items-center gap-2 mb-4'>
         <h2 className='text-xl font-bold'>Order ID: {order._id}</h2>
         {status ? (
@@ -117,7 +117,7 @@ const AdminOrderDetails = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

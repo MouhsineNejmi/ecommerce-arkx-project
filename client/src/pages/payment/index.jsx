@@ -5,7 +5,7 @@ const PaymentPage = () => {
   const { data: payments, isLoading: isLoadingPayments } =
     useGetAllPaymentsQuery();
 
-  // console.log(payments);
+  console.log(payments);
 
   return (
     <div>

@@ -41,6 +41,7 @@ import {
 import { Badge } from '../../components/ui/badge';
 
 import { paymentStatuses } from '../../data/table-data';
+import { Link } from 'react-router-dom';
 
 const columns = [
   {
@@ -166,19 +167,15 @@ const columns = [
               Copy order ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() =>
-                (window.location.href = `/admin/orders/${payment.order_id}`)
-              }
-            >
-              View order details
+            <DropdownMenuItem>
+              <Link to={`/admin/orders/${payment.order_id}`}>
+                View order details
+              </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() =>
-                (window.location.href = `/admin/payment/${payment._id}`)
-              }
-            >
-              View payment details
+            <DropdownMenuItem>
+              <Link to={`/admin/orders/${payment._id}`}>
+                View payment details
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

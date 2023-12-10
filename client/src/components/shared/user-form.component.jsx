@@ -267,7 +267,7 @@ const UserForm = ({ user, action = 'Create', account_type = 'User' }) => {
           <FormField
             control={form.control}
             name='email'
-            disabled={action === 'edit' ? true : false}
+            disabled={action === 'Edit' ? true : false}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>

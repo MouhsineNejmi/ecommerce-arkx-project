@@ -39,7 +39,7 @@ const ProductCard = ({ product, showActions = true, extended = false }) => {
           !extended ? 'flex-1' : 'w-[250px]'
         } group`}
       >
-        <div className='relative w-full h-[300px] overflow-hidden rounded-md'>
+        <div className='relative w-full h-[300px] overflow-hidden rounded-md cursor-pointer'>
           <div className='absolute w-full h-full bg-black opacity-30 hidden z-10 group-hover:block' />
           <img
             src={product.product_images[0]}

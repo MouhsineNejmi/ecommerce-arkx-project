@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import {
   Select,
@@ -13,6 +13,7 @@ import Parser from 'html-react-parser';
 import { useGetProductByIdQuery } from '../../app/api/products.api';
 import { Loader2, Star } from 'lucide-react';
 import AdminProductAction from '../../components/products/admin-product-actions.component';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 
 const AdminProductDetails = () => {
   const { id } = useParams();
@@ -37,14 +38,17 @@ const AdminProductDetails = () => {
 
   return (
     <div className='p-4'>
-      <div className='flex justify-center gap-20'>
-        <div className='w-2/5 overflow-hidden rounded-md'>
+      <Link
+        to='/admin/products'
+        className='flex items-center gap-2 underline text-zinc-500 mb-4'
+      >
+        <ArrowLeftIcon className='w-4 h-4' />
+        Go back
+      </Link>
+      <div className='flex justify-center gap-10'>
+        <div className='w-1/2 overflow-hidden rounded-md'>
           <img
-            src={
-              !product.product_images
-                ? product.product_images
-                : 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=1408&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-            }
+            src={product.product_images[0]}
             alt={product.product_name}
             className={cn(
               'h-[400px] w-full object-cover transition-all hover:scale-105',
@@ -52,13 +56,12 @@ const AdminProductDetails = () => {
             )}
           />
         </div>
-        <div className='w-2/5'>
+        <div className='w-1/2'>
           <div className='space-y-1 text-sm'>
             <div className='flex justify-between items-center'>
               <p className='text-sm text-muted-foreground text-slate-500 dark:text-slate-300'>
-                {product.subcategory_id.subcategory_name}
+                {product.category_id.category_name}
               </p>
-              <AdminProductAction productId={product._id} />
             </div>
 
             <h3 className='text-2xl py-2 w-4/5 font-bold leading-7'>

@@ -54,7 +54,7 @@ const CustomerLogin = () => {
   }, [form.isSubmitSuccessful]);
 
   const onSubmit = async (values) => {
-    loginUser({ ...values, account_type: 'customer' });
+    await loginUser({ ...values, account_type: 'customer' });
   };
 
   return (

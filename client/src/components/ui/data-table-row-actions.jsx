@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import * as React from 'react';
-import { Edit2, Trash2 } from 'lucide-react';
 
 import { AlertDialog, AlertDialogTrigger } from './alert-dialog';
 
@@ -11,6 +10,7 @@ import { isAccountTypeUser } from '../../helpers/isAccountTypeUser';
 
 import { useGetUserByIdQuery } from '../../app/api/users.api';
 import { useGetCustomerByIdQuery } from '../../app/api/customers.api';
+import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 function DataTableRowActions({ row, option }) {
   const { _id: id, account_type } = row.original;
@@ -27,15 +27,15 @@ function DataTableRowActions({ row, option }) {
   return option === 'users' ? (
     <div className='flex gap-2 items-center'>
       <UserDialog
-        trigger={<Edit2 size={18} className='cursor-pointer mr-2' />}
+        trigger={<PencilIcon className='w-6 h-6 cursor-pointer mr-2' />}
         user={user}
         account_type='User'
         action='Update'
       />
 
       <AlertDialog>
-        <AlertDialogTrigger className='w-full flex'>
-          <Trash2 size={16} className='mr-2 color-red-400' />
+        <AlertDialogTrigger className='w-full flex text-red-500'>
+          <TrashIcon className='w-5 h-5 mr-2' />
         </AlertDialogTrigger>
 
         <DeleteUserDialog userId={id} />
@@ -43,7 +43,7 @@ function DataTableRowActions({ row, option }) {
     </div>
   ) : (
     <UserDialog
-      trigger={<Edit2 size={14} className='cursor-pointer mr-2' />}
+      trigger={<PencilIcon className='w-5 h-5 cursor-pointer mr-2' />}
       user={customer}
       account_type='Customer'
       action='Update'

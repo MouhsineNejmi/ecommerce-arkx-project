@@ -15,17 +15,16 @@ function DataTableToolbar({ table, option }) {
   return (
     <div className='flex items-center gap-2 justify-end'>
       <div className='flex flex-1 items-center justify-end  space-x-2'>
-        {option === 'customers' ||
-          (option === 'users' && (
-            <Input
-              placeholder='Filter by emails...'
-              value={table.getColumn('email')?.getFilterValue() ?? ''}
-              onChange={(event) =>
-                table.getColumn('email')?.setFilterValue(event.target.value)
-              }
-              className='h-8 w-[150px] lg:w-[250px]'
-            />
-          ))}
+        {(option === 'customers' || option === 'users') && (
+          <Input
+            placeholder='Filter by emails...'
+            value={table.getColumn('email')?.getFilterValue() ?? ''}
+            onChange={(event) =>
+              table.getColumn('email')?.setFilterValue(event.target.value)
+            }
+            className='h-8 w-[150px] lg:w-[250px]'
+          />
+        )}
         {isFiltered && (
           <Button
             variant='ghost'

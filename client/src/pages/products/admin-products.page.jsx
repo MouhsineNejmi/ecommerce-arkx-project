@@ -7,6 +7,8 @@ import ProductCard from '../../components/products/product-card.component';
 
 import { useGetAllProductsQuery } from '../../app/api/products.api';
 
+import AdminProductAction from '../../components/products/admin-product-actions.component';
+
 const AdminProducts = () => {
   const {
     data: products,
@@ -45,9 +47,12 @@ const AdminProducts = () => {
         </div>
       </div>
 
-      <div className='pt-6 grid grid-flow-row grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+      <div className='pt-6 grid gap-4 grid-flow-row grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
         {products.map((product) => (
-          <ProductCard key={product._id} product={product} />
+          <div key={product._id} className='cursor-pointer'>
+            <ProductCard showActions={false} product={product} />
+            <AdminProductAction productId={product._id} />
+          </div>
         ))}
       </div>
     </div>

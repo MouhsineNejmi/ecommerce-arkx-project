@@ -48,6 +48,15 @@ export const paymentApi = apiSlice.injectEndpoints({
       },
       transformResponse: (result) => result.data,
     }),
+    getPaymentById: builder.query({
+      query: (paymentId) => {
+        return {
+          url: `payment/${paymentId}`,
+          credentials: 'include',
+        };
+      },
+      transformResponse: (result) => result.data,
+    }),
   }),
 });
 
@@ -56,4 +65,5 @@ export const {
   useCreatePaymentIntentMutation,
   useCreatePaymentMutation,
   useGetAllPaymentsQuery,
+  useGetPaymentByIdQuery,
 } = paymentApi;

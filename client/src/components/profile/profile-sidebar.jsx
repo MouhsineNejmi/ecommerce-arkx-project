@@ -4,20 +4,16 @@ import { cn } from '../../lib/utils';
 
 const ProfileSidebar = ({ className, items, ...props }) => {
   return (
-    <nav
-      className={cn(
-        'flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1',
-        className
-      )}
-      {...props}
-    >
+    <nav className={cn('flex flex-col gap-2 rounded-md', className)} {...props}>
       {items.map((item, index) => (
         <NavLink
           key={index}
-          to={item.link}
+          to={item.to}
           className={({ isActive }) =>
-            `justify-start ${
-              isActive ? 'bg-muted' : 'hover:bg-transparent hover:underline'
+            `justify-start w-full ${
+              isActive
+                ? 'underline font-bold'
+                : 'hover:bg-transparent hover:underline'
             }`
           }
         >
