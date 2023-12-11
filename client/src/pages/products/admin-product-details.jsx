@@ -12,11 +12,10 @@ import Parser from 'html-react-parser';
 
 import { useGetProductByIdQuery } from '../../app/api/products.api';
 import { Loader2, Star } from 'lucide-react';
-import AdminProductAction from '../../components/products/admin-product-actions.component';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 
 const AdminProductDetails = () => {
-  const { id } = useParams();
+  const { productId } = useParams();
 
   const {
     data: product,
@@ -24,7 +23,9 @@ const AdminProductDetails = () => {
     isFetching,
     isError,
     error,
-  } = useGetProductByIdQuery(id);
+  } = useGetProductByIdQuery(productId);
+
+  console.log(product);
 
   const loading = isLoading || isFetching;
 
@@ -48,7 +49,7 @@ const AdminProductDetails = () => {
       <div className='flex justify-center gap-10'>
         <div className='w-1/2 overflow-hidden rounded-md'>
           <img
-            src={product.product_images[0]}
+            src={product?.product_images[0]}
             alt={product.product_name}
             className={cn(
               'h-[400px] w-full object-cover transition-all hover:scale-105',
@@ -86,28 +87,13 @@ const AdminProductDetails = () => {
 
             <div className='flex py-2 gap-6'>
               <div className='flex items-center gap-2'>
-                <p className='text-slate-700 dark:text-slate-300'>
-                  Select Size:
-                </p>
-                <Select>
-                  <SelectTrigger className='w-[180px] text-slate-400 dark:border-slate-200'>
-                    <SelectValue placeholder='Choose size' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem value='apple'>Apple</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className='flex items-center gap-2'>
                 <p className='text-slate-700 dark:text-slate-300'>Quantity:</p>
                 <p className='text-slate-400'>{product.quantity}</p>
               </div>
             </div>
 
             <div className='flex items-center gap-4 py-2'>
-              <p className='text-slate-700 dark:text-slate-300'>Options:</p>
+              <p className='text-slate-700 dark:text-slate-300'>Colors:</p>
 
               <Select>
                 <SelectTrigger className='w-[250px] text-slate-400 dark:border-slate-200'>

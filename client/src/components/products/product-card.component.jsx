@@ -12,12 +12,28 @@ import { Loader2 } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 
 import { addProductToCart } from '../../app/features/cart.slice';
+import {
+  addProductToFavorites,
+  removeProductFromFavorites,
+} from '../../app/features/favorties.slice';
+import {
+  useAddToFavoritesMutation,
+  useDeleteFromFavoritesMutation,
+} from '../../app/api/favorites.api';
 
-const ProductCard = ({ product, showActions = true, extended = false }) => {
+const ProductCard = ({
+  product,
+  isFavorite = false,
+  showActions = true,
+  extended = false,
+}) => {
   const dispatch = useDispatch();
   const { toast } = useToast();
   const [addToCart, { isLoading: isAddingProductToCart, isSuccess }] =
     useAddToCartMutation();
+
+  const [addToFavorites] = useAddToFavoritesMutation();
+  const [deleteFromFavorites] = useDeleteFromFavoritesMutation();
 
   useEffect(() => {
     if (isSuccess) {
@@ -27,9 +43,21 @@ const ProductCard = ({ product, showActions = true, extended = false }) => {
   }, [isSuccess]);
 
   const handleAddToCart = async (product) => {
-    // console.log(product);
     dispatch(addProductToCart(product));
     await addToCart(product._id);
+    toast({ title: 'Product added to cart successfully!' });
+  };
+
+  const handleAddToFavorites = async () => {
+    dispatch(addProductToFavorites(product));
+    await addToFavorites(product._id);
+    toast({ title: 'Product added to favorites successfully!' });
+  };
+
+  const handleRemoveFrromFavorites = async () => {
+    dispatch(removeProductFromFavorites(product));
+    await deleteFromFavorites(product._id);
+    toast({ title: 'Product removed from favorites successfully!' });
   };
 
   return (
@@ -64,8 +92,14 @@ const ProductCard = ({ product, showActions = true, extended = false }) => {
         {showActions && (
           <div className='hidden z-20 group-hover:block'>
             <div className='absolute right-2 top-2 bg-background p-2 rounded-full cursor-pointer'>
-              <HeartIcon className='w-6 h-6' />
-              <HeartIconFilled className='w-6 h-6 text-red-500 hidden' />
+              {!isFavorite ? (
+                <HeartIcon className='w-6 h-6' onClick={handleAddToFavorites} />
+              ) : (
+                <HeartIconFilled
+                  className='w-6 h-6 text-red-500'
+                  onClick={handleRemoveFrromFavorites}
+                />
+              )}
             </div>
             <div className='w-full flex justify-center absolute bottom-24'>
               <Button

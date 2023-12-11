@@ -6,7 +6,7 @@ const productSchema = z.object({
     .min(2, { message: 'Must be 2 or more characters long' })
     .max(50, { message: 'Must be 50 or fewer characters long' }),
   product_images: z.instanceof(File),
-  category_id: z.string().min(1, { message: 'Category field is required' }),
+  category_id: z.string({ message: 'Category field is required' }),
   short_description: z
     .string()
     .min(1, { message: 'Short description field is required' }),

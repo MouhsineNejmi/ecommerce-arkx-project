@@ -35,6 +35,7 @@ import {
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { toast } from '../ui/use-toast';
+import { useUpdateProductMutation } from '../../app/api/products.api';
 
 const AdminProductForm = ({ product }) => {
   const [files, setFiles] = React.useState([]);
@@ -43,12 +44,16 @@ const AdminProductForm = ({ product }) => {
   );
 
   const { data: categories, isLoading } = useGetAllCategoriesQuery();
+  const [updateProduct, { isLoading: isUpdatingProduct }] =
+    useUpdateProductMutation();
   const [uploadImages] = useUploadImagesMutation();
   const [deleteImage] = useDeleteImageMutation();
 
   function setRichText(value) {
     form.setValue('description', value, { shouldValidate: true });
   }
+
+  // console.log(product);
 
   const form = useForm({
     resolver: zodResolver(productSchema),
@@ -60,30 +65,29 @@ const AdminProductForm = ({ product }) => {
       quantity: product ? product.quantity : 0,
       discount_price: product ? product.discount_price : 0,
       product_images: existingImages,
+      category_id: product ? product.category_id._id : 'Select Category',
     },
   });
 
-  // const updateProduct = async () => {
-  //   try {
-  //     const updatedProductData = {
-  //       product_name,
-  //       price,
-  //       discount_price,
-  //       options,
-  //       category_id,
-  //       short_description,
-  //       long_description,
-  //       quantity,
-  //       // product_images: updatedImageUrls, // Use the new image URLs
-  //     };
+  const handleUpdateProduct = async (values) => {
+    try {
+      const updatedProductData = {
+        product_name: values.product_name,
+        price: values.price,
+        discount_price: values.discount_price,
+        options: values.options,
+        category_id: values.category_id,
+        short_description: values.short_description,
+        long_description: values.long_description,
+        quantity: values.quantity,
+        // product_images: updatedImageUrls, // Use the new image URLs
+      };
 
-  //     // Dispatch the editProduct action with updated product data
-  //     await updateProduct({ id: product._id, data: updatedProductData });
-  //     navigate('/admin/products');
-  //   } catch (error) {
-  //     console.error('Error updating product:', error);
-  //   }
-  // };
+      await updateProduct({ id: product._id, data: updatedProductData });
+    } catch (error) {
+      console.error('Error updating product:', error);
+    }
+  };
 
   const handleDeleteImage = async (index, product_image) => {
     const public_id = getPublicIdFromUrl(product_image);
@@ -108,8 +112,9 @@ const AdminProductForm = ({ product }) => {
     await uploadImages(formData);
   };
 
-  const onSubmit = (values) => {
+  const onSubmit = async (values) => {
     console.log(values);
+    // handleUpdateProduct(values);
   };
 
   if (isLoading) {
@@ -173,6 +178,7 @@ const AdminProductForm = ({ product }) => {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name='short_description'
@@ -180,12 +186,17 @@ const AdminProductForm = ({ product }) => {
             <FormItem>
               <FormLabel>Short Description:</FormLabel>
               <FormControl>
-                <Textarea placeholder='Short Description' {...field} />
+                <Textarea
+                  className='bg-background'
+                  placeholder='Short Description'
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name='long_description'
@@ -214,6 +225,7 @@ const AdminProductForm = ({ product }) => {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name='quantity'
@@ -279,7 +291,9 @@ const AdminProductForm = ({ product }) => {
           )}
         />
 
-        <Button type='submit'>Submit</Button>
+        <Button type='submit' disabled={isUpdatingProduct}>
+          Submit
+        </Button>
       </form>
     </Form>
   );

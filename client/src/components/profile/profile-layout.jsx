@@ -18,10 +18,6 @@ const profileSidebarItems = [
     title: 'Wishlist',
     to: '/profile/favorites',
   },
-  {
-    title: 'Cart',
-    to: '/profile/cart',
-  },
 ];
 
 const ProfileLayout = () => {
@@ -29,8 +25,8 @@ const ProfileLayout = () => {
 
   return (
     <div className='custom-container'>
-      <div className='hidden pb-16 md:block'>
-        <h2 className='flex justify-center text-4xl underline font-bold tracking-tight my-6'>
+      <div className='pb-32'>
+        <h2 className='flex justify-center text-4xl underline font-bold tracking-tight mt-10 mb-20'>
           My Account
         </h2>
 
@@ -49,7 +45,7 @@ const ProfileLayout = () => {
             )}
             <ProfileSidebar items={profileSidebarItems} />
           </aside>
-          <div className='flex-1 lg:max-w-2xl'>
+          <div className='flex-1'>
             <Outlet />
           </div>
         </div>

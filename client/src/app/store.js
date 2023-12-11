@@ -10,9 +10,11 @@ import { ordersApi } from './api/orders.api';
 import { paymentApi } from './api/payment.api';
 import { categoriesApi } from './api/categories.api';
 import { cartApi } from './api/cart.api';
+import { favoritesApi } from './api/favorites.api';
 
 import userReducer from './features/user.slice';
 import cartReducer from './features/cart.slice';
+import favoritesReducer from './features/favorties.slice';
 
 export const store = configureStore({
   reducer: {
@@ -25,8 +27,10 @@ export const store = configureStore({
     [paymentApi.reducerPath]: paymentApi.reducer,
     [categoriesApi.reducerPath]: categoriesApi.reducer,
     [cartApi.reducerPath]: cartApi.reducer,
+    [favoritesApi.reducerPath]: favoritesApi.reducer,
     userSlice: userReducer,
     cartSlice: cartReducer,
+    favoritesSlice: favoritesReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({}).concat([
@@ -39,5 +43,6 @@ export const store = configureStore({
       paymentApi.middleware,
       categoriesApi.middleware,
       cartApi.middleware,
+      favoritesApi.middleware,
     ]),
 });

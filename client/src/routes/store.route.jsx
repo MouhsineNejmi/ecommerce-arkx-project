@@ -9,18 +9,22 @@ import ShopPage from '../pages/shop';
 import CheckoutPage from '../pages/checkout';
 import CustomerOrders from '../pages/orders/customer-orders.page';
 import FavoritesPage from '../pages/favorites';
+import CustomerFavorites from '../pages/favorites/customer-favorites';
 
 const StoreRoutes = () => {
   return (
     <Routes>
       <Route element={<StoreLayout />}>
         <Route path='/' element={<Home />} />
+
         <Route path='profile' element={<ProfileLayout />}>
           <Route index element={<AccountProfile />} />
           <Route path='orders' element={<CustomerOrders />} />
-          <Route path='favorites' element={<FavoritesPage />} />
+          <Route path='favorites' element={<CustomerFavorites />} />
         </Route>
+
         <Route path='checkout' element={<CheckoutPage />} />
+        <Route path='favorites' element={<FavoritesPage />} />
         <Route path='shop' element={<ShopPage />} />
       </Route>
     </Routes>

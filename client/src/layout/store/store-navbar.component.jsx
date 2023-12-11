@@ -1,6 +1,7 @@
 import { Link, NavLink } from 'react-router-dom';
 import {
   MagnifyingGlassIcon,
+  StarIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
 
@@ -53,8 +54,12 @@ const StoreNavbar = () => {
           </Link>
         )}
         {user && (
-          <div className='flex items-center gap-1'>
+          <div className='flex items-center gap-2'>
             <Cart />
+
+            <Link to='/favorites'>
+              <StarIcon className='w-6 h-6' />
+            </Link>
           </div>
         )}
       </div>
