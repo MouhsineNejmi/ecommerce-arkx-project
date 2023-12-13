@@ -1,5 +1,6 @@
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 
 import { Badge } from '../../components/ui/badge';
 import OrderItemsComponent from '../../components/order-items.component';
@@ -22,6 +23,13 @@ const AdminOrderDetails = () => {
     <Loader2 className='animate-spin' />
   ) : (
     <>
+      <Link
+        to='/admin/orders'
+        className='flex items-center gap-2 underline text-zinc-500 mb-4'
+      >
+        <ArrowLeftIcon className='w-4 h-4' />
+        Go back
+      </Link>
       <div className='mb-4 flex items-center gap-2 mb-4'>
         <h2 className='text-xl font-bold'>Order ID: {order._id}</h2>
         {status ? (

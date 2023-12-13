@@ -95,3 +95,19 @@ exports.getAllPayments = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getPaymentById = async (req, res, next) => {
+  const { paymentId } = req.params;
+
+  try {
+    const payment = await Payment.findById(paymentId);
+
+    res.status(200).json({
+      status: 'success',
+      data: payment,
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};

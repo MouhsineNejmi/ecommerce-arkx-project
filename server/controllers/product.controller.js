@@ -1,5 +1,4 @@
 const Product = require('../models/product.model');
-const { handleMultipleImagesUpload } = require('../utils/handleUpload.utils');
 
 //post create product
 exports.addProduct = async (req, res) => {
@@ -7,6 +6,7 @@ exports.addProduct = async (req, res) => {
     category_id,
     product_name,
     sku,
+    product_images,
     short_description,
     long_description,
     price,
@@ -16,8 +16,6 @@ exports.addProduct = async (req, res) => {
   } = req.body;
 
   try {
-    const product_images = await handleMultipleImagesUpload(req.files);
-
     const newProduct = await Product.create({
       sku,
       category_id,

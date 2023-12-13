@@ -10,12 +10,14 @@ import CheckoutPage from '../pages/checkout';
 import CustomerOrders from '../pages/orders/customer-orders.page';
 import FavoritesPage from '../pages/favorites';
 import CustomerFavorites from '../pages/favorites/customer-favorites';
+import ProductDetails from '../pages/products/product-details.page';
 
 const StoreRoutes = () => {
   return (
     <Routes>
       <Route element={<StoreLayout />}>
         <Route path='/' element={<Home />} />
+        <Route path='/products/:productId' element={<ProductDetails />} />
 
         <Route path='profile' element={<ProfileLayout />}>
           <Route index element={<AccountProfile />} />

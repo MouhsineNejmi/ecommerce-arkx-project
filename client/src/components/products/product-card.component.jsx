@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
-import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
 import { useToast } from '../ui/use-toast';
 import { useAddToCartMutation } from '../../app/api/cart.api';
 
@@ -20,6 +21,7 @@ import {
   useAddToFavoritesMutation,
   useDeleteFromFavoritesMutation,
 } from '../../app/api/favorites.api';
+import { useGetMyProfileDataQuery } from '../../app/api/users.api';
 
 const ProductCard = ({
   product,
@@ -29,26 +31,34 @@ const ProductCard = ({
 }) => {
   const dispatch = useDispatch();
   const { toast } = useToast();
-  const [addToCart, { isLoading: isAddingProductToCart, isSuccess }] =
+  const { data: user, isLoading } = useGetMyProfileDataQuery();
+  const [addToCart, { isLoading: isAddingProductToCart }] =
     useAddToCartMutation();
 
   const [addToFavorites] = useAddToFavoritesMutation();
   const [deleteFromFavorites] = useDeleteFromFavoritesMutation();
 
-  useEffect(() => {
-    if (isSuccess) {
-      toast({ title: 'Product added to cart successfully!' });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccess]);
-
   const handleAddToCart = async (product) => {
+    if (isLoading || (!isLoading && !user)) {
+      toast({
+        title: 'You must be logged in, in order to add product to cart!',
+        variant: 'destructive',
+      });
+      return;
+    }
     dispatch(addProductToCart(product));
     await addToCart(product._id);
     toast({ title: 'Product added to cart successfully!' });
   };
 
   const handleAddToFavorites = async () => {
+    if (isLoading || (!isLoading && !user)) {
+      toast({
+        title: 'You must be logged in, in order to add product to favorites!',
+        variant: 'destructive',
+      });
+      return;
+    }
     dispatch(addProductToFavorites(product));
     await addToFavorites(product._id);
     toast({ title: 'Product added to favorites successfully!' });
@@ -62,10 +72,11 @@ const ProductCard = ({
 
   return (
     product && (
-      <div
+      <Link
         className={`relative flex flex-col ${
           !extended ? 'flex-1' : 'w-[250px]'
         } group`}
+        to={`/products/${product._id}`}
       >
         <div className='relative w-full h-[300px] overflow-hidden rounded-md cursor-pointer'>
           <div className='absolute w-full h-full bg-black opacity-30 hidden z-10 group-hover:block' />
@@ -113,7 +124,7 @@ const ProductCard = ({
             </div>
           </div>
         )}
-      </div>
+      </Link>
     )
   );
 };

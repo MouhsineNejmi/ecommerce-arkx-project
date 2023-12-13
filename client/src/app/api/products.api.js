@@ -8,7 +8,6 @@ export const productsApi = apiSlice.injectEndpoints({
       query() {
         return {
           url: 'products',
-          credentials: 'include',
         };
       },
       providesTags: (result) =>
@@ -29,7 +28,6 @@ export const productsApi = apiSlice.injectEndpoints({
       query(id) {
         return {
           url: `products/${id}`,
-          credentials: 'include',
         };
       },
       transformResponse: (response) => response.data,

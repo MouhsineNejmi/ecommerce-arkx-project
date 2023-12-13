@@ -83,6 +83,36 @@ exports.getOrderByID = async (req, res) => {
   }
 };
 
+exports.getOrderByCustomerID = async (req, res) => {
+  try {
+    const { customer_id } = req.params;
+
+    const orders = await Order.find({ customer_id })
+      .populate('order_items.product')
+      .populate('customer_id', {
+        password: 0,
+        __v: 0,
+      });
+
+    if (!orders) {
+      return res.status(404).json({
+        status: 404,
+        message: 'Order not found',
+      });
+    }
+
+    return res.status(200).json({
+      status: 200,
+      data: orders,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.json({
+      message: error?.message,
+    });
+  }
+};
+
 exports.updateOrder = async (req, res) => {
   const { customer_id, order_items, order_date, total, status } = req.body;
 

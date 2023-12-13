@@ -7,11 +7,15 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const uploadToCloudinary = async (file) => {
-  const res = await cloudinary.uploader.upload(file, {
+exports.uploadToCloudinary = async (file) => {
+  const response = await cloudinary.uploader.upload(file, {
     resource_type: 'image',
   });
-  return res;
+  return response;
 };
 
-module.exports = uploadToCloudinary;
+exports.deleteFromCloudinary = async (public_id) => {
+  const response = await cloudinary.uploader.destroy(public_id);
+
+  return response;
+};

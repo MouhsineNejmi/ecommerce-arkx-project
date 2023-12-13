@@ -1,5 +1,10 @@
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import Parser from 'html-react-parser';
+import { Loader2, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { HeartIcon, ShoppingCartIcon } from '@heroicons/react/24/outline';
+
 import {
   Select,
   SelectContent,
@@ -8,15 +13,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import Parser from 'html-react-parser';
 
 import { useGetProductByIdQuery } from '../../app/api/products.api';
-import { Loader2, Star } from 'lucide-react';
-import { ArrowLeftIcon } from '@heroicons/react/24/outline';
-import Slider from '../../components/slider.component';
+import { addProductToCart } from '../../app/features/cart.slice';
+import { addProductToFavorites } from '../../app/features/favorties.slice';
+import { useAddToFavoritesMutation } from '../../app/api/favorites.api';
+import { useGetMyProfileDataQuery } from '../../app/api/users.api';
+import { useAddToCartMutation } from '../../app/api/cart.api';
+import { useToast } from '../../components/ui/use-toast';
+import { Button } from '../../components/ui/button';
 
-const AdminProductDetails = () => {
+const ProductDetails = () => {
   const { productId } = useParams();
+  const dispatch = useDispatch();
+  const { toast } = useToast();
+
+  const { data: user, isLoadingUserData } = useGetMyProfileDataQuery();
+  const [addToCart, { isLoading: isAddingProductToCart }] =
+    useAddToCartMutation();
+
+  const [addToFavorites, { isLoading: isAddingProductToFavorites }] =
+    useAddToFavoritesMutation();
 
   const {
     data: product,
@@ -25,8 +42,6 @@ const AdminProductDetails = () => {
     isError,
     error,
   } = useGetProductByIdQuery(productId);
-
-  console.log(product);
 
   const loading = isLoading || isFetching;
 
@@ -38,29 +53,44 @@ const AdminProductDetails = () => {
     console.error(error);
   }
 
+  const handleAddToCart = async (product) => {
+    if (isLoading || (!isLoading && !user)) {
+      toast({
+        title: 'You must be logged in, in order to add product to cart!',
+        variant: 'destructive',
+      });
+      return;
+    }
+    dispatch(addProductToCart(product));
+    await addToCart(product._id);
+    toast({ title: 'Product added to cart successfully!' });
+  };
+
+  const handleAddToFavorites = async () => {
+    if (isLoading || (!isLoadingUserData && !user)) {
+      toast({
+        title: 'You must be logged in, in order to add product to favorites!',
+        variant: 'destructive',
+      });
+      return;
+    }
+    dispatch(addProductToFavorites(product));
+    await addToFavorites(product._id);
+    toast({ title: 'Product added to favorites successfully!' });
+  };
+
   return (
-    <div className='p-4'>
-      <Link
-        to='/admin/products'
-        className='flex items-center gap-2 underline text-zinc-500 mb-4'
-      >
-        <ArrowLeftIcon className='w-4 h-4' />
-        Go back
-      </Link>
+    <div className='my-20 p-4'>
       <div className='flex justify-center gap-10'>
         <div className='w-1/2 overflow-hidden rounded-md'>
-          {product?.product_images.length > 1 ? (
-            <Slider slides={product.product_images} />
-          ) : (
-            <img
-              src={product?.product_images[0]}
-              alt={product.product_name}
-              className={cn(
-                'h-[400px] w-full object-cover transition-all hover:scale-105',
-                'aspect-square'
-              )}
-            />
-          )}
+          <img
+            src={product?.product_images[0]}
+            alt={product.product_name}
+            className={cn(
+              'h-[400px] w-full object-cover transition-all hover:scale-105',
+              'aspect-square'
+            )}
+          />
         </div>
         <div className='w-1/2'>
           <div className='space-y-1 text-sm'>
@@ -123,10 +153,31 @@ const AdminProductDetails = () => {
               </p>
             </div>
           </div>
+
+          <div className='w-full flex gap-2 mt-4'>
+            <Button
+              className='h-10 bg-transparent gap-2 text-black border border-red-500 text-red-500 transition-all duration-300 hover:text-white hover:bg-red-500'
+              disabled={isAddingProductToFavorites}
+              onClick={handleAddToFavorites}
+            >
+              <HeartIcon className='w-6 h-6' />
+              Add To Favorites
+            </Button>
+
+            <Button
+              className='h-10 bg-gold gap-2 hover:bg-light-gold dark:text-white'
+              disabled={isAddingProductToCart}
+              onClick={() => handleAddToCart(product)}
+            >
+              {isAddingProductToCart && <Loader2 className='animte-spin' />}
+              <ShoppingCartIcon className='w-6 h-6' />
+              Add To Cart
+            </Button>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default AdminProductDetails;
+export default ProductDetails;

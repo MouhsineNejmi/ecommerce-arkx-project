@@ -1,5 +1,9 @@
 import { Link, useParams } from 'react-router-dom';
-import { ArrowPathIcon, LinkIcon } from '@heroicons/react/24/outline';
+import {
+  ArrowLeftIcon,
+  ArrowPathIcon,
+  LinkIcon,
+} from '@heroicons/react/24/outline';
 
 import { Badge } from '../../components/ui/badge';
 
@@ -21,6 +25,13 @@ const PaymentDetailsPage = () => {
     <ArrowPathIcon className='w-6 h-6 animate-spin' />
   ) : (
     <div>
+      <Link
+        to='/admin/payment'
+        className='flex items-center gap-2 underline text-zinc-500 mb-4'
+      >
+        <ArrowLeftIcon className='w-4 h-4' />
+        Go back
+      </Link>
       <div className='mb-4 flex items-center gap-2 mb-4'>
         <h2 className='text-xl font-bold'>Payment ID: {payment._id}</h2>
         {status ? (

@@ -173,7 +173,7 @@ const columns = [
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link to={`/admin/orders/${payment._id}`}>
+              <Link to={`/admin/payment/${payment._id}`}>
                 View payment details
               </Link>
             </DropdownMenuItem>

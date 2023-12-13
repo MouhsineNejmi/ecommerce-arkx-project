@@ -6,12 +6,14 @@ const {
   createPaymentIntent,
   createPayment,
   getAllPayments,
+  getPaymentById,
 } = require('../controllers/payment.controller');
 
 const router = require('express').Router();
 
 router.use(deserialiseUser, requireUser);
 
+router.get('/:paymentId', getPaymentById);
 router.get('/', getAllPayments);
 router.post('/create-payment-intent', createPaymentIntent);
 router.post('/create-checkout-session', createCheckoutSession);
