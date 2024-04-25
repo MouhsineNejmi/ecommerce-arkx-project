@@ -1,16 +1,16 @@
 /* eslint-disable react/prop-types */
-import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { useToast } from '../ui/use-toast';
+import * as React from "react";
+import { useNavigate } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { useToast } from "../ui/use-toast";
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2 } from 'lucide-react';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 
-import { useLoginUserMutation } from '../../app/api/auth.api';
+import { useLoginUserMutation } from "../../app/api/auth.api";
 
-import { cn } from '../../lib/utils';
-import { Button } from '../ui/button';
+import { cn } from "../../lib/utils";
+import { Button } from "../ui/button";
 import {
   Form,
   FormControl,
@@ -18,9 +18,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../ui/form';
-import { Input } from '../ui/input';
-import { LoginValidation } from '../../lib/validation';
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { LoginValidation } from "../../lib/validation";
 
 const UserAuthForm = ({ className, ...props }) => {
   const { toast } = useToast();
@@ -32,17 +32,17 @@ const UserAuthForm = ({ className, ...props }) => {
   const form = useForm({
     resolver: zodResolver(LoginValidation),
     defaultValues: {
-      username: '',
-      password: '',
+      username: "",
+      password: "",
     },
   });
 
   React.useEffect(() => {
     if (isSuccess) {
       toast({
-        title: 'User Logged In Successfully!',
+        title: "User Logged In Successfully!",
       });
-      navigate('/admin/dashboard');
+      navigate("/admin/dashboard");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
@@ -59,26 +59,26 @@ const UserAuthForm = ({ className, ...props }) => {
   };
 
   return (
-    <div className={cn('grid gap-6', className)} {...props}>
+    <div className={cn("grid gap-6", className)} {...props}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className='grid gap-4'>
+          <div className="grid gap-4">
             {(isError || error) && (
-              <h2 className='text-center text-red-500'>
+              <h2 className="text-center text-red-500">
                 {error?.data.message}
               </h2>
             )}
-            <div className='grid gap-2'>
+            <div className="grid gap-2">
               <FormField
                 control={form.control}
-                name='username'
+                name="username"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Username</FormLabel>
                     <FormControl>
                       <Input
-                        className='dark:border-white'
-                        placeholder='Enter your username'
+                        className="dark:border-white"
+                        placeholder="Enter your username"
                         {...field}
                       />
                     </FormControl>
@@ -89,14 +89,14 @@ const UserAuthForm = ({ className, ...props }) => {
 
               <FormField
                 control={form.control}
-                name='password'
+                name="password"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
                       <Input
-                        type='password'
-                        placeholder='Enter your password'
+                        type="password"
+                        placeholder="Enter your password"
                         {...field}
                       />
                     </FormControl>
@@ -105,8 +105,8 @@ const UserAuthForm = ({ className, ...props }) => {
                 )}
               />
             </div>
-            <Button disabled={isLoading} className='bg-main-1 hover:bg-main-2'>
-              {isLoading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
+            <Button disabled={isLoading} className="bg-main-1 hover:bg-main-2">
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Sign In
             </Button>
           </div>

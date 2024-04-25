@@ -1,6 +1,6 @@
-import { useParams } from 'react-router-dom';
-import { useGetOrderByIdQuery } from '../../app/api/orders.api';
-import { Loader2 } from 'lucide-react';
+// import { useParams } from 'react-router-dom';
+import { useGetOrderByIdQuery } from "../../app/api/orders.api";
+import { Loader2 } from "lucide-react";
 
 const AdminOrderDetails = () => {
   const { orderId } = useParams();
@@ -10,7 +10,7 @@ const AdminOrderDetails = () => {
   console.log(order);
 
   return isLoading ? (
-    <Loader2 className='animate-spin' />
+    <Loader2 className="animate-spin" />
   ) : (
     <div>{JSON.stringify(order)}</div>
   );

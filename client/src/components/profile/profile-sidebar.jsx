@@ -1,12 +1,11 @@
-/* eslint-disable react/prop-types */
-import { Link } from 'react-router-dom';
-import { cn } from '../../lib/utils';
+import Link from "next/link";
+import { cn } from "../../lib/utils";
 
 const ProfileSidebar = ({ className, items, ...props }) => {
   return (
     <nav
       className={cn(
-        'flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1',
+        "flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1",
         className
       )}
       {...props}
@@ -18,8 +17,8 @@ const ProfileSidebar = ({ className, items, ...props }) => {
           className={({ isActive }) =>
             `justify-start ${
               isActive
-                ? 'bg-muted hover:bg-muted'
-                : 'hover:bg-transparent hover:underline'
+                ? "bg-muted hover:bg-muted"
+                : "hover:bg-transparent hover:underline"
             }`
           }
         >

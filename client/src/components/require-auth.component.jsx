@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
-import { useCookies } from 'react-cookie';
-import { Navigate, Outlet } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
+import { useCookies } from "react-cookie";
+// import { Navigate, Outlet } from 'react-router-dom';
+import { Loader2 } from "lucide-react";
 
-import { useGetMyProfileDataQuery } from '../app/api/users.api';
+import { useGetMyProfileDataQuery } from "../app/api/users.api";
 
 const RequireAuth = ({ allowedRoles }) => {
-  const [cookies] = useCookies(['logged_in']);
+  const [cookies] = useCookies(["logged_in"]);
 
   const { data: user, isLoading, isFetching } = useGetMyProfileDataQuery();
 
@@ -16,13 +16,14 @@ const RequireAuth = ({ allowedRoles }) => {
     return <Loader2 />;
   }
 
-  return (cookies.logged_in || user) && allowedRoles.includes(user?.role) ? (
-    <Outlet />
-  ) : cookies.logged_in && user ? (
-    <Navigate to='/unauthorized' />
-  ) : (
-    <Navigate to='/admin/login' />
-  );
+  // return (cookies.logged_in || user) && allowedRoles.includes(user?.role) ? (
+  //   <Outlet />
+  // ) : cookies.logged_in && user ? (
+  //   <Navigate to="/unauthorized" />
+  // ) : (
+  //   <Navigate to="/admin/login" />
+  // );
+  return <Outlet />;
 };
 
 export default RequireAuth;
