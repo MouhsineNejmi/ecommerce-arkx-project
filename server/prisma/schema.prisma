@@ -3,19 +3,21 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum ROLE {
   admin
   manager
+  store_owner
 }
 
 model Store {
-  id String @id @default(uuid()) @map("_id") @db.ObjectId
+  id String @id @default(uuid())
   name String
-  user_id String @db.ObjectId
+  user_id String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -23,10 +25,10 @@ model Store {
 }
 
 model User {
-  id String @id @default(uuid()) @map("_id") @db.ObjectId
+  id String @id @default(uuid())
   username String
   email String @unique
-  role ROLE @default(manager)
+  role ROLE @default(store_owner)
   password String
   profile_image String? @default("https://github.com/shadcn.png")
   last_login DateTime?
@@ -38,7 +40,7 @@ model User {
 }
 
 model Customer {
-  id String @id @default(uuid()) @map("_id") @db.ObjectId
+  id String @id @default(uuid())
   username String
   email String @unique
   password String

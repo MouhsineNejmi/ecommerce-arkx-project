@@ -6,8 +6,24 @@ import {
 } from "../dto/user.dto";
 import prisma from "../utils/prisma";
 
-export const createUser = async (user: CreateUserInput) => {
-  return await prisma.user.create({ data: user });
+export const existingUser = async (email: string) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    return user ? true : false;
+  } catch (error) {
+    console.log("EXISTING_USER", error);
+  }
+};
+
+export const createUser = async (data: CreateUserInput) => {
+  const user = await prisma.user.create({ data });
+
+  return user;
 };
 
 export const findUserById = async (id: string) => {

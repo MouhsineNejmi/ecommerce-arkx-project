@@ -5,7 +5,7 @@ import * as UserService from "../services/user.service";
 
 import CustomError from "../utils/custom-error";
 import { signToken } from "../utils/jwt";
-import { UserLogin } from "../dto/user.dto";
+import { CreateUserInput, UserLogin } from "../dto/user.dto";
 
 const accessTokenCookieOptions: CookieOptions = {
   expires: new Date(Date.now() * 86400 * 1000),
@@ -22,11 +22,20 @@ export const register = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { password } = req.body;
+  const { email, password } = <CreateUserInput>req.body;
 
   try {
     const salt = await genSalt(12);
     const hashedPassword = await hash(password, salt);
+
+    // const existingEmail = await UserService.findUserByEmail(email);
+    // console.log("existingEmail", existingEmail);
+
+    const existingUser = await UserService.existingUser(email);
+
+    if (existingUser) {
+      throw new CustomError("User with these credentials already exists!", 400);
+    }
 
     const newUser = await UserService.createUser({
       ...req.body,
