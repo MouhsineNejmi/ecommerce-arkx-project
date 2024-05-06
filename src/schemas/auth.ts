@@ -1,24 +1,25 @@
 import { z } from "zod";
 
 export const loginSchema = z.object({
-  username: z
-    .string({ required_error: "Username is required" })
-    .min(1, "Invalid username or password"),
+  email: z.string({ required_error: "Email is required" }).email(),
   password: z
     .string({ required_error: "Password is required" })
-    .min(8, "Invalid username or password"),
+    .min(8, "Invalid email or password"),
 });
 
 export const signupSchema = z.object({
-  username: z.string({ required_error: "Username is required" }),
-  email: z
-    .string({ required_error: "Email is required" })
-    .email("Invalid email"),
+  first_name: z.string(),
+  last_name: z.string(),
+  username: z.string(),
+  email: z.string().email("Invalid email"),
   password: z
-    .string({ required_error: "Password is required" })
+    .string()
     .min(6, "Password must be more than 6 characters")
     .max(32, "Password must be less than 32 characters"),
-  role: z.enum(["store_owner", "admin", "manager"], {
+  role: z.enum(["customer", "seller", "admin", "manager"], {
     required_error: "Role is required",
   }),
 });
+
+export type LoginForm = z.infer<typeof loginSchema>;
+export type SignupForm = z.infer<typeof loginSchema>;
