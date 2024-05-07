@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
 import authOptions from "@/auth.config";
-import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Ecommerce Arkx Final - Office",
@@ -14,7 +14,6 @@ export default async function OfficeLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const { data: session } = useSession();
   const session = await getServerSession(authOptions);
 
   if (session?.user?.role === "customer") {

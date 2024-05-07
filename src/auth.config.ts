@@ -43,9 +43,11 @@ const authOptions: NextAuthOptions = {
                   query GetUserByEmail($where: user_bool_exp) {
                     user(where: $where) {
                       id
+                      username
                       email
                       role
                       password
+                      profile_image
                     }
                   }
                 `,
@@ -65,7 +67,11 @@ const authOptions: NextAuthOptions = {
               data?.user[0].password
             ))
           ) {
-            return data.user[0];
+            return {
+              ...data.user[0],
+              image: data.user[0].profile_image,
+              name: data.user[0].username,
+            };
           } else {
             throw new Error("Invalid credentials!");
           }
