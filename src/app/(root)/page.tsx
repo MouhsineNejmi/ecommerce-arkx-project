@@ -5,11 +5,9 @@ import { useSession } from "next-auth/react";
 const Page = () => {
   const { data: session } = useSession();
 
-  console.log(session);
-
   return (
     <main>
-      <h1>Hello App</h1>
+      <h1>{JSON.stringify(session)}</h1>
     </main>
   );
 };

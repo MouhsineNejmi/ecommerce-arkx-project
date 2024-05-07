@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/form";
 
 import { LoginForm, loginSchema } from "@/schemas/auth";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 const Page = () => {
   const router = useRouter();
@@ -42,18 +43,10 @@ const Page = () => {
         password: values.password,
       };
 
-      const login = await signIn("credentials", {
+      await signIn("credentials", {
         ...loginCredentials,
         redirect: false,
       });
-
-      if (!login?.ok && login?.status === 401) {
-        toast({
-          title:
-            "Unathorized! Only sellers or admins can access the dashboard.",
-          variant: "destructive",
-        });
-      }
 
       setLoading(false);
 
@@ -68,11 +61,11 @@ const Page = () => {
     } catch (error) {
       setLoading(false);
 
-      if (typeof error === "string") {
-        toast({ title: error, variant: "destructive" });
+      if (error) {
+        toast({ title: "Invalid Credentials", variant: "destructive" });
       }
 
-      toast({ title: error as any });
+      toast({ title: "Something went wrong", variant: "destructive" });
     }
   };
 
