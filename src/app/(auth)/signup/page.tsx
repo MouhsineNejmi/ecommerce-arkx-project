@@ -59,6 +59,7 @@ const Page = () => {
         }
       );
       const { user } = await res.json();
+
       setLoading(false);
 
       if (user.errors) {

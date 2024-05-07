@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   description: "Created by Mouhsine NEJMI as a the final test in our bootcamp.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

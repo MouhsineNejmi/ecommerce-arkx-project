@@ -10,10 +10,10 @@ import {
 
 const apolloClient = new ApolloClient({
   link: new HttpLink({
-    uri: process.env.NEXT_PUBLIC_HASURA_ENDPOINT as string,
+    uri: process.env.NEXT_PUBLIC_HASURA_GRAPHQL_ENDPOINT as string,
     headers: {
       "x-hasura-admin-secret": process.env
-        .NEXT_PUBLIC_HASURA_ADMIN_SECRET_KEY as string,
+        .NEXT_PUBLIC_HASURA_ADMIN_SECRET as string,
     },
   }),
   cache: new InMemoryCache(),

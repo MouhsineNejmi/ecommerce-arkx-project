@@ -4,38 +4,26 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 
 interface ModalProps {
   isOpen?: boolean;
   onClose: () => void;
-  onSubmit: () => void;
   title?: string;
   description?: string;
-  body?: React.ReactElement;
-  footer?: React.ReactElement;
-  actionLabel: string;
+  children?: React.ReactNode;
   disabled?: boolean;
-  secondaryAction?: () => void;
-  secondaryActionLabel?: string;
 }
 
 const Modal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
-  onSubmit,
   title,
   description,
-  body,
-  actionLabel,
-  footer,
+  children,
   disabled,
-  secondaryAction,
-  secondaryActionLabel,
 }) => {
   const [showModal, setShowModal] = useState(isOpen);
 
@@ -54,22 +42,6 @@ const Modal: React.FC<ModalProps> = ({
     }, 300);
   }, [onClose, disabled]);
 
-  const handleSubmit = useCallback(() => {
-    if (disabled) {
-      return;
-    }
-
-    onSubmit();
-  }, [onSubmit, disabled]);
-
-  const handleSecondaryAction = useCallback(() => {
-    if (disabled || !secondaryAction) {
-      return;
-    }
-
-    secondaryAction();
-  }, [secondaryAction, disabled]);
-
   if (!isOpen) {
     return null;
   }
@@ -85,30 +57,7 @@ const Modal: React.FC<ModalProps> = ({
           <hr />
         </DialogHeader>
 
-        <div className="relative flex-auto">{body}</div>
-
-        <DialogFooter>
-          <div className="flex flex-row items-center gap-4 w-full">
-            {secondaryAction && secondaryActionLabel && (
-              <Button
-                disabled={disabled}
-                onClick={handleSecondaryAction}
-                className="w-full"
-              >
-                {secondaryActionLabel}
-              </Button>
-            )}
-
-            <Button
-              disabled={disabled}
-              onClick={handleSubmit}
-              className="w-full"
-            >
-              {actionLabel}
-            </Button>
-          </div>
-          {footer}
-        </DialogFooter>
+        <div className="relative flex-auto">{children}</div>
       </DialogContent>
     </Dialog>
   );
