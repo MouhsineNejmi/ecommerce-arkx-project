@@ -27,12 +27,14 @@ const ImageUpload = ({
   }, []);
 
   const onUpload = (result: any) => {
-    onChange(result.info.secure_url);
+    onChange(result?.info?.secure_url);
   };
 
   if (!isMounted) {
     return null;
   }
+
+  // console.log("IMAGE VALUES: ", values);
 
   return (
     <>
@@ -58,7 +60,7 @@ const ImageUpload = ({
         ))}
       </div>
 
-      <CldUploadWidget onUploadAdded={onUpload} uploadPreset="ecommerce-arkx">
+      <CldUploadWidget onSuccess={onUpload} uploadPreset="ecommerce-arkx">
         {({ open }) => {
           const onClick = () => {
             open();
@@ -72,6 +74,7 @@ const ImageUpload = ({
               onClick={onClick}
             >
               <ImagePlus className="w-4 h-4 mr-2" />
+              Upload an Image
             </Button>
           );
         }}
@@ -79,25 +82,5 @@ const ImageUpload = ({
     </>
   );
 };
-
-{
-  /* <FormField
-  control={form.control}
-  name="imageUrl"
-  render={({field}) => (
-    <FormItem>
-      <FormLabel>Background Image</FormLabel>
-      <FormControl>
-        <ImageUpload
-          values={field.value ? [field.value]: []}
-          disabled={loading}
-          onChange={(url) => field.onChange(url)}
-          onRemove={() => field.onChange("")}
-        />
-      </FormControl>
-    </FormItem>
-  )}
-/> */
-}
 
 export default ImageUpload;

@@ -107,7 +107,7 @@ const SettingsForm = ({ initialData }: SettingsFormProps) => {
         loading={isDeletingStore}
       />
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-4">
         <Heading title="Settings" description="Manage store preferences" />
         <Button
           variant="destructive"

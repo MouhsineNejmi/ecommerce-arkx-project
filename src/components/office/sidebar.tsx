@@ -9,8 +9,8 @@ import {
   Paintbrush,
   PanelsTopLeft,
   PencilRuler,
-  ReceiptEuro,
   Settings,
+  Presentation,
   Shirt,
   PanelLeft,
 } from "lucide-react";
@@ -37,7 +37,7 @@ const Sidebar = ({
     {
       href: `/office/${params.storeId}/billboards`,
       label: "Billboards",
-      icon: ReceiptEuro,
+      icon: Presentation,
       active: pathname === `/office/${params.storeId}/billboards`,
     },
     {
