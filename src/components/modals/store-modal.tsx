@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Modal from "@/components/modals/modal";
+import Modal from "@/components/ui/modal";
 
 import { useStoreModal } from "@/hooks/use-store-modal";
 import { CreateStoreInput, createStoreSchema } from "@/schemas/store";

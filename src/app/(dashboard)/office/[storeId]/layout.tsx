@@ -53,7 +53,7 @@ export default async function OfficeLayout({
     <main>
       <Navbar />
       <Sidebar />
-      {children}
+      <div className="md:ml-60 p-4">{children}</div>
     </main>
   );
 }

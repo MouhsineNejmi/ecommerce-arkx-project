@@ -50,7 +50,7 @@ const Modal: React.FC<ModalProps> = ({
     <Dialog open={showModal} onOpenChange={handleClose}>
       <DialogContent className="outline-none">
         <DialogHeader>
-          <DialogTitle className="text-center text-lg font-semibold mb-2">
+          <DialogTitle className="text-lg font-semibold mb-2">
             {title}
           </DialogTitle>
           <DialogDescription>{description}</DialogDescription>

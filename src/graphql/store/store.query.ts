@@ -21,3 +21,12 @@ export const GET_USER_STORES = gql`
     }
   }
 `;
+
+export const GET_USER_CURRENT_STORE = gql`
+  query getStoreById($where: store_bool_exp) {
+    store(where: $where) {
+      id
+      name
+    }
+  }
+`;
