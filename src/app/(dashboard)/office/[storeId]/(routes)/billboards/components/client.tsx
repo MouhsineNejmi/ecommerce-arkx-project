@@ -17,7 +17,9 @@ const BillboardsClient = () => {
   const router = useRouter();
   const params = useParams();
 
-  const { data: billboardsData, loading } = useQuery(GET_BILLBOARDS);
+  const { data: billboardsData, loading } = useQuery(GET_BILLBOARDS, {
+    variables: { where: { store_id: { _eq: params.storeId } } },
+  });
   const billboards = billboardsData?.billboard;
 
   const formattedBillboards: BillboardColumn[] =

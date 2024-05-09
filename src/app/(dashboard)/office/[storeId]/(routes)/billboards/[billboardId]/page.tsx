@@ -1,9 +1,9 @@
 "use client";
 
 import { useQuery } from "@apollo/client";
-import router, { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
-import { GET_BILLBOARD } from "@/graphql/billboard/billboard.query";
+import { GET_BILLBOARDS } from "@/graphql/billboard/billboard.query";
 import BillboardForm from "@/components/office/billboard-form";
 
 interface BillboardPageProps {
@@ -12,15 +12,21 @@ interface BillboardPageProps {
 
 const BillboardPage = ({ params }: BillboardPageProps) => {
   const router = useRouter();
+  const { storeId } = useParams();
 
-  const { data: billboardData, loading } = useQuery(GET_BILLBOARD, {
-    variables: { id: params.billboardId },
+  const { data: billboardData, loading } = useQuery(GET_BILLBOARDS, {
+    variables: {
+      where: { id: { _eq: params.billboardId }, store_id: { _eq: storeId } },
+    },
   });
-  const billboard = billboardData?.billboard_by_pk;
+
+  const billboard = billboardData?.billboard[0];
 
   if (loading) {
     return <h1>Loading...</h1>;
   }
+
+  console.log(billboardData);
 
   if (!billboard && !loading) {
     router.push("/");

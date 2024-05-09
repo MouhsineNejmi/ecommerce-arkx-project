@@ -20,64 +20,70 @@ import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
-import ImageUpload from "@/components/shared/image-upload";
-
-import { Billboard } from "@/types/billboard.types";
-import { BillboardFormInput, billboardSchema } from "@/schemas/billboard";
 import {
-  CREATE_BILLBOARD,
-  DELETE_BILLBOARD,
-  EDIT_BILLBOARD,
-} from "@/graphql/billboard/billboard.mutation";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
 
-interface BillboardFormProps {
-  initialData: Billboard | null;
+import { Category } from "@/types/category.types";
+import { Billboard } from "@/types/billboard.types";
+import { CategoryFormInput, categorySchema } from "@/schemas/category";
+import {
+  CREATE_CATEGORY,
+  DELETE_CATEGORY,
+  EDIT_CATEGORY,
+} from "@/graphql/category/category.mutation";
+
+interface CategoryFormProps {
+  initialData: Category | null;
+  billboards: Billboard[];
 }
 
-const BillboardForm = ({ initialData }: BillboardFormProps) => {
+const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
 
   const [open, setOpen] = useState(false);
 
-  const [createBillboard, { loading: isCreatingBillboard }] =
-    useMutation(CREATE_BILLBOARD);
-  const [editBillboard, { loading: isEditingBillboard }] =
-    useMutation(EDIT_BILLBOARD);
-  const [deleteBillboard, { loading: isDeletingBillboard }] =
-    useMutation(DELETE_BILLBOARD);
+  const [createCategory, { loading: isCreatingCategory }] =
+    useMutation(CREATE_CATEGORY);
+  const [editCategory, { loading: isEditingCategory }] =
+    useMutation(EDIT_CATEGORY);
+  const [deleteCategory, { loading: isDeletingCategory }] =
+    useMutation(DELETE_CATEGORY);
 
-  const title = initialData ? "Edit billboard" : "Create billboard";
-  const description = initialData
-    ? "Update a billboard"
-    : "Add a new billboard";
+  const title = initialData ? "Edit category" : "Create category";
+  const description = initialData ? "Update a category" : "Add a new category";
   const toastMessage = initialData
-    ? "Billboard updated successfully!"
-    : "Billboard created successfully!";
+    ? "Category updated successfully!"
+    : "Category created successfully!";
   const action = initialData ? "Save changes" : "Create";
 
-  const form = useForm<BillboardFormInput>({
-    resolver: zodResolver(billboardSchema),
+  const form = useForm<CategoryFormInput>({
+    resolver: zodResolver(categorySchema),
     defaultValues: initialData || {
-      label: "",
-      image_url: "",
+      name: "",
+      billboard_id: "",
     },
   });
 
-  const onSubmit = async (values: BillboardFormInput) => {
-    const billboardData = {
-      label: values.label,
-      image_url: values.image_url,
+  const onSubmit = async (values: CategoryFormInput) => {
+    const categoryData = {
+      name: values.name,
+      billboard_id: values.billboard_id,
       store_id: params.storeId,
     };
 
     try {
       if (initialData) {
-        await editBillboard({
+        await editCategory({
           variables: {
-            _set: billboardData,
+            _set: categoryData,
             where: {
               id: { _eq: initialData?.id },
               store_id: { _eq: params.storeId },
@@ -85,14 +91,14 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
           },
         });
       } else {
-        await createBillboard({
+        await createCategory({
           variables: {
-            object: billboardData,
+            object: categoryData,
           },
         });
       }
 
-      router.push(`/office/${params.storeId}/billboards`);
+      router.push(`/office/${params.storeId}/categories`);
       toast({ title: toastMessage });
       setOpen(false);
     } catch (error) {
@@ -104,7 +110,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
 
   const onDelete = async () => {
     try {
-      await deleteBillboard({
+      await deleteCategory({
         variables: {
           where: {
             id: { _eq: initialData?.id },
@@ -112,8 +118,9 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
           },
         },
       });
-      router.push(`/office/${params.storeId}/billboards`);
-      toast({ title: "Billboard deleted." });
+
+      router.push(`/office/${params.storeId}/categories`);
+      toast({ title: "Category deleted." });
     } catch (error) {
       console.log(error);
 
@@ -123,8 +130,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
     }
   };
 
-  const loading =
-    isCreatingBillboard || isEditingBillboard || isDeletingBillboard;
+  const loading = isCreatingCategory || isEditingCategory || isDeletingCategory;
 
   return (
     <>
@@ -132,7 +138,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
-        loading={isDeletingBillboard}
+        loading={isDeletingCategory}
       />
 
       <div className="flex items-center justify-between mb-4">
@@ -143,7 +149,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
             variant="destructive"
             size="sm"
             onClick={() => setOpen(true)}
-            disabled={isDeletingBillboard}
+            disabled={isDeletingCategory}
           >
             <Trash className="h-4 w-4" />
           </Button>
@@ -160,35 +166,50 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
           <div className="grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
-              name="image_url"
+              name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Background Image</FormLabel>
+                  <FormLabel>Category Name</FormLabel>
                   <FormControl>
-                    <ImageUpload
-                      values={field.value ? [field.value] : []}
+                    <Input
                       disabled={loading}
-                      onChange={(url) => field.onChange(url)}
-                      onRemove={() => field.onChange("")}
+                      placeholder="Category name"
+                      {...field}
                     />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
 
             <FormField
               control={form.control}
-              name="label"
+              name="billboard_id"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Label</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Billboard name"
-                      {...field}
-                    />
-                  </FormControl>
+                  <FormLabel>Billboard</FormLabel>
+                  <Select
+                    disabled={loading}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue
+                          defaultValue={field.value}
+                          placeholder="Select a billboard"
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+
+                    <SelectContent>
+                      {billboards?.map((billboard) => (
+                        <SelectItem key={billboard.id} value={billboard.id}>
+                          {billboard.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -204,4 +225,4 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
   );
 };
 
-export default BillboardForm;
+export default CategoryForm;
