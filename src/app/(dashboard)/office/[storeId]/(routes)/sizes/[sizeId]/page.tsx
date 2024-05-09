@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@apollo/client";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 
 import SizeForm from "@/components/office/size-form";
 import { GET_SIZES } from "@/graphql/size/size.query";
@@ -11,7 +11,6 @@ interface SizePageProps {
 }
 
 const SizePage = ({ params }: SizePageProps) => {
-  const router = useRouter();
   const { storeId } = useParams();
 
   const { data: sizeData, loading } = useQuery(GET_SIZES, {

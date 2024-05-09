@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@apollo/client";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 
 import { GET_BILLBOARDS } from "@/graphql/billboard/billboard.query";
 import BillboardForm from "@/components/office/billboard-form";
@@ -11,7 +11,6 @@ interface BillboardPageProps {
 }
 
 const BillboardPage = ({ params }: BillboardPageProps) => {
-  const router = useRouter();
   const { storeId } = useParams();
 
   const { data: billboardData, loading } = useQuery(GET_BILLBOARDS, {

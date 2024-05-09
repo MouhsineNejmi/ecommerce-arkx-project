@@ -50,3 +50,12 @@ export interface Size {
   created_at: Date;
   updated_at?: Date;
 }
+
+export interface Color {
+  id: string;
+  name: string;
+  value: string;
+  store_id: string;
+  created_at: Date;
+  updated_at?: Date;
+}

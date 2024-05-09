@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@apollo/client";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 
 import CategoryForm from "@/components/office/category-form";
 
@@ -13,7 +13,6 @@ interface CategoryPageProps {
 }
 
 const BillboardPage = ({ params }: CategoryPageProps) => {
-  const router = useRouter();
   const { storeId } = useParams();
 
   const { data: categoryData, loading: loadingCategory } = useQuery(

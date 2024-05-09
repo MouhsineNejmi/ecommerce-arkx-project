@@ -1,8 +1,8 @@
 import * as z from "zod";
 
 export const colorSchema = z.object({
-  label: z.string().min(2, { message: "Label field must not be empty" }),
-  image_url: z.string().min(1),
+  name: z.string().min(1, { message: "Name field must not be empty" }),
+  value: z.string().min(1, { message: "Value field must not be empty" }),
 });
 
 export type ColorFormInput = z.infer<typeof colorSchema>;
