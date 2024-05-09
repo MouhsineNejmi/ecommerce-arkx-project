@@ -55,7 +55,8 @@ export const CellAction = ({ rowData }: CellActionProps) => {
       console.log(error);
 
       toast({
-        title: "Make sure you removed all products and categories first.",
+        title:
+          "Make sure you removed all products using this categories first.",
       });
       setOpen(false);
     }
