@@ -26,12 +26,6 @@ const BillboardPage = ({ params }: BillboardPageProps) => {
     return <h1>Loading...</h1>;
   }
 
-  console.log(billboardData);
-
-  if (!billboard && !loading) {
-    router.push("/");
-  }
-
   return <BillboardForm initialData={billboard} />;
 };
 

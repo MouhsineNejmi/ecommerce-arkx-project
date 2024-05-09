@@ -40,10 +40,6 @@ const BillboardPage = ({ params }: CategoryPageProps) => {
     return <h1>Loading...</h1>;
   }
 
-  if (!category && !loading) {
-    router.push("/");
-  }
-
   return <CategoryForm initialData={category} billboards={billboards} />;
 };
 
