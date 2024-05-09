@@ -95,9 +95,11 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
 
       router.push(`/office/${params.storeId}/billboards`);
       toast({ title: toastMessage });
+      setOpen(false);
     } catch (error) {
       console.log(error);
       toast({ title: "Something went wrong.", variant: "destructive" });
+      setOpen(false);
     }
   };
 
