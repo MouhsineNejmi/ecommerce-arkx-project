@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
-import { Inter as FontSans } from "next/font/google";
+import { Urbanist } from "next/font/google";
 
 import Providers from "@/providers";
 
+import Navbar from "@/components/navbar/navbar";
+import Footer from "@/components/footer";
+
 import "./globals.css";
 
-const fontSans = FontSans({
+const font = Urbanist({
   subsets: ["latin"],
 });
 
@@ -21,8 +24,10 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={fontSans.className}>
+      <body className={font.className}>
+        <Navbar />
         <Providers>{children}</Providers>
+        <Footer />
       </body>
     </html>
   );

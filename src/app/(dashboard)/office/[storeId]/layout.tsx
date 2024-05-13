@@ -1,16 +1,24 @@
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { Inter as FontSans } from "next/font/google";
 
 import Sidebar from "@/components/office/sidebar";
 import Navbar from "@/components/office/navbar";
-import authOptions from "@/auth.config";
+
 import { GET_STORE_BY_ID } from "@/graphql/store/store.query";
+
+import authOptions from "@/auth.config";
+import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Ecommerce Arkx Final - Office",
   description: "Created by Mouhsine NEJMI as a the final test in our bootcamp.",
 };
+
+const fontSans = FontSans({
+  subsets: ["latin"],
+});
 
 export default async function OfficeLayout({
   children,
@@ -53,7 +61,7 @@ export default async function OfficeLayout({
     <main>
       <Navbar />
       <Sidebar />
-      <div className="md:ml-60 p-4">{children}</div>
+      <div className={cn("md:ml-60 p-4", fontSans.className)}>{children}</div>
     </main>
   );
 }
