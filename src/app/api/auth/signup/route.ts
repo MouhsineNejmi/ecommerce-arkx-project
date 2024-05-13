@@ -1,8 +1,8 @@
 import { genSalt, hash } from "bcryptjs";
+import { NextResponse } from "next/server";
 
 import { SIGNUP_USER } from "@/graphql/users/users.mutation";
-import { SignupUserInput } from "@/types/auth.types";
-import { NextResponse } from "next/server";
+import { SignupUserInput } from "@/types";
 
 const handler = async (req: Request) => {
   const body: SignupUserInput = await req.json();

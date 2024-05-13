@@ -28,7 +28,7 @@ import { Button } from "@/components/ui/button";
 
 import { cn } from "@/lib/utils";
 import { useStoreModal } from "@/hooks/use-store-modal";
-import { Store } from "@/types/store.types";
+import { Store } from "@/types";
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger

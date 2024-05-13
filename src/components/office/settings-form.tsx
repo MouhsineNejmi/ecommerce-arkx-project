@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ApolloError, useMutation } from "@apollo/client";
@@ -23,7 +23,7 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 
-import { Store } from "@/types/store.types";
+import { Store } from "@/types";
 import { SettingsFormInput, editStoreSchema } from "@/schemas/store";
 import { EDIT_STORE, DELETE_STORE } from "@/graphql/store/store.mutation";
 
@@ -32,7 +32,6 @@ interface SettingsFormProps {
 }
 
 const SettingsForm = ({ initialData }: SettingsFormProps) => {
-  const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
   const { data: session } = useSession();
@@ -63,7 +62,7 @@ const SettingsForm = ({ initialData }: SettingsFormProps) => {
           },
         },
       });
-      // router.refresh();
+      router.refresh();
       toast({ title: "Store updated." });
     } catch (error) {
       if (error instanceof ApolloError) {
@@ -94,6 +93,7 @@ const SettingsForm = ({ initialData }: SettingsFormProps) => {
 
       toast({
         title: "Make sure you removed all products and categories first.",
+        variant: "destructive",
       });
     }
   };

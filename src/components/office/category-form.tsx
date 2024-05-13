@@ -29,8 +29,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 
-import { Category } from "@/types/category.types";
-import { Billboard } from "@/types/billboard.types";
+import { Category, Billboard } from "@/types";
 import { CategoryFormInput, categorySchema } from "@/schemas/category";
 import {
   CREATE_CATEGORY,
@@ -126,6 +125,7 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
 
       toast({
         title: "Make sure you removed all products and categories first.",
+        variant: "destructive",
       });
     }
   };

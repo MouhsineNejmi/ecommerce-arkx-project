@@ -59,3 +59,17 @@ export interface Color {
   created_at: Date;
   updated_at?: Date;
 }
+
+export interface Product {
+  id: string;
+  name: string;
+  price: number;
+  size: Size[];
+  category: Category;
+  color: Color[];
+  images: string[];
+  is_featured: boolean;
+  is_archived: boolean;
+  created_at: Date;
+  updated_at?: Date;
+}

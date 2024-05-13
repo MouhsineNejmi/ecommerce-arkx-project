@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 
 import { signupSchema } from "@/schemas/auth";
-import { SignupUserInput } from "@/types/auth.types";
+import { SignupUserInput } from "@/types";
 
 const Page = () => {
   const router = useRouter();

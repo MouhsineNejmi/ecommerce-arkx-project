@@ -7,12 +7,12 @@ import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
+import { DataTable } from "@/components/ui/data-table";
+import { Separator } from "@/components/ui/separator";
 import { CategoryColumn, columns } from "./columns";
 
 import { GET_CATEGORIES } from "@/graphql/category/category.query";
-import { DataTable } from "@/components/ui/data-table";
-import { Separator } from "@/components/ui/separator";
-import { Category } from "@/types/category.types";
+import { Category } from "@/types";
 
 const CategoriesClient = () => {
   const router = useRouter();

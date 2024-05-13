@@ -113,6 +113,7 @@ const ColorForm = ({ initialData }: ColorFormProps) => {
 
       toast({
         title: "Make sure you removed all products using this color first.",
+        variant: "destructive",
       });
     }
   };

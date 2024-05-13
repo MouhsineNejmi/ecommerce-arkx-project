@@ -113,6 +113,7 @@ const SizeForm = ({ initialData }: SizeFormProps) => {
 
       toast({
         title: "Make sure you removed all products using this size first.",
+        variant: "destructive",
       });
     }
   };

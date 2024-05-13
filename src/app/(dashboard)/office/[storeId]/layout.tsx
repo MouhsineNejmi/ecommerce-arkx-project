@@ -22,7 +22,7 @@ export default async function OfficeLayout({
   const { storeId } = params;
   const session = await getServerSession(authOptions);
 
-  if (session?.user?.role === "customer" || !storeId) {
+  if (!session?.user || session?.user?.role === "customer" || !storeId) {
     // To Do: Display an unathorized page
     redirect("/login");
   }

@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import ImageUpload from "@/components/shared/image-upload";
 
-import { Billboard } from "@/types/billboard.types";
+import { Billboard } from "@/types";
 import { BillboardFormInput, billboardSchema } from "@/schemas/billboard";
 import {
   CREATE_BILLBOARD,
@@ -119,6 +119,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
 
       toast({
         title: "Make sure you removed all products and categories first.",
+        variant: "destructive",
       });
     }
   };

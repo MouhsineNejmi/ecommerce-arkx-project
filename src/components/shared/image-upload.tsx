@@ -34,8 +34,6 @@ const ImageUpload = ({
     return null;
   }
 
-  // console.log("IMAGE VALUES: ", values);
-
   return (
     <>
       <div className="mb-4 flex items-center gap-4">
