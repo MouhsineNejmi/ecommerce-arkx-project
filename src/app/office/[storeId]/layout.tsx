@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { Inter as FontSans } from "next/font/google";
+import { Poppins as FontSans } from "next/font/google";
 
 import Sidebar from "@/components/office/sidebar";
 import Navbar from "@/components/office/navbar";
@@ -18,6 +18,7 @@ export const metadata: Metadata = {
 
 const fontSans = FontSans({
   subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 export default async function OfficeLayout({

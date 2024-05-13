@@ -63,13 +63,19 @@ export interface Color {
 export interface Product {
   id: string;
   name: string;
+  description: string;
   price: number;
-  size: Size[];
+  size_ids: string[];
   category: Category;
-  color: Color[];
+  color_ids: string[];
   images: string[];
   is_featured: boolean;
   is_archived: boolean;
   created_at: Date;
   updated_at?: Date;
+}
+
+export interface ProductSingle extends Product {
+  colors: Color[];
+  sizes: Size[];
 }
