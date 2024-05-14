@@ -4,12 +4,13 @@ import Currency from "@/components/ui/currency";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-import { ProductSingle } from "@/types";
+import { Product } from "@/types";
 
 interface InfoProps {
-  data: ProductSingle;
+  data: Product;
+  isPreview?: boolean;
 }
-const Info: React.FC<InfoProps> = ({ data }) => {
+const Info: React.FC<InfoProps> = ({ data, isPreview }) => {
   // console.log("INFO PRODUCT: ", data);
 
   return (
@@ -50,7 +51,9 @@ const Info: React.FC<InfoProps> = ({ data }) => {
         </Button>
       </div>
 
-      <p className="text-lg text-gray-900 mt-10">{data?.description}</p>
+      {!isPreview && (
+        <p className="text-lg text-gray-900 mt-10">{data?.description}</p>
+      )}
     </div>
   );
 };

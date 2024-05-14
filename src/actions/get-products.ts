@@ -44,9 +44,51 @@ const getProducts = async (query: Query): Promise<Product[]> => {
   });
 
   const { data } = await res.json();
-  const products = data?.product;
+  const products = data?.product || [];
 
-  return products;
+  const enrichedProducts = await Promise.all(
+    products.map(async (product: Product) => {
+      const enrichedResponse = await fetch(URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-hasura-admin-secret": process.env
+            .NEXT_PUBLIC_HASURA_ADMIN_SECRET as string,
+        },
+        body: JSON.stringify({
+          query: `
+            query getSizesAndColors($whereSize: size_bool_exp!, $whereColor: color_bool_exp!) {
+              size(where: $whereSize) {
+                id
+                name
+                value
+              }
+              color(where: $whereColor) {
+                id
+                name
+                value
+              }
+            }
+          `,
+          variables: {
+            whereSize: { id: { _in: product.size_ids } },
+            whereColor: { id: { _in: product.color_ids } },
+          },
+        }),
+      });
+
+      const { data: sizes_and_colors } = await enrichedResponse.json();
+
+      // Merge product data with sizes and colors
+      return {
+        ...product,
+        sizes: sizes_and_colors.size,
+        colors: sizes_and_colors.color,
+      };
+    })
+  );
+
+  return enrichedProducts;
 };
 
 export default getProducts;

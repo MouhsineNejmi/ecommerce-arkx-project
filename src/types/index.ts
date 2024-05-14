@@ -73,6 +73,8 @@ export interface Product {
   is_archived: boolean;
   created_at: Date;
   updated_at?: Date;
+  colors?: Color[];
+  sizes?: Size[];
 }
 
 export interface ProductSingle extends Product {
