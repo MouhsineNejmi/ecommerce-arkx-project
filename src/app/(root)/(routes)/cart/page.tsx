@@ -1,9 +1,15 @@
 "use client";
+
 import { useEffect, useState } from "react";
+import { Elements } from "@stripe/react-stripe-js";
+import getStripe from "@/lib/get-stripejs";
+
 import Container from "@/components/ui/container";
-import useCart from "@/hooks/use-cart";
 import CartItem from "./components/cart-item";
 import Summary from "./components/summary";
+import useCart from "@/hooks/use-cart";
+
+const stripePromise = getStripe();
 
 const CartPage = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -16,6 +22,8 @@ const CartPage = () => {
   if (!isMounted) {
     return null;
   }
+
+  const orderItems = cart?.items.map((item) => item.product.id);
 
   return (
     <div className="bg-white">
@@ -33,7 +41,10 @@ const CartPage = () => {
                 ))}
               </ul>
             </div>
-            <Summary />
+
+            <Elements stripe={stripePromise}>
+              <Summary orderItems={orderItems} />
+            </Elements>
           </div>
         </div>
       </Container>

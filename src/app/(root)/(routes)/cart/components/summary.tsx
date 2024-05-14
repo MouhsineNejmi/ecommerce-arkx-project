@@ -1,7 +1,8 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { useMutation } from "@apollo/client";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -12,9 +13,17 @@ import Currency from "@/components/ui/currency";
 
 import useCart from "@/hooks/use-cart";
 
-const Summary = () => {
+import { CREATE_ORDER } from "@/graphql/order/order.mutation";
+
+interface SummaryProps {
+  orderItems: string[];
+}
+
+const Summary: React.FC<SummaryProps> = ({ orderItems }) => {
   const [info, setInfo] = useState({ address: "", phone: "" });
-  const searchParams = useSearchParams();
+  const stripe = useStripe();
+  const elements = useElements();
+
   const items = useCart((state) => state.items);
   const removeAll = useCart((state) => state.removeAll);
   const totalPrice = items.reduce(
@@ -22,20 +31,51 @@ const Summary = () => {
     0
   );
 
-  useEffect(() => {
-    if (searchParams.get("success")) {
-      toast({ title: "Payment completed." });
-      removeAll();
-    }
-    if (searchParams.get("canceled")) {
-      toast({ title: "Something went wrong.", variant: "destructive" });
-    }
-  }, [searchParams, removeAll]);
+  const [createOrder, { loading: isCreatingOrder }] = useMutation(CREATE_ORDER);
 
   const onCheckout = async () => {
     if (!info.address) {
       toast({ title: "Address field is required" });
       return;
+    }
+
+    const cardElement = elements?.getElement("card");
+
+    try {
+      if (!stripe || !cardElement) return null;
+
+      const res = await fetch("/api/create-payment-intent", {
+        method: "POST",
+        body: JSON.stringify({ data: { amount: totalPrice } }),
+      });
+
+      const { clientSecret } = await res.json();
+
+      const { paymentIntent, error: confirmError } =
+        await stripe?.confirmCardPayment(clientSecret, {
+          payment_method: { card: cardElement },
+        });
+
+      if (confirmError) {
+        console.log("Confirm Error: ", confirmError);
+        toast({ title: confirmError.message, variant: "destructive" });
+        return;
+      }
+
+      const orderData = {
+        phone: info.phone,
+        address: info.address,
+        status: paymentIntent.status,
+        store_id: "0949a36b-49f7-4180-bcc7-29724b2d83c4",
+        order_items: orderItems,
+      };
+
+      await createOrder({ variables: { object: orderData } });
+
+      toast({ title: "Payment completed." });
+      removeAll();
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -46,33 +86,35 @@ const Summary = () => {
     });
   };
 
+  const loading = items.length === 0 || isCreatingOrder;
+
   return (
     <div className="px-4 py-6 mt-16 rounded-lg bg-gray-50 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
       <h2 className="text-lg font-medium text-gray-900">Order Summary</h2>
       <div className="mt-6 space-y-4">
-        <div className="grid gap-2">
-          <div className="space-y-2">
-            <Label>
-              Address:<span className="text-red-500 text-lg">*</span>
-            </Label>
-            <Input
-              name="address"
-              placeholder="Your delivery address"
-              value={info.address}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label>Phone Number:</Label>
-            <Input
-              name="phone"
-              placeholder="Your phone number"
-              value={info.phone}
-              onChange={handleChange}
-            />
-          </div>
+        <div className="space-y-2">
+          <Label>
+            Address:<span className="text-red-500 text-lg">*</span>
+          </Label>
+          <Input
+            name="address"
+            placeholder="Your delivery address"
+            value={info.address}
+            onChange={handleChange}
+          />
         </div>
+
+        <div className="space-y-2">
+          <Label>Phone Number:</Label>
+          <Input
+            name="phone"
+            placeholder="Your phone number"
+            value={info.phone}
+            onChange={handleChange}
+          />
+        </div>
+
+        <CardElement />
       </div>
 
       <Separator className="mt-8" />
@@ -82,11 +124,7 @@ const Summary = () => {
         <Currency value={totalPrice} />
       </div>
 
-      <Button
-        disabled={items.length === 0}
-        className="w-full mt-6"
-        onClick={onCheckout}
-      >
+      <Button disabled={loading} className="w-full mt-6" onClick={onCheckout}>
         Checkout
       </Button>
     </div>
