@@ -20,7 +20,6 @@ import {
 } from "@/components/ui/form";
 
 import { LoginForm, loginSchema } from "@/schemas/auth";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 const Page = () => {
   const router = useRouter();

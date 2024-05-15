@@ -10,7 +10,7 @@ export type OrderColumn = {
   phone: string;
   status: string;
   products: string;
-  created_at: Date;
+  created_at: Date | string;
 };
 
 export const columns: ColumnDef<OrderColumn>[] = [

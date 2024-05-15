@@ -13,13 +13,12 @@ import Currency from "@/components/ui/currency";
 
 import useCart from "@/hooks/use-cart";
 
-import { CREATE_ORDER } from "@/graphql/order/order.mutation";
+import {
+  CREATE_ORDER,
+  CREATE_ORDER_ITEMS,
+} from "@/graphql/order/order.mutation";
 
-interface SummaryProps {
-  orderItems: string[];
-}
-
-const Summary: React.FC<SummaryProps> = ({ orderItems }) => {
+const Summary = () => {
   const [info, setInfo] = useState({ address: "", phone: "" });
   const stripe = useStripe();
   const elements = useElements();
@@ -30,8 +29,12 @@ const Summary: React.FC<SummaryProps> = ({ orderItems }) => {
     (total, item) => total + Number(item.product.price) * item.quantity,
     0
   );
+  const orderItemsIds = items?.map((item) => item.product.id);
 
-  const [createOrder, { loading: isCreatingOrder }] = useMutation(CREATE_ORDER);
+  const [createOrder, { data: order, loading: isCreatingOrder }] =
+    useMutation(CREATE_ORDER);
+  const [createOrderItems, { loading: isCreatingOrderItems }] =
+    useMutation(CREATE_ORDER_ITEMS);
 
   const onCheckout = async () => {
     if (!info.address) {
@@ -46,7 +49,7 @@ const Summary: React.FC<SummaryProps> = ({ orderItems }) => {
 
       const res = await fetch("/api/create-payment-intent", {
         method: "POST",
-        body: JSON.stringify({ data: { amount: totalPrice } }),
+        body: JSON.stringify({ data: { amount: Math.floor(totalPrice) } }),
       });
 
       const { clientSecret } = await res.json();
@@ -67,13 +70,20 @@ const Summary: React.FC<SummaryProps> = ({ orderItems }) => {
         address: info.address,
         status: paymentIntent.status,
         store_id: "0949a36b-49f7-4180-bcc7-29724b2d83c4",
-        order_items: orderItems,
+        amount: Math.floor(totalPrice),
       };
-
       await createOrder({ variables: { object: orderData } });
+
+      const orderItemsData = items.map((item) => ({
+        order_id: order?.insert_order_one.id,
+        product_id: item.product.id,
+        quantity: item.quantity,
+      }));
+      await createOrderItems({ variables: { objects: orderItemsData } });
 
       toast({ title: "Payment completed." });
       removeAll();
+      setInfo({ phone: "", address: "" });
     } catch (error) {
       console.error(error);
     }
@@ -86,7 +96,7 @@ const Summary: React.FC<SummaryProps> = ({ orderItems }) => {
     });
   };
 
-  const loading = items.length === 0 || isCreatingOrder;
+  const loading = items.length === 0 || isCreatingOrder || isCreatingOrderItems;
 
   return (
     <div className="px-4 py-6 mt-16 rounded-lg bg-gray-50 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">

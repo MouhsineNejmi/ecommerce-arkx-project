@@ -4,7 +4,6 @@ export const GET_ORDERS = gql`
   query getAllOrders($where: order_bool_exp!) {
     order(where: $where) {
       id
-      order_items
       address
       phone
       status

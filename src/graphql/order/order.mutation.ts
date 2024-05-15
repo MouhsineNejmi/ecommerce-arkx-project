@@ -8,3 +8,16 @@ export const CREATE_ORDER = gql`
     }
   }
 `;
+
+export const CREATE_ORDER_ITEMS = gql`
+  mutation createOrderItems($objects: [order_item_insert_input!]!) {
+    insert_order_item(objects: $objects) {
+      returning {
+        id
+        product_id
+        quantity
+        order_id
+      }
+    }
+  }
+`;

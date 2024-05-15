@@ -1,7 +1,5 @@
 "use client";
 
-import { useParams } from "next/navigation";
-import { useQuery } from "@apollo/client";
 import { format } from "date-fns";
 
 import { Heading } from "@/components/ui/heading";
@@ -11,50 +9,31 @@ import { OrderColumn, columns } from "./columns";
 
 import { formatter } from "@/lib/utils";
 
-import { GET_ORDERS } from "@/graphql/order/order.query";
-import { GET_ORDER_ITEMS } from "@/graphql/order/order.query";
+import { OrderItemWithProduct, OrderWithOrderItem } from "@/types";
 
-const OrdersClient = () => {
-  const params = useParams();
+interface OrdersClientProps {
+  data: OrderWithOrderItem[];
+}
 
-  const { data: ordersData, loading: loadingOrders } = useQuery(GET_ORDERS, {
-    variables: { where: { store_id: { _eq: params.storeId } } },
-  });
-  const orders = ordersData?.order;
-
-  const { data: orderItemsData, loading: loadingOrderItems } = useQuery(
-    GET_ORDER_ITEMS,
-    {
-      skip: loadingOrders,
-      variables: { where: { id: { _in: orders?.order_items } } },
-    }
-  );
-  const order_items = orderItemsData?.order_item;
-
-  console.log("orderItemsData: ", orderItemsData);
-
-  const formattedOrders: OrderColumn[] =
-    !loadingOrders &&
-    orders?.map((order: any) => ({
+const OrdersClient: React.FC<OrdersClientProps> = ({ data }) => {
+  const formattedOrders: OrderColumn[] = data?.map(
+    (order: OrderWithOrderItem) => ({
       id: order.id,
       phone: order.phone,
       address: order.address,
-      products: order_items.products
-        .map((product: any) => product.name)
+      products: order?.items
+        .map((item: OrderItemWithProduct) => item.product.name)
         .join(", "),
-      total_price: formatter.format(
-        order_items.reduce((total: number, item: any) => {
-          return total + Number(item.product.price) * item.quantity;
-        }, 0)
-      ),
+      total_price: formatter.format(order.amount),
       status: order.status,
       created_at: format(order.created_at, "MMMM do, yyyy"),
-    }));
+    })
+  );
 
   return (
     <div className="grid gap-6">
       <Heading
-        title={`Orders(${orders?.length || 0})`}
+        title={`Orders(${data?.length || 0})`}
         description="See your store orders"
       />
 

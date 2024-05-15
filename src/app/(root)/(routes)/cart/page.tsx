@@ -2,18 +2,20 @@
 
 import { useEffect, useState } from "react";
 import { Elements } from "@stripe/react-stripe-js";
-import getStripe from "@/lib/get-stripejs";
 
 import Container from "@/components/ui/container";
 import CartItem from "./components/cart-item";
 import Summary from "./components/summary";
 import useCart from "@/hooks/use-cart";
+import getStripe from "@/lib/get-stripejs";
+
+import { CartItem as CartItemType } from "@/types";
 
 const stripePromise = getStripe();
 
 const CartPage = () => {
-  const [isMounted, setIsMounted] = useState(false);
   const cart = useCart();
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -22,8 +24,6 @@ const CartPage = () => {
   if (!isMounted) {
     return null;
   }
-
-  const orderItems = cart?.items.map((item) => item.product.id);
 
   return (
     <div className="bg-white">
@@ -36,14 +36,14 @@ const CartPage = () => {
                 <p className="text-neutral-500">No items added to cart</p>
               )}
               <ul>
-                {cart?.items?.map((item) => (
+                {cart?.items?.map((item: CartItemType) => (
                   <CartItem key={item.product?.id} data={item} />
                 ))}
               </ul>
             </div>
 
             <Elements stripe={stripePromise}>
-              <Summary orderItems={orderItems} />
+              <Summary />
             </Elements>
           </div>
         </div>

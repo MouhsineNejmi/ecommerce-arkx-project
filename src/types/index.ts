@@ -81,3 +81,50 @@ export interface ProductSingle extends Product {
   colors: Color[];
   sizes: Size[];
 }
+
+export interface CartItem {
+  product: Product;
+  quantity: number;
+}
+
+export interface Order {
+  id: string;
+  amount: number;
+  phone: string;
+  address: string;
+  status: string;
+  items?: OrderItem[];
+  created_at: Date;
+  updated_at?: Date;
+}
+
+export interface OrderWithOrderItem {
+  id: string;
+  amount: number;
+  phone: string;
+  address: string;
+  items: OrderItemWithProduct[];
+  status: string;
+  created_at: Date;
+  updated_at?: Date;
+}
+
+export interface OrderItem {
+  id: string;
+  order_id: string;
+  quantity: number;
+  product_id: string;
+  product?: Product;
+  created_at: Date;
+  updated_at?: Date;
+}
+
+export interface OrderItemWithProduct {
+  id: string;
+  order_id: string;
+  quantity: number;
+  product_id: string;
+  product: Product;
+  created_at: Date;
+  updated_at?: Date;
+}
