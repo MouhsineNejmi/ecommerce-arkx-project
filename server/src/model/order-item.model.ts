@@ -17,9 +17,6 @@ export class OrderItem {
 
   @prop({ ref: () => Store })
   store!: Ref<Store>
-
-  @prop({ type: () => [OrderItem] })
-  order_items!: Ref<OrderItem>[]
 }
 
 const OrderItemModel = getModelForClass(OrderItem)

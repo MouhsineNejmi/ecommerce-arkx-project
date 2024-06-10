@@ -1,7 +1,6 @@
 import { prop, modelOptions, getModelForClass, Ref } from '@typegoose/typegoose'
 
 import { Product } from './product.model'
-import { Cart } from './cart.model'
 import { Order } from './order.model'
 
 @modelOptions({ schemaOptions: { timestamps: true } })
@@ -26,9 +25,6 @@ export class User {
 
   @prop({ ref: () => Product, default: [] })
   favoriteProducts!: Ref<Product>[]
-
-  @prop({ ref: () => Cart })
-  cart?: Ref<Cart>
 
   @prop({ type: () => [Order], default: [] })
   orders?: Ref<Order>[]
