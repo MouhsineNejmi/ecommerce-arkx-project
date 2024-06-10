@@ -6,9 +6,9 @@ export default class Database {
   public uri: string
   public options: mongoose.ConnectOptions
 
-  constructor(uri: string, options: mongoose.ConnectOptions) {
+  constructor(uri: string, options?: mongoose.ConnectOptions) {
     this.uri = uri
-    this.options = options
+    this.options = options || {}
   }
 
   async connect() {
