@@ -1,26 +1,21 @@
-import { Schema, model } from 'mongoose'
+import { getModelForClass, prop, Ref } from '@typegoose/typegoose'
 
-const TokenSchema = new Schema({
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  refreshToken: {
-    type: String,
-    required: true
-  },
-  accessToken: {
-    type: String,
-    required: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-    expires: 24 * 60 * 60 // 24 hours
-  }
-})
+import { User } from './user.model'
 
-const Token = model('Token', TokenSchema)
+export class Token {
+  @prop({ type: () => [User], default: [], required: true })
+  user!: Ref<User>
 
-export default Token
+  @prop({ required: true })
+  refreshToken!: string
+
+  @prop({ required: true })
+  accessToken!: string
+
+  @prop({ default: Date.now, expires: 24 * 60 * 60 })
+  createdAt!: string
+}
+
+const TokenModel = getModelForClass(Token)
+
+export default TokenModel

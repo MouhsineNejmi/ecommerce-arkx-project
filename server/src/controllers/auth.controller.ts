@@ -98,7 +98,7 @@ export const login = async (req: Request, res: Response) => {
     })
 
     if (!existingUser) {
-      return res.status(400).json({
+      return res.status(404).json({
         message: "User with these credentials doesn't exists"
       })
     }
