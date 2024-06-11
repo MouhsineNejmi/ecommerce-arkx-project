@@ -5,9 +5,9 @@ import { NextFunction, Request, Response } from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
-import User from '../model/user.model'
-import EmailVerification from '../model/email.model'
-import Token from '../model/token.model'
+import User from '../models/user.model'
+import EmailVerification from '../models/email.model'
+import Token from '../models/token.model'
 
 import { token } from '../config/config'
 

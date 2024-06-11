@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { check, validationResult } from 'express-validator'
-import User from '../../model/user.model'
+import User from '../../models/user.model'
 
 export const addUserValidator = [
   check('username')

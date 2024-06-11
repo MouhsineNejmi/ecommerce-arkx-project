@@ -2,9 +2,9 @@ import { Request, Response } from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
-import Admin from '../model/admin.model'
-import AdminToken from '../model/admin-token.model'
-import User from '../model/user.model'
+import Admin from '../models/admin.model'
+import AdminToken from '../models/admin-token.model'
+import User from '../models/user.model'
 
 import { token } from '../config/config'
 
@@ -59,6 +59,8 @@ export const login = async (req: Request, res: Response) => {
       }
     })
   } catch (error) {
+    console.log(error)
+
     return res.status(500).json({ message: 'Internal Server error. Please try again later.' })
   }
 }

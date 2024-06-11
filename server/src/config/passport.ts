@@ -2,8 +2,8 @@ import passport from 'passport'
 import jwt from 'jsonwebtoken'
 import { Strategy, ExtractJwt, StrategyOptions } from 'passport-jwt'
 
-import User from '../model/user.model'
-import Token from '../model/token.model'
+import User from '../models/user.model'
+import Token from '../models/token.model'
 
 import { token } from './config'
 

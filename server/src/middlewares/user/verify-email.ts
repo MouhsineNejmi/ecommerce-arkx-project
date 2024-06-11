@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { query, validationResult } from 'express-validator'
 import nodemailer from 'nodemailer'
 
-import EmailVerification from '../../model/email.model'
+import EmailVerification from '../../models/email.model'
 
 import { verifyEmailHTML } from '../../utils/email-template'
 

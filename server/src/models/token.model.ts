@@ -3,7 +3,7 @@ import { getModelForClass, prop, Ref } from '@typegoose/typegoose'
 import { User } from './user.model'
 
 export class Token {
-  @prop({ type: () => [User], default: [], required: true })
+  @prop({ ref: () => User, required: true })
   user!: Ref<User>
 
   @prop({ required: true })

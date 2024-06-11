@@ -33,7 +33,7 @@ export class Admin {
     minlength: 6,
     validate: {
       validator: (password: string) => {
-        return password.length < 6
+        return password.length >= 6
       },
       message: 'Password must be at least 6 characters long!'
     }
