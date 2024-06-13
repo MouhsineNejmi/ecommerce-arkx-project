@@ -56,7 +56,7 @@ const Page = () => {
         {
           method: "POST",
           body: JSON.stringify({ ...userData }),
-        }
+        },
       );
       const { user } = await res.json();
 

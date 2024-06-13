@@ -26,7 +26,7 @@ const handler = async (req: Request) => {
             object: { ...body, password: hashedPassword },
           },
         }),
-      }
+      },
     );
     const data = await res.json();
 

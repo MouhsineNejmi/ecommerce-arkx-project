@@ -1,21 +1,17 @@
 "use client";
 
-import { X, Plus, Minus } from "lucide-react";
+import React from "react";
 import Image from "next/image";
+import { X, Plus, Minus } from "lucide-react";
 
 import Currency from "@/components/ui/currency";
 import IconButton from "@/components/ui/icon-button";
 import useCart from "@/hooks/use-cart";
 
-import { Product } from "@/types";
-
-type CartItem = {
-  product: Product;
-  quantity: number;
-};
+import { CartItem as CartItemType } from "@/types";
 
 interface CartItemProps {
-  data: CartItem;
+  data: CartItemType;
 }
 
 const CartItem: React.FC<CartItemProps> = ({ data }) => {

@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import {
@@ -20,10 +21,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 import { cn } from "@/lib/utils";
 
-const Sidebar = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLElement>) => {
+const Sidebar = ({ className }: React.HTMLAttributes<HTMLElement>) => {
   const pathname = usePathname();
   const params = useParams();
 
@@ -77,7 +75,7 @@ const Sidebar = ({
       <aside
         className={cn(
           "fixed inset-y-0 z-10 gap-10 hidden w-60 flex-col p-4 border-r bg-background md:flex",
-          className
+          className,
         )}
       >
         <Link
@@ -99,7 +97,7 @@ const Sidebar = ({
                 "flex items-center rounded-lg space-x-2 px-2 text-muted-foreground transition-colors hover:text-foreground",
                 active
                   ? "text-black font-bold dark:text-white"
-                  : "text-muted-foreground"
+                  : "text-muted-foreground",
               )}
             >
               <Icon className="h-5 w-5" />
@@ -115,7 +113,7 @@ const Sidebar = ({
               "flex items-center space-x-2 rounded-lg text-muted-foreground transition-colors hover:text-foreground",
               pathname === `/office/${params.storeId}/settings`
                 ? "text-black font-bold dark:text-white"
-                : "text-muted-foreground"
+                : "text-muted-foreground",
             )}
           >
             <Settings className="h-5 w-5" />
@@ -149,7 +147,7 @@ const Sidebar = ({
                   "flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground",
                   active
                     ? "text-black font-bold dark:text-white"
-                    : "text-muted-foreground"
+                    : "text-muted-foreground",
                 )}
               >
                 <Icon className="h-5 w-5" />
@@ -163,7 +161,7 @@ const Sidebar = ({
                 "flex items-center gap-4 space-x-2 px-2.5 text-muted-foreground hover:text-foreground",
                 pathname === `/office/${params.storeId}/settings`
                   ? "text-black font-bold dark:text-white"
-                  : "text-muted-foreground"
+                  : "text-muted-foreground",
               )}
             >
               <Settings className="h-5 w-5" />

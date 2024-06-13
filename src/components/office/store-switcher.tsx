@@ -42,7 +42,6 @@ interface StoreSwitcherProps extends PopoverTriggerProps {
 export default function StoreSwitcher({
   className,
   items = [],
-  loading,
 }: StoreSwitcherProps) {
   const storeModal = useStoreModal();
   const params = useParams();
@@ -54,7 +53,7 @@ export default function StoreSwitcher({
   }));
 
   const currentStore = formattedItems.find(
-    (item) => item.value === params.storeId
+    (item) => item.value === params.storeId,
   );
 
   const [open, setOpen] = useState(false);
@@ -98,7 +97,7 @@ export default function StoreSwitcher({
                       "ml-auto h-4 w-4",
                       currentStore?.value === store.value
                         ? "opacity-100"
-                        : "opacity-0"
+                        : "opacity-0",
                     )}
                   />
                 </CommandItem>

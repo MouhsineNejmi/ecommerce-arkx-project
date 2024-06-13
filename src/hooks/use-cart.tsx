@@ -11,7 +11,9 @@ type CartItem = {
 
 interface CartStore {
   items: CartItem[];
+  // eslint-disable-next-line no-unused-vars
   addItem: (data: Product, quantity?: number) => void;
+  // eslint-disable-next-line no-unused-vars
   removeItem: (id: string) => void;
   removeAll: () => void;
 }
@@ -23,7 +25,7 @@ const useCart = create(
       addItem: (data: Product, quantity: number = 1) => {
         const currentItems = get().items;
         const existingItem = currentItems.find(
-          (item) => item.product.id === data.id
+          (item) => item.product.id === data.id,
         );
 
         if (existingItem) {
@@ -33,7 +35,7 @@ const useCart = create(
               items: state.items.map((item) =>
                 item.product.id === data.id
                   ? { ...item, quantity: updatedQuantity }
-                  : item
+                  : item,
               ),
             }));
             toast({
@@ -62,8 +64,8 @@ const useCart = create(
     {
       name: "cart-storage",
       storage: createJSONStorage(() => localStorage),
-    }
-  )
+    },
+  ),
 );
 
 export default useCart;

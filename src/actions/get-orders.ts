@@ -72,7 +72,7 @@ const getOrders = async (storeId: string) => {
         ...order,
         items: [...orderItems],
       };
-    })
+    }),
   );
 
   return enrichedOrders;

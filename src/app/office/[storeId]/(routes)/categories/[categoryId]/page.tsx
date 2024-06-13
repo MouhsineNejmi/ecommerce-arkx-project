@@ -21,13 +21,13 @@ const BillboardPage = ({ params }: CategoryPageProps) => {
       variables: {
         where: { id: { _eq: params.categoryId }, store_id: { _eq: storeId } },
       },
-    }
+    },
   );
   const { data: billboardsData, loading: loadingBillboards } = useQuery(
     GET_BILLBOARDS,
     {
       variables: { where: { store_id: { _eq: storeId } } },
-    }
+    },
   );
 
   const category = categoryData?.category[0];

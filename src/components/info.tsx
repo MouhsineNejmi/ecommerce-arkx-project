@@ -1,3 +1,4 @@
+import React from "react";
 import { ShoppingCart } from "lucide-react";
 
 import Currency from "@/components/ui/currency";

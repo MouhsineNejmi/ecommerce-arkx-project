@@ -1,3 +1,4 @@
+import React from "react";
 import OrdersClient from "./components/client";
 import getOrders from "@/actions/get-orders";
 

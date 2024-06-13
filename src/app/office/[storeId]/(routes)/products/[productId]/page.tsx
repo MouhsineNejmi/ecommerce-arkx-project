@@ -23,7 +23,7 @@ const ProductPage = ({ params }: PagePageProps) => {
       variables: {
         where: { id: { _eq: params.productId }, store_id: { _eq: storeId } },
       },
-    }
+    },
   );
   const { data: categoriesData, loading: loadingCategories } = useQuery(
     GET_CATEGORIES,
@@ -31,7 +31,7 @@ const ProductPage = ({ params }: PagePageProps) => {
       variables: {
         where: { store_id: { _eq: storeId } },
       },
-    }
+    },
   );
   const { data: sizesData, loading: loadingSizes } = useQuery(GET_SIZES, {
     variables: {

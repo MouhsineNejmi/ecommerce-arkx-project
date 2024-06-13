@@ -208,7 +208,7 @@ const ProductForm = ({
                       onRemove={(url) =>
                         field.onChange([
                           ...field.value.filter(
-                            (currentImg) => currentImg !== url
+                            (currentImg) => currentImg !== url,
                           ),
                         ])
                       }

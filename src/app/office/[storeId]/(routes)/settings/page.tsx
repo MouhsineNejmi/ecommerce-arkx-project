@@ -3,7 +3,6 @@
 import SettingsForm from "@/components/office/settings-form";
 
 import { useUserCurrentStore } from "@/hooks/use-user-stores";
-import { redirect } from "next/navigation";
 
 interface SettingsPageProps {
   params: {

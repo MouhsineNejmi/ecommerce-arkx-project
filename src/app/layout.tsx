@@ -1,3 +1,4 @@
+import React from "react";
 import type { Metadata } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -18,7 +19,10 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <SpeedInsights />
+        </Providers>
       </body>
     </html>
   );

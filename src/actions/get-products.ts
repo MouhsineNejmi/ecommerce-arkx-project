@@ -85,7 +85,7 @@ const getProducts = async (query: Query): Promise<Product[]> => {
         sizes: sizes_and_colors.size,
         colors: sizes_and_colors.color,
       };
-    })
+    }),
   );
 
   return enrichedProducts;

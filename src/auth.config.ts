@@ -7,8 +7,8 @@ import { compare } from "bcryptjs";
 
 const authOptions: NextAuthOptions = {
   adapter: HasuraAdapter({
-    endpoint: process.env.NEXT_PUBLIC_NEXT_PUBLIC_HASURA_GRAPHQL_ENDPOINT!,
-    adminSecret: process.env.NEXT_PUBLIC_NEXT_PUBLIC_HASURA_ADMIN_SECRET!,
+    endpoint: process.env.NEXT_PUBLIC_HASURA_GRAPHQL_ENDPOINT!,
+    adminSecret: process.env.NEXT_PUBLIC_HASURA_ADMIN_SECRET!,
   }),
   providers: [
     CredentialsProvider({
@@ -55,7 +55,7 @@ const authOptions: NextAuthOptions = {
                   where: { email: { _eq: credentials?.email } },
                 },
               }),
-            }
+            },
           );
 
           const { data } = await res.json();
@@ -64,7 +64,7 @@ const authOptions: NextAuthOptions = {
             data.user &&
             (await compare(
               credentials?.password as string,
-              data?.user[0].password
+              data?.user[0].password,
             ))
           ) {
             return {
@@ -135,7 +135,7 @@ const authOptions: NextAuthOptions = {
               id: token.sub,
             },
           }),
-        }
+        },
       );
 
       const { data } = await res.json();

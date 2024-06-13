@@ -27,9 +27,9 @@ const Summary = () => {
   const removeAll = useCart((state) => state.removeAll);
   const totalPrice = items.reduce(
     (total, item) => total + Number(item.product.price) * item.quantity,
-    0
+    0,
   );
-  const orderItemsIds = items?.map((item) => item.product.id);
+  // const orderItemsIds = items?.map((item) => item.product.id);
 
   const [createOrder, { data: order, loading: isCreatingOrder }] =
     useMutation(CREATE_ORDER);
@@ -55,7 +55,7 @@ const Summary = () => {
       const { clientSecret } = await res.json();
 
       const { paymentIntent, error: confirmError } =
-        await stripe?.confirmCardPayment(clientSecret, {
+        await stripe.confirmCardPayment(clientSecret, {
           payment_method: { card: cardElement },
         });
 

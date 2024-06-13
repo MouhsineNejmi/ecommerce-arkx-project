@@ -1,3 +1,4 @@
+import React from "react";
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
@@ -49,7 +50,7 @@ export default async function OfficeLayout({
         query: GET_STORE_BY_ID,
         variables: { id: storeId },
       }),
-    }
+    },
   );
 
   const { data } = await res.json();

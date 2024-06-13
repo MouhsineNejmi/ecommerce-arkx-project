@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { format } from "date-fns";
 
 import { Heading } from "@/components/ui/heading";
@@ -27,7 +28,7 @@ const OrdersClient: React.FC<OrdersClientProps> = ({ data }) => {
       total_price: formatter.format(order.amount),
       status: order.status,
       created_at: format(order.created_at, "MMMM do, yyyy"),
-    })
+    }),
   );
 
   return (

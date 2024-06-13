@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import qs from "query-string";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -31,7 +32,7 @@ const Filter: React.FC<FilterProps> = ({ data, name, valueKey }) => {
         url: window.location.href,
         query,
       },
-      { skipNull: true }
+      { skipNull: true },
     );
 
     router.push(url);
@@ -46,7 +47,7 @@ const Filter: React.FC<FilterProps> = ({ data, name, valueKey }) => {
             <Button
               className={cn(
                 "rounded-md text-sm text-gray-800 p-2 bg-white border border-gray-300",
-                selectedValue === filter.id && "bg-black text-white"
+                selectedValue === filter.id && "bg-black text-white",
               )}
               onClick={() => onClick(filter.id)}
             >

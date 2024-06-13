@@ -37,10 +37,8 @@ const SettingsForm = ({ initialData }: SettingsFormProps) => {
   const { data: session } = useSession();
 
   const [open, setOpen] = useState(false);
-  const [editStore, { loading: isEditingStore, error: editStoreErrors }] =
-    useMutation(EDIT_STORE);
-  const [deleteStore, { loading: isDeletingStore, error: deleteStoreErrors }] =
-    useMutation(DELETE_STORE);
+  const [editStore, { loading: isEditingStore }] = useMutation(EDIT_STORE);
+  const [deleteStore, { loading: isDeletingStore }] = useMutation(DELETE_STORE);
 
   const form = useForm<SettingsFormInput>({
     resolver: zodResolver(editStoreSchema),

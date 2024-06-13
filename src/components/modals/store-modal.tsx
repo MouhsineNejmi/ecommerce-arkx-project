@@ -28,7 +28,7 @@ const StoreModal = () => {
   const { toast } = useToast();
   const storeModal = useStoreModal();
   const { data: session } = useSession();
-  const [createStore, { data, loading, error }] = useMutation(CREATE_STORE);
+  const [createStore, { data, loading }] = useMutation(CREATE_STORE);
 
   const form = useForm({
     resolver: zodResolver(createStoreSchema),
