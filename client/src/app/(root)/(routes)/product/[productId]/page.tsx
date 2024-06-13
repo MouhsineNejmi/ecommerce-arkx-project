@@ -1,3 +1,5 @@
+import React from "react";
+
 import getProduct from "@/actions/get-product";
 import getProducts from "@/actions/get-products";
 
