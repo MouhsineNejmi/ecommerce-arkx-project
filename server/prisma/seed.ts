@@ -26,6 +26,7 @@ async function main() {
       last_name: 'Foster',
       username: 'admin',
       email: 'admin@test.com',
+      role: 'admin',
       password: await hash('test1234', salt),
     },
   });
