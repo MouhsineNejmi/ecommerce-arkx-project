@@ -23,19 +23,19 @@ services:
     depends_on:
       - db
 
-  server:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    container_name: server
-    ports:
-      - "5000:5000"
-    depends_on:
-      - db
-    volumes:
-      - ./server:/app
-      - /app/node_modules
+  # server:
+  #   build:
+  #     context: ./server
+  #     dockerfile: Dockerfile
+  #   restart: unless-stopped
+  #   container_name: server
+  #   ports:
+  #     - "5000:5000"
+  #   depends_on:
+  #     - db
+  #   volumes:
+  #     - ./server:/app
+  #     - /app/node_modules
 
 volumes:
   postgres:
