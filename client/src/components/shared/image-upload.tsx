@@ -7,6 +7,8 @@ import { CldUploadWidget } from "next-cloudinary";
 
 import { Button } from "@/components/ui/button";
 
+import { cn } from "@/lib/utils";
+
 interface ImageUploadProps {
   disabled?: boolean;
   // eslint-disable-next-line no-unused-vars
@@ -14,6 +16,7 @@ interface ImageUploadProps {
   // eslint-disable-next-line no-unused-vars
   onRemove: (value: string) => void;
   values: string[];
+  is_banner?: boolean;
 }
 
 const ImageUpload = ({
@@ -21,6 +24,7 @@ const ImageUpload = ({
   onChange,
   onRemove,
   values,
+  is_banner,
 }: ImageUploadProps) => {
   const [isMounted, setIsMounted] = useState(false);
 
@@ -55,7 +59,12 @@ const ImageUpload = ({
               </Button>
             </div>
 
-            <Image fill className="object-cover" alt="Image" src={url} />
+            <Image
+              fill
+              className={cn("object-cover", is_banner && "w-full h-auto")}
+              alt="Image"
+              src={url}
+            />
           </div>
         ))}
       </div>

@@ -24,4 +24,29 @@ model User {
   is_email_verified Boolean  @default(false)
   created_at        DateTime @default(now())
   updated_at        DateTime @updatedAt
+
+  Billboards Billboard[]
+}
+
+model Billboard {
+  id          String   @id @default(uuid())
+  label       String
+  image_url   String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  user_id     String
+  category_id String?
+
+  user     User      @relation(fields: [user_id], references: [id])
+  Category Category? @relation(fields: [category_id], references: [id])
+}
+
+model Category {
+  id         String   @id @default(uuid())
+  name       String
+  icon       String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  Billboards Billboard[]
 }

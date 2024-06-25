@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@apollo/client";
@@ -23,13 +24,11 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import ImageUpload from "@/components/shared/image-upload";
 
+import { createBillboard, editBillboard } from "@/actions/billboards/actions";
+import { DELETE_BILLBOARD } from "@/graphql/billboard/billboard.mutation";
+
 import { Billboard } from "@/types";
 import { BillboardFormInput, billboardSchema } from "@/schemas/billboard";
-import {
-  CREATE_BILLBOARD,
-  DELETE_BILLBOARD,
-  EDIT_BILLBOARD,
-} from "@/graphql/billboard/billboard.mutation";
 
 interface BillboardFormProps {
   initialData: Billboard | null;
@@ -39,13 +38,11 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
+  const { data: session } = useSession();
 
-  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
-  const [createBillboard, { loading: isCreatingBillboard }] =
-    useMutation(CREATE_BILLBOARD);
-  const [editBillboard, { loading: isEditingBillboard }] =
-    useMutation(EDIT_BILLBOARD);
   const [deleteBillboard, { loading: isDeletingBillboard }] =
     useMutation(DELETE_BILLBOARD);
 
@@ -63,42 +60,39 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
     defaultValues: initialData || {
       label: "",
       image_url: "",
+      user_id: session?.user.id,
     },
   });
 
   const onSubmit = async (values: BillboardFormInput) => {
+    setLoading(true);
+
     const billboardData = {
       label: values.label,
       image_url: values.image_url,
-      store_id: params.storeId,
+      user_id: session?.user.id as string,
     };
 
     try {
       if (initialData) {
-        await editBillboard({
-          variables: {
-            _set: billboardData,
-            where: {
-              id: { _eq: initialData?.id },
-              store_id: { _eq: params.storeId },
-            },
-          },
-        });
+        await editBillboard(
+          initialData?.id,
+          billboardData,
+          session?.access_token as string
+        );
       } else {
-        await createBillboard({
-          variables: {
-            object: billboardData,
-          },
-        });
+        await createBillboard(billboardData, session?.access_token as string);
+        form.reset();
       }
 
-      router.push(`/office/${params.storeId}/billboards`);
       toast({ title: toastMessage });
-      setOpen(false);
+      router.push("/office/billboards");
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast({ title: "Something went wrong.", variant: "destructive" });
+    } finally {
       setOpen(false);
+      setLoading(false);
     }
   };
 
@@ -112,7 +106,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
           },
         },
       });
-      router.push(`/office/${params.storeId}/billboards`);
+      router.push("/office/billboards");
       toast({ title: "Billboard deleted." });
     } catch (error) {
       console.log(error);
@@ -123,9 +117,6 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
       });
     }
   };
-
-  const loading =
-    isCreatingBillboard || isEditingBillboard || isDeletingBillboard;
 
   return (
     <>
@@ -158,43 +149,42 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full mt-8 space-y-8"
         >
-          <div className="grid grid-cols-3 gap-8">
-            <FormField
-              control={form.control}
-              name="image_url"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Background Image</FormLabel>
-                  <FormControl>
-                    <ImageUpload
-                      values={field.value ? [field.value] : []}
-                      disabled={loading}
-                      onChange={(url) => field.onChange(url)}
-                      onRemove={() => field.onChange("")}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="image_url"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Background Image</FormLabel>
+                <FormControl>
+                  <ImageUpload
+                    is_banner
+                    values={field.value ? [field.value] : []}
+                    disabled={loading}
+                    onChange={(url) => field.onChange(url)}
+                    onRemove={() => field.onChange("")}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="label"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Label</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Billboard name"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name="label"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Label</FormLabel>
+                <FormControl>
+                  <Input
+                    disabled={loading}
+                    placeholder="Billboard name"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <Button disabled={loading} className="ml-auto" type="submit">
             {action}

@@ -23,12 +23,23 @@ export interface Store {
   updated_at?: Date;
 }
 
+// export interface Billboard {
+//   id: string;
+//   label: string;
+//   store_id: string;
+//   image_url: string;
+//   created_at?: Date;
+//   updated_at?: Date;
+// }
+
+/* NEW */
 export interface Billboard {
   id: string;
   label: string;
-  store_id: string;
   image_url: string;
-  created_at?: Date;
+  category_id: string;
+  user_id: string;
+  created_at: Date;
   updated_at?: Date;
 }
 
