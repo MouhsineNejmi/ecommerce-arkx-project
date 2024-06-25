@@ -38,10 +38,7 @@ const authOptions: NextAuthOptions = {
             },
           });
 
-          console.log(res);
-
           if (res.status === 401) {
-            console.log(res.statusText);
             return null;
           }
 
@@ -55,6 +52,7 @@ const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async jwt({ token, user }) {
       if (user) return { ...token, ...user };

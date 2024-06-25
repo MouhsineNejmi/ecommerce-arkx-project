@@ -11,10 +11,10 @@ import * as bcrypt from 'bcryptjs';
 import { UsersService } from '../users/users.service';
 
 import {
-  AccessToken,
   JwtPayload,
   LoginResponseDto,
   RegisterRequestDto,
+  RegisterResponseDto,
 } from '../dto/auth.dto';
 import { UserModule, UserWithoutPasswordModule } from '../dto/user.dto';
 
@@ -53,13 +53,19 @@ export class AuthService {
 
     return {
       access_token,
-      user: { id: user.id, username: user.username, role: user.role },
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        profile: user.profile,
+        role: user.role,
+      },
     };
   }
 
   async register(
     user: RegisterRequestDto,
-  ): Promise<AccessToken | BadRequestException> {
+  ): Promise<RegisterResponseDto | BadRequestException> {
     const { username, password } = user;
     const existingUser = await this.usersService.findUser({ username });
 

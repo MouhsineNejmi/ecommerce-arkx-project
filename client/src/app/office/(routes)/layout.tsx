@@ -6,7 +6,6 @@ import { Poppins as FontSans } from "next/font/google";
 import Sidebar from "@/components/office/sidebar";
 import Navbar from "@/components/office/navbar";
 
-import { GET_STORE_BY_ID } from "@/graphql/store/store.query";
 import getUserSession from "@/actions/get-user-session";
 
 import { cn } from "@/lib/utils";
@@ -23,46 +22,26 @@ const fontSans = FontSans({
 
 export default async function OfficeLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: { storeId: string };
 }) {
-  const { storeId } = params;
   const session = await getUserSession();
 
   console.log("SESSION: ", session);
 
-  if (!session?.user || session?.user?.role !== "admin" || !storeId) {
-    // To Do: Display an unathorized page
+  if (!session?.user) {
+    // Not authenticated
     redirect("/api/auth/signin");
   }
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_HASURA_GRAPHQL_ENDPOINT}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-hasura-admin-secret": process.env
-          .NEXT_PUBLIC_HASURA_ADMIN_SECRET as string,
-      },
-      body: JSON.stringify({
-        query: GET_STORE_BY_ID,
-        variables: { id: storeId },
-      }),
-    }
-  );
-
-  const { data } = await res.json();
-
-  if (!data.store_by_pk) {
+  if (session?.user?.role !== "admin") {
+    // To Do: Display an unathorized page (only admin can access this page)
     redirect("/");
   }
 
   return (
     <main>
-      <Navbar />
+      <Navbar currentUser={session.user} />
       <Sidebar />
       <div className={cn("md:ml-60 p-4", fontSans.className)}>{children}</div>
     </main>

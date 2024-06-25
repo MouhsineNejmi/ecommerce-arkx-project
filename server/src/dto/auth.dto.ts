@@ -15,11 +15,21 @@ export interface LoginResponseDto extends AccessToken {
   user: {
     id: string;
     username: string;
+    email: string;
     role: USER_ROLE;
+    profile: string;
   };
 }
 
-export type RegisterResponseDto = AccessToken;
+export interface RegisterResponseDto extends AccessToken {
+  user: {
+    id: string;
+    username: string;
+    email: string;
+    role: USER_ROLE;
+    profile: string;
+  };
+}
 
 export interface JwtPayload {
   username: string;
