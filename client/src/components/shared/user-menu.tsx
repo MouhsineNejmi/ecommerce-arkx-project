@@ -1,4 +1,9 @@
-import { useParams, useRouter } from "next/navigation";
+"use client";
+
+import {
+  //  useParams,
+  useRouter,
+} from "next/navigation";
 import { signOut } from "next-auth/react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -12,54 +17,24 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Session } from "next-auth";
 
-import { SessionUser } from "@/types";
+// import { SessionUser } from "@/types";
 
 interface UserMenuProps {
-  currentUser?: SessionUser;
+  currentUser?: Session["user"];
 }
 
 const UserMenu = ({ currentUser }: UserMenuProps) => {
   const router = useRouter();
-  const { storeId } = useParams();
+  // const { storeId } = useParams();
 
   const logout = async () => {
     await signOut();
     router.push("/login");
   };
 
-  return currentUser ? (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Avatar className="w-8 h-8 cursor-pointer">
-          <AvatarImage src={currentUser.image!} alt={currentUser.name!} />
-          <AvatarFallback>{currentUser.name!}</AvatarFallback>
-        </Avatar>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => router.push("/office/profile")}>
-            Profile
-            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => router.push(`/office/${storeId}/settings`)}
-          >
-            Settings
-            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={logout}>
-          Log out
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  ) : (
+  if (!currentUser) {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar className="w-8 h-8 cursor-pointer">
@@ -72,11 +47,44 @@ const UserMenu = ({ currentUser }: UserMenuProps) => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-56">
-        <DropdownMenuItem onClick={() => router.push("/login")}>
+        <DropdownMenuItem onClick={() => router.push("/api/auth/signin")}>
           Login
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => router.push("/signup")}>
           Signup
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>;
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Avatar className="w-8 h-8 cursor-pointer">
+          <AvatarImage src={currentUser?.profile} alt={currentUser?.username} />
+          <AvatarFallback>
+            {currentUser?.username.charAt(0).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56">
+        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem onClick={() => router.push("/office/profile")}>
+            Profile
+            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push("/office/settings")}>
+            Settings
+            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={logout}>
+          Log out
+          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
