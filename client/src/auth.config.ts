@@ -1,23 +1,19 @@
 import { NextAuthOptions } from "next-auth";
-import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { HasuraAdapter } from "next-auth-hasura-adapter";
-import * as jwt from "jsonwebtoken";
-import { compare } from "bcryptjs";
+
+import { BACKEND_URL } from "./lib/constants";
+
+const LOGIN_URL = `${BACKEND_URL}/auth/login`;
 
 const authOptions: NextAuthOptions = {
-  adapter: HasuraAdapter({
-    endpoint: process.env.NEXT_PUBLIC_HASURA_GRAPHQL_ENDPOINT!,
-    adminSecret: process.env.NEXT_PUBLIC_HASURA_ADMIN_SECRET!,
-  }),
   providers: [
     CredentialsProvider({
       name: "credentials",
       credentials: {
-        email: {
-          label: "Email",
+        username: {
+          label: "username",
           type: "text",
-          placeholder: "john.doe@example.com",
+          placeholder: "john.doe",
         },
         password: {
           label: "Password",
@@ -26,55 +22,32 @@ const authOptions: NextAuthOptions = {
         },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+        if (!credentials?.username || !credentials?.password) return null;
+
+        const { username, password } = credentials;
 
         try {
-          const res = await fetch(
-            process.env.NEXT_PUBLIC_HASURA_GRAPHQL_ENDPOINT as string,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "x-hasura-admin-secret": process.env
-                  .NEXT_PUBLIC_HASURA_ADMIN_SECRET as string,
-              },
-              body: JSON.stringify({
-                query: `
-                  query GetUserByEmail($where: user_bool_exp) {
-                    user(where: $where) {
-                      id
-                      username
-                      email
-                      role
-                      password
-                      profile_image
-                    }
-                  }
-                `,
-                variables: {
-                  where: { email: { _eq: credentials?.email } },
-                },
-              }),
+          const res = await fetch(LOGIN_URL, {
+            method: "POST",
+            body: JSON.stringify({
+              username,
+              password,
+            }),
+            headers: {
+              "Content-Type": "application/json",
             },
-          );
+          });
 
-          const { data } = await res.json();
+          console.log(res);
 
-          if (
-            data.user &&
-            (await compare(
-              credentials?.password as string,
-              data?.user[0].password,
-            ))
-          ) {
-            return {
-              ...data.user[0],
-              image: data.user[0].profile_image,
-              name: data.user[0].username,
-            };
-          } else {
-            throw new Error("Invalid credentials!");
+          if (res.status === 401) {
+            console.log(res.statusText);
+            return null;
           }
+
+          const user = await res.json();
+
+          return user;
         } catch (error) {
           console.error(error);
           return null;
@@ -82,82 +55,19 @@ const authOptions: NextAuthOptions = {
       },
     }),
   ],
-  secret: process.env.NEXTAUTH_SECRET,
-  session: {
-    strategy: "jwt",
-    maxAge: 60 * 60 * 24,
-  },
-  jwt: {
-    encode: ({ secret, token }) => {
-      const encodedToken = jwt.sign(token!, secret as string, {
-        algorithm: "HS256",
-      });
-      return encodedToken;
-    },
-    decode: async ({ secret, token }) => {
-      const decodedToken = jwt.verify(token!, secret as string, {
-        algorithms: ["HS256"],
-      });
-      return decodedToken as JWT;
-    },
-  },
   callbacks: {
-    session: async ({ session, token }) => {
-      if (session?.user) {
-        session.user.id = token.sub!;
-      }
+    async jwt({ token, user }) {
+      if (user) return { ...token, ...user };
 
-      if (token.role && session?.user) {
-        session.user.role = token.role;
-      }
+      return token;
+    },
+
+    async session({ token, session }) {
+      session.user = token.user;
+      session.access_token = token.access_token;
+
       return session;
     },
-    async jwt({ token }) {
-      const res = await fetch(
-        process.env.NEXT_PUBLIC_HASURA_GRAPHQL_ENDPOINT as string,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-hasura-admin-secret": process.env
-              .NEXT_PUBLIC_HASURA_ADMIN_SECRET as string,
-          },
-          body: JSON.stringify({
-            query: `
-              query GetUserById($id: uuid!) {
-                user_by_pk(id: $id) {
-                  email
-                  role
-                }
-              }
-            `,
-            variables: {
-              id: token.sub,
-            },
-          }),
-        },
-      );
-
-      const { data } = await res.json();
-
-      const existingUser = data.user_by_pk;
-
-      token.role = existingUser.role;
-
-      return {
-        ...token,
-        "https://hasura.io/jwt/claims": {
-          "x-hasura-allowed-roles": ["user"],
-          "x-hasura-default-role": "user",
-          "x-hasura-role": "user",
-          "x-hasura-user-id": token.sub,
-        },
-      };
-    },
-  },
-  pages: {
-    signIn: "/login",
-    signOut: "/",
   },
 } satisfies NextAuthOptions;
 

@@ -11,7 +11,14 @@ export interface AccessToken {
   access_token: string;
 }
 
-export type LoginResponseDto = AccessToken;
+export interface LoginResponseDto extends AccessToken {
+  user: {
+    id: string;
+    username: string;
+    role: USER_ROLE;
+  };
+}
+
 export type RegisterResponseDto = AccessToken;
 
 export interface JwtPayload {

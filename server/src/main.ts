@@ -3,10 +3,8 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
 
-import { port } from './config/config';
-
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
   const config = new DocumentBuilder()
     .setTitle('Ecommerce Arkx')
     .setDescription('The Ecommerce API endpoints')
@@ -16,6 +14,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(port || 5000);
+  await app.listen(process.env.port || 5000);
 }
 bootstrap();

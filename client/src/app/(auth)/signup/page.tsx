@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -23,7 +22,6 @@ import { signupSchema } from "@/schemas/auth";
 import { SignupUserInput } from "@/types";
 
 const Page = () => {
-  const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof signupSchema>>({
@@ -52,41 +50,38 @@ const Page = () => {
       };
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/signup`,
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
         {
           method: "POST",
-          body: JSON.stringify({ ...userData }),
-        },
+          body: JSON.stringify(userData),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
-      const { user } = await res.json();
 
-      setLoading(false);
+      if (!res.ok) {
+        const { message } = await res.json();
 
-      if (user.errors) {
-        user.errors.map((error: any) => {
-          if (error?.message?.includes("Uniqueness violation"))
-            toast({
-              title: "Username or email already exists!",
-              variant: "destructive",
-            });
-
-          toast({
-            title: error?.message,
-            variant: "destructive",
-          });
+        toast({
+          title: message,
+          variant: "destructive",
         });
+
+        return;
       }
 
-      toast({
-        title: "Account Created Successfully!",
-        variant: "success",
-      });
+      const user = await res.json();
 
-      setTimeout(() => {
-        router.push("/");
-      }, 300);
+      if (user) {
+        toast({
+          title: "Account Created Successfully!",
+          variant: "success",
+        });
+      }
     } catch (error) {
       console.error(error);
+    } finally {
       setLoading(false);
     }
   };
@@ -196,7 +191,7 @@ const Page = () => {
 
             <div className="mt-2 text-center text-sm">
               Already have have an account?{" "}
-              <Link href="/login" className="underline">
+              <Link href="/api/auth/login" className="underline">
                 Login
               </Link>
             </div>

@@ -1,11 +1,21 @@
-import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  HttpException,
+  Injectable,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 
 import { UsersService } from '../users/users.service';
 
-import { AccessToken, JwtPayload, RegisterRequestDto } from '../dto/auth.dto';
+import {
+  AccessToken,
+  JwtPayload,
+  LoginResponseDto,
+  RegisterRequestDto,
+} from '../dto/auth.dto';
 import { UserModule, UserWithoutPasswordModule } from '../dto/user.dto';
 
 @Injectable()
@@ -37,12 +47,13 @@ export class AuthService {
     return result as UserWithoutPasswordModule;
   }
 
-  async login(user: UserModule): Promise<AccessToken> {
+  async login(user: UserModule): Promise<LoginResponseDto> {
     const payload: JwtPayload = { username: user.username, sub: user.id };
     const access_token = this.jwtService.sign(payload);
 
     return {
       access_token,
+      user: { id: user.id, username: user.username, role: user.role },
     };
   }
 
@@ -53,7 +64,7 @@ export class AuthService {
     const existingUser = await this.usersService.findUser({ username });
 
     if (existingUser) {
-      throw new BadRequestException(
+      throw new ConflictException(
         'User with this username or email already exists!',
       );
     }
