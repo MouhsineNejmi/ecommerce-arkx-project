@@ -50,3 +50,19 @@ model Category {
 
   Billboards Billboard[]
 }
+
+model Size {
+  id         String   @id @default(uuid())
+  name       String
+  value      String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Color {
+  id         String   @id @default(uuid())
+  name       String
+  value      String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}

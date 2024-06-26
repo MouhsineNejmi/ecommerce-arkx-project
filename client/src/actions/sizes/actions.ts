@@ -1,15 +1,15 @@
-import { Category } from "@/types";
-import { CategoryFormInput, categorySchema } from "@/schemas/category";
+import { Size } from "@/types";
+import { SizeFormInput, sizeSchema } from "@/schemas/size";
 
-const URL = `${process.env.NEXT_PUBLIC_API_URL}/categories`;
+const URL = `${process.env.NEXT_PUBLIC_API_URL}/sizes`;
 
-type CreateCategoryResponse = Category | string;
+type CreateSizeResponse = Size | string;
 
-export const createCategory = async (
-  values: CategoryFormInput,
+export const createSize = async (
+  values: SizeFormInput,
   token: string
-): Promise<CreateCategoryResponse> => {
-  const validateFields = categorySchema.safeParse(values);
+): Promise<CreateSizeResponse> => {
+  const validateFields = sizeSchema.safeParse(values);
 
   if (!validateFields.success) {
     return "Invalid Fields!";
@@ -29,17 +29,17 @@ export const createCategory = async (
     return message;
   }
 
-  const category = await res.json();
+  const size = await res.json();
 
-  return category;
+  return size;
 };
 
-export const editCategory = async (
-  categoryId: string,
-  values: CategoryFormInput,
+export const editSize = async (
+  sizeId: string,
+  values: SizeFormInput,
   token: string
-): Promise<Category | null> => {
-  const res = await fetch(`${URL}/${categoryId}`, {
+): Promise<Size | null> => {
+  const res = await fetch(`${URL}/${sizeId}`, {
     method: "POST",
     headers: {
       authorization: `Bearer ${token}`,
@@ -53,16 +53,16 @@ export const editCategory = async (
     return message;
   }
 
-  const category = await res.json();
+  const size = await res.json();
 
-  return category;
+  return size;
 };
 
-export const deleteCategory = async (
-  categoryId: string,
+export const deleteSize = async (
+  sizeId: string,
   token: string
-): Promise<Category | null> => {
-  const res = await fetch(`${URL}/${categoryId}`, {
+): Promise<Size | null> => {
+  const res = await fetch(`${URL}/${sizeId}`, {
     method: "DELETE",
     headers: {
       authorization: `Bearer ${token}`,
@@ -75,6 +75,6 @@ export const deleteCategory = async (
     return message;
   }
 
-  const category = await res.json();
-  return category;
+  const size = await res.json();
+  return size;
 };

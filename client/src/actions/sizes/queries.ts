@@ -1,10 +1,10 @@
 import getUserSession from "../get-user-session";
 
-import { Category } from "@/types";
+import { Size } from "@/types";
 
-const URL = `${process.env.NEXT_PUBLIC_API_URL}/categories`;
+const URL = `${process.env.NEXT_PUBLIC_API_URL}/sizes`;
 
-export const getCategories = async (): Promise<Category[]> => {
+export const getSizes = async (): Promise<Size[]> => {
   try {
     const session = await getUserSession();
 
@@ -20,21 +20,19 @@ export const getCategories = async (): Promise<Category[]> => {
       return [];
     }
 
-    const categories = await res.json();
+    const sizes = await res.json();
 
-    return categories;
+    return sizes;
   } catch {
     return [];
   }
 };
 
-export const getCategory = async (
-  categoryId: string
-): Promise<Category | null> => {
+export const getSize = async (sizeId: string): Promise<Size | null> => {
   try {
     const session = await getUserSession();
 
-    const res = await fetch(`${URL}/${categoryId}`, {
+    const res = await fetch(`${URL}/${sizeId}`, {
       method: "GET",
       headers: {
         authorization: `Bearer ${session?.access_token}`,
@@ -49,9 +47,9 @@ export const getCategory = async (
       return null;
     }
 
-    const category = await res.json();
+    const size = await res.json();
 
-    return category;
+    return size;
   } catch {
     return null;
   }

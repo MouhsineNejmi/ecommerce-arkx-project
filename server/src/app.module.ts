@@ -17,6 +17,7 @@ import { JwtGuard } from './auth/guards/jwt.guard';
 import { JwtStrategy } from './auth/strategies/jwt.strategy';
 import { BillboardsModule } from './billboards/billboards.module';
 import { CategoriesModule } from './categories/categories.module';
+import { SizesModule } from './sizes/sizes.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { CategoriesModule } from './categories/categories.module';
     UsersModule,
     BillboardsModule,
     CategoriesModule,
+    SizesModule,
   ],
   controllers: [AuthController, UsersController],
   providers: [

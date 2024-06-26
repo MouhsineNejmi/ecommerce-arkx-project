@@ -20,7 +20,7 @@ interface CategoriesClientProps {
 const CategoriesClient = ({ categories }: CategoriesClientProps) => {
   const router = useRouter();
 
-  const formattedBillboards: CategoryColumn[] =
+  const formattedCategories: CategoryColumn[] =
     categories &&
     categories?.map((category: Category) => ({
       id: category.id,
@@ -45,7 +45,7 @@ const CategoriesClient = ({ categories }: CategoriesClientProps) => {
 
       <DataTable
         columns={columns}
-        data={formattedBillboards}
+        data={formattedCategories}
         searchKey="label"
       />
     </div>

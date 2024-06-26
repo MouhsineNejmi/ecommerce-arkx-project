@@ -17,6 +17,14 @@ export interface Category {
   updated_at?: Date;
 }
 
+export interface Size {
+  id: string;
+  name: string;
+  value: string;
+  created_at: Date;
+  updated_at?: Date;
+}
+
 /* OLD */
 export interface SignupUserInput {
   first_name: string;
@@ -62,14 +70,14 @@ export interface Store {
 //   updated_at?: Date;
 // }
 
-export interface Size {
-  id: string;
-  name: string;
-  value: string;
-  store_id: string;
-  created_at: Date;
-  updated_at?: Date;
-}
+// export interface Size {
+//   id: string;
+//   name: string;
+//   value: string;
+//   store_id: string;
+//   created_at: Date;
+//   updated_at?: Date;
+// }
 
 export interface Color {
   id: string;

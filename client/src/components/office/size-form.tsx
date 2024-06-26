@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@apollo/client";
 import { Trash } from "lucide-react";
 
 import {
@@ -22,28 +22,22 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 
+import { createSize, editSize, deleteSize } from "@/actions/sizes/actions";
+
 import { Size } from "@/types";
 import { SizeFormInput, sizeSchema } from "@/schemas/size";
-import {
-  CREATE_SIZE,
-  DELETE_SIZE,
-  EDIT_SIZE,
-} from "@/graphql/size/size.mutation";
 
 interface SizeFormProps {
   initialData: Size | null;
 }
 
 const SizeForm = ({ initialData }: SizeFormProps) => {
-  const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
+  const { data: session } = useSession();
 
   const [open, setOpen] = useState(false);
-
-  const [createSize, { loading: isCreatingSize }] = useMutation(CREATE_SIZE);
-  const [editSize, { loading: isEditingSize }] = useMutation(EDIT_SIZE);
-  const [deleteSize, { loading: isDeletingSize }] = useMutation(DELETE_SIZE);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const title = initialData ? "Edit size" : "Create size";
   const description = initialData ? "Update a size" : "Add a new size";
@@ -51,6 +45,8 @@ const SizeForm = ({ initialData }: SizeFormProps) => {
     ? "Size updated successfully!"
     : "Size created successfully!";
   const action = initialData ? "Save changes" : "Create";
+
+  const access_token = session?.access_token as string;
 
   const form = useForm<SizeFormInput>({
     resolver: zodResolver(sizeSchema),
@@ -61,53 +57,36 @@ const SizeForm = ({ initialData }: SizeFormProps) => {
   });
 
   const onSubmit = async (values: SizeFormInput) => {
+    setIsLoading(true);
+
     const sizeData = {
       name: values.name,
       value: values.value,
-      store_id: params.storeId,
     };
 
     try {
       if (initialData) {
-        await editSize({
-          variables: {
-            _set: sizeData,
-            where: {
-              id: { _eq: initialData?.id },
-              store_id: { _eq: params.storeId },
-            },
-          },
-        });
+        await editSize(initialData?.id, sizeData, access_token);
       } else {
-        await createSize({
-          variables: {
-            object: sizeData,
-          },
-        });
+        await createSize(sizeData, access_token);
       }
 
-      router.push(`/office/${params.storeId}/sizes`);
       toast({ title: toastMessage });
-      setOpen(false);
+      router.push("/office/sizes");
     } catch (error) {
       console.log(error);
       toast({ title: "Something went wrong.", variant: "destructive" });
+    } finally {
       setOpen(false);
+      setIsLoading(false);
     }
   };
 
   const onDelete = async () => {
     try {
-      await deleteSize({
-        variables: {
-          where: {
-            id: { _eq: initialData?.id },
-            store_id: { _eq: params.storeId },
-          },
-        },
-      });
-      router.push(`/office/${params.storeId}/sizes`);
+      await deleteSize(initialData?.id as string, access_token);
       toast({ title: "Size deleted." });
+      router.push("/office/sizes");
     } catch (error) {
       console.log(error);
 
@@ -118,15 +97,13 @@ const SizeForm = ({ initialData }: SizeFormProps) => {
     }
   };
 
-  const loading = isCreatingSize || isEditingSize || isDeletingSize;
-
   return (
     <>
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
-        loading={isDeletingSize}
+        loading={isLoading}
       />
 
       <div className="flex items-center justify-between mb-4">
@@ -137,7 +114,7 @@ const SizeForm = ({ initialData }: SizeFormProps) => {
             variant="destructive"
             size="sm"
             onClick={() => setOpen(true)}
-            disabled={isDeletingSize}
+            disabled={isLoading}
           >
             <Trash className="h-4 w-4" />
           </Button>
@@ -160,7 +137,7 @@ const SizeForm = ({ initialData }: SizeFormProps) => {
                   <FormLabel>Size Name</FormLabel>
                   <FormControl>
                     <Input
-                      disabled={loading}
+                      disabled={isLoading}
                       placeholder="Small, Medium, Large..."
                       {...field}
                     />
@@ -177,7 +154,7 @@ const SizeForm = ({ initialData }: SizeFormProps) => {
                   <FormLabel>Size Value</FormLabel>
                   <FormControl>
                     <Input
-                      disabled={loading}
+                      disabled={isLoading}
                       placeholder="S, M, L..."
                       {...field}
                     />
@@ -188,7 +165,7 @@ const SizeForm = ({ initialData }: SizeFormProps) => {
             />
           </div>
 
-          <Button disabled={loading} className="ml-auto" type="submit">
+          <Button disabled={isLoading} className="ml-auto" type="submit">
             {action}
           </Button>
         </form>

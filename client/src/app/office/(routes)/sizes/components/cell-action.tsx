@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
-import { useMutation } from "@apollo/client";
+import { useSession } from "next-auth/react";
 
 import {
   DropdownMenu,
@@ -15,22 +15,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { CategoryColumn } from "./columns";
+import { SizeColumn } from "./columns";
 
-import { DELETE_CATEGORY } from "@/graphql/category/category.mutation";
+import { deleteCategory } from "@/actions/categories/actions";
 
 interface CellActionProps {
-  rowData: CategoryColumn;
+  rowData: SizeColumn;
 }
 
 export const CellAction = ({ rowData }: CellActionProps) => {
   const router = useRouter();
-  const params = useParams();
+  const { data: session } = useSession();
 
-  const [open, setOpen] = useState(false);
-
-  const [deleteCategory, { loading: isDeletingCategory }] =
-    useMutation(DELETE_CATEGORY);
+  const [open, setOpen] = useState<boolean>(false);
+  const [isDeletingCategory, setIsDeletingCategory] = useState<boolean>(false);
 
   const onCopy = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -38,27 +36,22 @@ export const CellAction = ({ rowData }: CellActionProps) => {
   };
 
   const onDelete = async () => {
-    try {
-      await deleteCategory({
-        variables: {
-          where: {
-            id: { _eq: rowData?.id },
-            store_id: { _eq: params.storeId },
-          },
-        },
-      });
+    setIsDeletingCategory(true);
 
-      router.refresh();
+    try {
+      await deleteCategory(rowData?.id, session?.access_token!);
+
       toast({ title: "Category deleted." });
-      setOpen(false);
+      router.refresh();
     } catch (error) {
       console.log(error);
 
       toast({
-        title:
-          "Make sure you removed all products using this categories first.",
+        title: "Make sure you removed all products using this size first.",
       });
+    } finally {
       setOpen(false);
+      setIsDeletingCategory(false);
     }
   };
 
@@ -86,9 +79,7 @@ export const CellAction = ({ rowData }: CellActionProps) => {
             Copy Id
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() =>
-              router.push(`/office/${params.storeId}/categories/${rowData?.id}`)
-            }
+            onClick={() => router.push(`/office/sizes/${rowData?.id}`)}
           >
             <Edit className="mr-2 w-4 h-4" />
             Update
