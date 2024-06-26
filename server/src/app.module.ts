@@ -18,6 +18,7 @@ import { JwtStrategy } from './auth/strategies/jwt.strategy';
 import { BillboardsModule } from './billboards/billboards.module';
 import { CategoriesModule } from './categories/categories.module';
 import { SizesModule } from './sizes/sizes.module';
+import { ColorsModule } from './colors/colors.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { SizesModule } from './sizes/sizes.module';
     BillboardsModule,
     CategoriesModule,
     SizesModule,
+    ColorsModule,
   ],
   controllers: [AuthController, UsersController],
   providers: [

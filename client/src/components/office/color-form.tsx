@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@apollo/client";
 import { Trash } from "lucide-react";
 
 import {
@@ -22,28 +22,22 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 
+import { createColor, editColor, deleteColor } from "@/actions/colors/actions";
+
 import { Color } from "@/types";
 import { ColorFormInput, colorSchema } from "@/schemas/color";
-import {
-  CREATE_COLOR,
-  DELETE_COLOR,
-  EDIT_COLOR,
-} from "@/graphql/color/color.mutation";
 
 interface ColorFormProps {
   initialData: Color | null;
 }
 
 const ColorForm = ({ initialData }: ColorFormProps) => {
-  const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
+  const { data: session } = useSession();
 
   const [open, setOpen] = useState(false);
-
-  const [createColor, { loading: isCreatingColor }] = useMutation(CREATE_COLOR);
-  const [editColor, { loading: isEditingColor }] = useMutation(EDIT_COLOR);
-  const [deleteColor, { loading: isDeletingColor }] = useMutation(DELETE_COLOR);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const title = initialData ? "Edit color" : "Create color";
   const description = initialData ? "Update a color" : "Add a new color";
@@ -51,6 +45,8 @@ const ColorForm = ({ initialData }: ColorFormProps) => {
     ? "Color updated successfully!"
     : "Color created successfully!";
   const action = initialData ? "Save changes" : "Create";
+
+  const access_token = session?.access_token as string;
 
   const form = useForm<ColorFormInput>({
     resolver: zodResolver(colorSchema),
@@ -64,50 +60,32 @@ const ColorForm = ({ initialData }: ColorFormProps) => {
     const colorData = {
       name: values.name,
       value: values.value,
-      store_id: params.storeId,
     };
 
     try {
       if (initialData) {
-        await editColor({
-          variables: {
-            _set: colorData,
-            where: {
-              id: { _eq: initialData?.id },
-              store_id: { _eq: params.storeId },
-            },
-          },
-        });
+        await editColor(initialData?.id, colorData, access_token);
       } else {
-        await createColor({
-          variables: {
-            object: colorData,
-          },
-        });
+        await createColor(colorData, access_token);
       }
 
-      router.push(`/office/${params.storeId}/colors`);
       toast({ title: toastMessage });
-      setOpen(false);
+      router.push("/office/colors");
     } catch (error) {
       console.log(error);
       toast({ title: "Something went wrong.", variant: "destructive" });
+    } finally {
       setOpen(false);
+      setIsLoading(false);
     }
   };
 
   const onDelete = async () => {
     try {
-      await deleteColor({
-        variables: {
-          where: {
-            id: { _eq: initialData?.id },
-            store_id: { _eq: params.storeId },
-          },
-        },
-      });
-      router.push(`/office/${params.storeId}/colors`);
+      await deleteColor(initialData?.id as string, access_token);
+
       toast({ title: "Color deleted." });
+      router.push("/office/colors");
     } catch (error) {
       console.log(error);
 
@@ -118,15 +96,13 @@ const ColorForm = ({ initialData }: ColorFormProps) => {
     }
   };
 
-  const loading = isCreatingColor || isEditingColor || isDeletingColor;
-
   return (
     <>
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
-        loading={isDeletingColor}
+        loading={isLoading}
       />
 
       <div className="flex items-center justify-between mb-4">
@@ -137,7 +113,7 @@ const ColorForm = ({ initialData }: ColorFormProps) => {
             variant="destructive"
             size="sm"
             onClick={() => setOpen(true)}
-            disabled={isDeletingColor}
+            disabled={isLoading}
           >
             <Trash className="h-4 w-4" />
           </Button>
@@ -160,7 +136,7 @@ const ColorForm = ({ initialData }: ColorFormProps) => {
                   <FormLabel>Color Name</FormLabel>
                   <FormControl>
                     <Input
-                      disabled={loading}
+                      disabled={isLoading}
                       placeholder="Black, White, Purple..."
                       {...field}
                     />
@@ -177,7 +153,7 @@ const ColorForm = ({ initialData }: ColorFormProps) => {
                   <FormLabel>Color Value</FormLabel>
                   <FormControl>
                     <Input
-                      disabled={loading}
+                      disabled={isLoading}
                       placeholder="#000, #fff, #800080..."
                       {...field}
                     />
@@ -188,7 +164,7 @@ const ColorForm = ({ initialData }: ColorFormProps) => {
             />
           </div>
 
-          <Button disabled={loading} className="ml-auto" type="submit">
+          <Button disabled={isLoading} className="ml-auto" type="submit">
             {action}
           </Button>
         </form>

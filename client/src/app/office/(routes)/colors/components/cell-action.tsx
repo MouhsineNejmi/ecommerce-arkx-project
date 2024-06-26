@@ -15,12 +15,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { SizeColumn } from "./columns";
+import { ColorColumn } from "./columns";
 
-import { deleteSize } from "@/actions/sizes/actions";
+import { deleteColor } from "@/actions/colors/actions";
 
 interface CellActionProps {
-  rowData: SizeColumn;
+  rowData: ColorColumn;
 }
 
 export const CellAction = ({ rowData }: CellActionProps) => {
@@ -28,30 +28,30 @@ export const CellAction = ({ rowData }: CellActionProps) => {
   const { data: session } = useSession();
 
   const [open, setOpen] = useState<boolean>(false);
-  const [isDeletingSize, setIsDeletingSize] = useState<boolean>(false);
+  const [isDeletingColor, setIsDeletingColor] = useState<boolean>(false);
 
   const onCopy = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast({ title: "Size Id copied to the clipboard" });
+    toast({ title: "Color Id copied to the clipboard" });
   };
 
   const onDelete = async () => {
-    setIsDeletingSize(true);
+    setIsDeletingColor(true);
 
     try {
-      await deleteSize(rowData?.id, session?.access_token!);
+      await deleteColor(rowData?.id, session?.access_token!);
 
-      toast({ title: "Size deleted." });
+      toast({ title: "Color deleted." });
       router.refresh();
     } catch (error) {
       console.log(error);
 
       toast({
-        title: "Make sure you removed all products using this size first.",
+        title: "Make sure you removed all products using this color first.",
       });
     } finally {
       setOpen(false);
-      setIsDeletingSize(false);
+      setIsDeletingColor(false);
     }
   };
 
@@ -61,7 +61,7 @@ export const CellAction = ({ rowData }: CellActionProps) => {
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
-        loading={isDeletingSize}
+        loading={isDeletingColor}
       />
 
       <DropdownMenu>
@@ -79,7 +79,7 @@ export const CellAction = ({ rowData }: CellActionProps) => {
             Copy Id
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => router.push(`/office/sizes/${rowData?.id}`)}
+            onClick={() => router.push(`/office/colors/${rowData?.id}`)}
           >
             <Edit className="mr-2 w-4 h-4" />
             Update
