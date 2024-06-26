@@ -21,8 +21,6 @@ export const getCategories = async (): Promise<Category[]> => {
 
   const categories = await res.json();
 
-  console.log(categories);
-
   return categories;
 };
 
