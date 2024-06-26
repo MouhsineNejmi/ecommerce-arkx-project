@@ -6,8 +6,6 @@ import { Category } from "@/types";
 const CategoriesPage = async () => {
   const categories: Category[] = await getCategories();
 
-  console.log(categories);
-
   return (
     <div className="flex flex-col">
       <CategoriesClient categories={categories} />
