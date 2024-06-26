@@ -16,6 +16,7 @@ import { UsersService } from './users/users.service';
 import { JwtGuard } from './auth/guards/jwt.guard';
 import { JwtStrategy } from './auth/strategies/jwt.strategy';
 import { BillboardsModule } from './billboards/billboards.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { BillboardsModule } from './billboards/billboards.module';
     AuthModule,
     UsersModule,
     BillboardsModule,
+    CategoriesModule,
   ],
   controllers: [AuthController, UsersController],
   providers: [
