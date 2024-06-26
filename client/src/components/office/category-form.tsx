@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@apollo/client";
 import { Trash } from "lucide-react";
 
 import {
@@ -18,43 +18,31 @@ import {
 import { AlertModal } from "@/components/modals/alert-modal";
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 
-import { Category, Billboard } from "@/types";
-import { CategoryFormInput, categorySchema } from "@/schemas/category";
 import {
-  CREATE_CATEGORY,
-  DELETE_CATEGORY,
-  EDIT_CATEGORY,
-} from "@/graphql/category/category.mutation";
+  createCategory,
+  editCategory,
+  deleteCategory,
+} from "@/actions/categories/actions";
+
+import { Category } from "@/types";
+import { CategoryFormInput, categorySchema } from "@/schemas/category";
 
 interface CategoryFormProps {
   initialData: Category | null;
-  billboards: Billboard[];
 }
 
-const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
-  const params = useParams();
+const CategoryForm = ({ initialData }: CategoryFormProps) => {
   const router = useRouter();
   const { toast } = useToast();
+  const { data: session } = useSession();
+  const access_token = session?.access_token as string;
 
-  const [open, setOpen] = useState(false);
-
-  const [createCategory, { loading: isCreatingCategory }] =
-    useMutation(CREATE_CATEGORY);
-  const [editCategory, { loading: isEditingCategory }] =
-    useMutation(EDIT_CATEGORY);
-  const [deleteCategory, { loading: isDeletingCategory }] =
-    useMutation(DELETE_CATEGORY);
+  const [open, setOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const title = initialData ? "Edit category" : "Create category";
   const description = initialData ? "Update a category" : "Add a new category";
@@ -67,62 +55,43 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
     resolver: zodResolver(categorySchema),
     defaultValues: initialData || {
       name: "",
-      billboard_id: "",
+      icon: "",
     },
   });
 
   const onSubmit = async (values: CategoryFormInput) => {
+    setIsLoading(true);
+
     const categoryData = {
       name: values.name,
-      billboard_id: values.billboard_id,
-      store_id: params.storeId,
+      icon: values.icon,
     };
 
     try {
       if (initialData) {
-        await editCategory({
-          variables: {
-            _set: categoryData,
-            where: {
-              id: { _eq: initialData?.id },
-              store_id: { _eq: params.storeId },
-            },
-          },
-        });
+        await editCategory(initialData?.id, categoryData, access_token);
       } else {
-        await createCategory({
-          variables: {
-            object: categoryData,
-          },
-        });
+        await createCategory(categoryData, access_token);
       }
 
-      router.push(`/office/${params.storeId}/categories`);
+      router.push("/office/categories");
       toast({ title: toastMessage });
-      setOpen(false);
     } catch (error) {
       console.log(error);
       toast({ title: "Something went wrong.", variant: "destructive" });
+    } finally {
       setOpen(false);
+      setIsLoading(false);
     }
   };
 
   const onDelete = async () => {
     try {
-      await deleteCategory({
-        variables: {
-          where: {
-            id: { _eq: initialData?.id },
-            store_id: { _eq: params.storeId },
-          },
-        },
-      });
+      await deleteCategory(initialData?.id as string, access_token);
 
-      router.push(`/office/${params.storeId}/categories`);
       toast({ title: "Category deleted." });
+      router.push("/office/categories");
     } catch (error) {
-      console.log(error);
-
       toast({
         title: "Make sure you removed all products and categories first.",
         variant: "destructive",
@@ -130,15 +99,13 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
     }
   };
 
-  const loading = isCreatingCategory || isEditingCategory || isDeletingCategory;
-
   return (
     <>
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
-        loading={isDeletingCategory}
+        loading={isLoading}
       />
 
       <div className="flex items-center justify-between mb-4">
@@ -149,7 +116,7 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
             variant="destructive"
             size="sm"
             onClick={() => setOpen(true)}
-            disabled={isDeletingCategory}
+            disabled={isLoading}
           >
             <Trash className="h-4 w-4" />
           </Button>
@@ -172,7 +139,7 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
                   <FormLabel>Category Name</FormLabel>
                   <FormControl>
                     <Input
-                      disabled={loading}
+                      disabled={isLoading}
                       placeholder="Category name"
                       {...field}
                     />
@@ -184,39 +151,24 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
 
             <FormField
               control={form.control}
-              name="billboard_id"
+              name="icon"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Billboard</FormLabel>
-                  <Select
-                    disabled={loading}
-                    onValueChange={field.onChange}
-                    value={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue
-                          defaultValue={field.value}
-                          placeholder="Select a billboard"
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-
-                    <SelectContent>
-                      {billboards?.map((billboard) => (
-                        <SelectItem key={billboard.id} value={billboard.id}>
-                          {billboard.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormLabel>Icon</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={isLoading}
+                      placeholder="Category icon"
+                      {...field}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
 
-          <Button disabled={loading} className="ml-auto" type="submit">
+          <Button disabled={isLoading} className="ml-auto" type="submit">
             {action}
           </Button>
         </form>

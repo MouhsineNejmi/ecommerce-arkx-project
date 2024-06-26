@@ -27,8 +27,6 @@ export default async function OfficeLayout({
 }) {
   const session = await getUserSession();
 
-  console.log("SESSION: ", session);
-
   if (!session?.user) {
     // Not authenticated
     redirect("/api/auth/signin");

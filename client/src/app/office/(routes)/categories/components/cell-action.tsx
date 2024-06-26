@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
-import { useMutation } from "@apollo/client";
+import { useSession } from "next-auth/react";
 
 import {
   DropdownMenu,
@@ -15,49 +15,43 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { BillboardColumn } from "./columns";
+import { CategoryColumn } from "./columns";
 
-import { DELETE_BILLBOARD } from "@/graphql/billboard/billboard.mutation";
+import { deleteCategory } from "@/actions/categories/actions";
 
 interface CellActionProps {
-  rowData: BillboardColumn;
+  rowData: CategoryColumn;
 }
 
 export const CellAction = ({ rowData }: CellActionProps) => {
   const router = useRouter();
-  const params = useParams();
+  const { data: session } = useSession();
 
-  const [open, setOpen] = useState(false);
-
-  const [deleteBillboard, { loading: isDeletingBillboard }] =
-    useMutation(DELETE_BILLBOARD);
+  const [open, setOpen] = useState<boolean>(false);
+  const [isDeletingCategory, setIsDeletingCategory] = useState<boolean>(false);
 
   const onCopy = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast({ title: "Billboard Id copied to the clipboard" });
+    toast({ title: "Category Id copied to the clipboard" });
   };
 
   const onDelete = async () => {
-    try {
-      await deleteBillboard({
-        variables: {
-          where: {
-            id: { _eq: rowData?.id },
-            store_id: { _eq: params.storeId },
-          },
-        },
-      });
+    setIsDeletingCategory(true);
 
+    try {
+      await deleteCategory(rowData?.id, session?.access_token!);
+
+      toast({ title: "Category deleted." });
       router.refresh();
-      toast({ title: "Billboard deleted." });
-      setOpen(false);
     } catch (error) {
       console.log(error);
 
       toast({
-        title: "Make sure you removed all products and categories first.",
+        title: "Make sure you removed all products and billboards first.",
       });
+    } finally {
       setOpen(false);
+      setIsDeletingCategory(false);
     }
   };
 
@@ -67,7 +61,7 @@ export const CellAction = ({ rowData }: CellActionProps) => {
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
-        loading={isDeletingBillboard}
+        loading={isDeletingCategory}
       />
 
       <DropdownMenu>
@@ -85,9 +79,7 @@ export const CellAction = ({ rowData }: CellActionProps) => {
             Copy Id
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() =>
-              router.push(`/office/${params.storeId}/billboards/${rowData?.id}`)
-            }
+            onClick={() => router.push(`/office/categories/${rowData?.id}`)}
           >
             <Edit className="mr-2 w-4 h-4" />
             Update

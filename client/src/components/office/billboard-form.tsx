@@ -1,11 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@apollo/client";
 import { Trash } from "lucide-react";
 
 import {
@@ -24,8 +23,11 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import ImageUpload from "@/components/shared/image-upload";
 
-import { createBillboard, editBillboard } from "@/actions/billboards/actions";
-import { DELETE_BILLBOARD } from "@/graphql/billboard/billboard.mutation";
+import {
+  createBillboard,
+  editBillboard,
+  deleteBillboard,
+} from "@/actions/billboards/actions";
 
 import { Billboard } from "@/types";
 import { BillboardFormInput, billboardSchema } from "@/schemas/billboard";
@@ -35,16 +37,12 @@ interface BillboardFormProps {
 }
 
 const BillboardForm = ({ initialData }: BillboardFormProps) => {
-  const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
   const { data: session } = useSession();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
-
-  const [deleteBillboard, { loading: isDeletingBillboard }] =
-    useMutation(DELETE_BILLBOARD);
 
   const title = initialData ? "Edit billboard" : "Create billboard";
   const description = initialData
@@ -97,20 +95,13 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
   };
 
   const onDelete = async () => {
-    try {
-      await deleteBillboard({
-        variables: {
-          where: {
-            id: { _eq: initialData?.id },
-            store_id: { _eq: params.storeId },
-          },
-        },
-      });
-      router.push("/office/billboards");
-      toast({ title: "Billboard deleted." });
-    } catch (error) {
-      console.log(error);
+    setLoading(true);
 
+    try {
+      await deleteBillboard(initialData?.id!, session?.access_token!);
+      toast({ title: "Billboard deleted." });
+      router.push("/office/billboards");
+    } catch (error) {
       toast({
         title: "Make sure you removed all products and categories first.",
         variant: "destructive",
@@ -124,7 +115,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
-        loading={isDeletingBillboard}
+        loading={loading}
       />
 
       <div className="flex items-center justify-between mb-4">
@@ -135,7 +126,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
             variant="destructive"
             size="sm"
             onClick={() => setOpen(true)}
-            disabled={isDeletingBillboard}
+            disabled={loading}
           >
             <Trash className="h-4 w-4" />
           </Button>

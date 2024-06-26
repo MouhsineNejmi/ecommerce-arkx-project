@@ -1,3 +1,23 @@
+/* NEW */
+export interface Billboard {
+  id: string;
+  label: string;
+  image_url: string;
+  category_id: string;
+  user_id: string;
+  created_at: Date;
+  updated_at?: Date;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  icon: string;
+  created_at: Date;
+  updated_at?: Date;
+}
+
+/* OLD */
 export interface SignupUserInput {
   first_name: string;
   last_name: string;
@@ -32,26 +52,15 @@ export interface Store {
 //   updated_at?: Date;
 // }
 
-/* NEW */
-export interface Billboard {
-  id: string;
-  label: string;
-  image_url: string;
-  category_id: string;
-  user_id: string;
-  created_at: Date;
-  updated_at?: Date;
-}
-
-export interface Category {
-  id: string;
-  name: string;
-  billboard_id: string;
-  store_id: string;
-  billboard: Billboard;
-  created_at: Date;
-  updated_at?: Date;
-}
+// export interface Category {
+//   id: string;
+//   name: string;
+//   billboard_id: string;
+//   store_id: string;
+//   billboard: Billboard;
+//   created_at: Date;
+//   updated_at?: Date;
+// }
 
 export interface Size {
   id: string;

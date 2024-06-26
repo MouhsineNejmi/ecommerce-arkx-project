@@ -19,6 +19,7 @@ import { CreateCategoryDto, EditCategoryDto } from '../dto/categories.dto';
 export class CategoriesController {
   constructor(private categoriesService: CategoriesService) {}
 
+  @Public()
   @Get()
   async getAllCategories() {
     return this.categoriesService.findAll();
@@ -55,7 +56,7 @@ export class CategoriesController {
       name: data.name,
     });
 
-    if (existingCategory) {
+    if (existingCategory.id !== id) {
       throw new ConflictException(
         'Category with this name already exists! Try to rename it.',
       );

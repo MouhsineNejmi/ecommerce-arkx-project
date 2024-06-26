@@ -3,13 +3,13 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
 
-export type BillboardColumn = {
+export type CategoryColumn = {
   id: string;
   label: string;
-  created_at: Date;
+  created_at: Date | string;
 };
 
-export const columns: ColumnDef<BillboardColumn>[] = [
+export const columns: ColumnDef<CategoryColumn>[] = [
   {
     accessorKey: "label",
     header: "Label",
