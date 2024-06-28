@@ -8,8 +8,6 @@ export const productSchema = z.object({
   images: z.array(z.string()),
   price: z.coerce.number().min(1),
   category_id: z.string().min(1),
-  size_ids: z.array(z.string()),
-  color_ids: z.array(z.string()),
   is_featured: z.boolean().default(false).optional(),
   is_archived: z.boolean().default(false).optional(),
 });

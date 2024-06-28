@@ -24,8 +24,6 @@ export const createBillboard = async (
     body: JSON.stringify({ ...values }),
   });
 
-  console.log(res);
-
   if (!res.ok) {
     const { message } = await res.json();
     return message;

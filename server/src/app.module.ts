@@ -19,6 +19,8 @@ import { BillboardsModule } from './billboards/billboards.module';
 import { CategoriesModule } from './categories/categories.module';
 import { SizesModule } from './sizes/sizes.module';
 import { ColorsModule } from './colors/colors.module';
+import { ProductsModule } from './products/products.module';
+import { ProductVariantModule } from './product-variant/product-variant.module';
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { ColorsModule } from './colors/colors.module';
     CategoriesModule,
     SizesModule,
     ColorsModule,
+    ProductsModule,
+    ProductVariantModule,
   ],
   controllers: [AuthController, UsersController],
   providers: [

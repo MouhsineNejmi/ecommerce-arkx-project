@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@apollo/client";
 import { Trash } from "lucide-react";
 
 import {
@@ -29,21 +29,27 @@ import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import ImageUpload from "@/components/shared/image-upload";
+import ProductVariantForm from "@/components/office/product-variant-form";
 
-import { Category, Product, Size, Color } from "@/types";
+import { Category, Product, Size, Color, ProductVariant } from "@/types";
 import { ProductFormInput, productSchema } from "@/schemas/product";
 import {
-  CREATE_PRODUCT,
-  DELETE_PRODUCT,
-  EDIT_PRODUCT,
-} from "@/graphql/product/product.mutation";
+  createProduct,
+  editProduct,
+  deleteProduct,
+} from "@/actions/products/actions";
+import {
+  createProductVariants,
+  editProductVariants,
+  deleteProductVariants,
+} from "@/actions/product-variant/actions";
 
 interface ProductFormProps {
   initialData: Product | null;
+  productVariants: ProductVariant[] | null;
   categories: Category[];
   sizes: Size[];
   colors: Color[];
@@ -51,22 +57,20 @@ interface ProductFormProps {
 
 const ProductForm = ({
   initialData,
+  productVariants,
   categories,
   sizes,
   colors,
 }: ProductFormProps) => {
-  const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
+  const { data: session } = useSession();
 
-  const [open, setOpen] = useState(false);
-
-  const [createProduct, { loading: isCreatingProduct }] =
-    useMutation(CREATE_PRODUCT);
-  const [editProduct, { loading: isEditingProduct }] =
-    useMutation(EDIT_PRODUCT);
-  const [deleteProduct, { loading: isDeletingProduct }] =
-    useMutation(DELETE_PRODUCT);
+  const [open, setOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [variants, setVariants] = useState<ProductVariant[]>(
+    productVariants || []
+  );
 
   const title = initialData ? "Edit product" : "Create product";
   const description = initialData ? "Update a product" : "Add a new product";
@@ -74,6 +78,8 @@ const ProductForm = ({
     ? "Product updated successfully!"
     : "Product created successfully!";
   const action = initialData ? "Save changes" : "Create";
+
+  const access_token = session?.access_token as string;
 
   const form = useForm<ProductFormInput>({
     resolver: zodResolver(productSchema),
@@ -88,68 +94,96 @@ const ProductForm = ({
           images: [],
           price: 0,
           category_id: "",
-          color_ids: [],
-          size_ids: [],
           is_featured: false,
           is_archived: false,
         },
   });
 
   const onSubmit = async (values: ProductFormInput) => {
+    setIsLoading(true);
+
     const productData = {
       name: values.name,
       description: values.description,
       images: values.images,
-      store_id: params.storeId,
       price: values.price,
-      size_ids: values.size_ids,
-      color_ids: values.color_ids,
       is_featured: values.is_featured,
       is_archived: values.is_archived,
       category_id: values.category_id,
     };
 
     try {
+      let productId: string;
       if (initialData) {
-        await editProduct({
-          variables: {
-            _set: productData,
-            where: {
-              id: { _eq: initialData?.id },
-              store_id: { _eq: params.storeId },
-            },
-          },
-        });
+        productId = initialData?.id;
+        await editProduct(initialData?.id, productData, access_token);
       } else {
-        await createProduct({
-          variables: {
-            object: productData,
-          },
-        });
+        const product = await createProduct(productData, access_token);
+        productId = product?.id as string;
       }
 
-      router.push(`/office/${params.storeId}/products`);
+      if (productId) {
+        const updatedVariants = variants.map((variant) => ({
+          ...variant,
+          product_id: productId,
+        }));
+
+        const variantsToUpdate = updatedVariants.filter((updatedVariant) =>
+          productVariants?.some(
+            (existingVariant) => existingVariant.id === updatedVariant.id
+          )
+        );
+
+        const variantsToCreate = updatedVariants.filter(
+          (updatedVariant) =>
+            !productVariants?.some(
+              (existingVariant) => existingVariant.id === updatedVariant.id
+            )
+        );
+
+        const variantsToDelete = productVariants
+          ?.filter(
+            (existingVariant) =>
+              !updatedVariants.some(
+                (updatedVariant) => updatedVariant.id === existingVariant.id
+              )
+          )
+          .map((variant) => variant.id);
+
+        // Update existing variants
+        variantsToUpdate &&
+          (await Promise.all(
+            variantsToUpdate.map((variant) =>
+              editProductVariants(variant, access_token)
+            )
+          ));
+
+        // Create new variants
+        variantsToCreate &&
+          (await createProductVariants(variantsToCreate, access_token));
+
+        // Delete removed variants
+        variantsToDelete &&
+          (await deleteProductVariants(variantsToDelete, access_token));
+      }
+
       toast({ title: toastMessage });
-      setOpen(false);
+      // router.push("/office/products");
     } catch (error) {
       console.log(error);
       toast({ title: "Something went wrong.", variant: "destructive" });
+    } finally {
       setOpen(false);
+      setIsLoading(false);
     }
   };
 
   const onDelete = async () => {
     try {
-      await deleteProduct({
-        variables: {
-          where: {
-            id: { _eq: initialData?.id },
-            store_id: { _eq: params.storeId },
-          },
-        },
-      });
-      router.push(`/office/${params.storeId}/products`);
+      await deleteProduct(initialData?.id as string, access_token);
+
       toast({ title: "Product deleted." });
+      router.push("/office/products");
     } catch (error) {
       console.log(error);
 
@@ -160,15 +194,13 @@ const ProductForm = ({
     }
   };
 
-  const loading = isCreatingProduct || isEditingProduct || isDeletingProduct;
-
   return (
     <>
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
-        loading={isDeletingProduct}
+        loading={isLoading}
       />
 
       <div className="flex items-center justify-between mb-4">
@@ -179,7 +211,7 @@ const ProductForm = ({
             variant="destructive"
             size="sm"
             onClick={() => setOpen(true)}
-            disabled={isDeletingProduct}
+            disabled={isLoading}
           >
             <Trash className="h-4 w-4" />
           </Button>
@@ -193,7 +225,7 @@ const ProductForm = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full mt-8 space-y-8"
         >
-          <div className="grid grid-cols-3 gap-8">
+          <div className="grid gap-4">
             <FormField
               control={form.control}
               name="images"
@@ -203,12 +235,12 @@ const ProductForm = ({
                   <FormControl>
                     <ImageUpload
                       values={field.value.map((image) => image)}
-                      disabled={loading}
+                      disabled={isLoading}
                       onChange={(url) => field.onChange([...field.value, url])}
                       onRemove={(url) =>
                         field.onChange([
                           ...field.value.filter(
-                            (currentImg) => currentImg !== url,
+                            (currentImg) => currentImg !== url
                           ),
                         ])
                       }
@@ -227,7 +259,7 @@ const ProductForm = ({
                   <FormLabel>Product Name</FormLabel>
                   <FormControl>
                     <Input
-                      disabled={loading}
+                      disabled={isLoading}
                       placeholder="Product name"
                       {...field}
                     />
@@ -245,7 +277,7 @@ const ProductForm = ({
                   <FormLabel>Product Description</FormLabel>
                   <FormControl>
                     <Textarea
-                      disabled={loading}
+                      disabled={isLoading}
                       placeholder="Product description"
                       {...field}
                     />
@@ -263,7 +295,7 @@ const ProductForm = ({
                   <FormLabel>Product Price</FormLabel>
                   <FormControl>
                     <Input
-                      disabled={loading}
+                      disabled={isLoading}
                       type="number"
                       placeholder="99.99"
                       {...field}
@@ -281,7 +313,7 @@ const ProductForm = ({
                 <FormItem>
                   <FormLabel>Category</FormLabel>
                   <Select
-                    disabled={loading}
+                    disabled={isLoading}
                     onValueChange={field.onChange}
                     value={field.value}
                   >
@@ -307,109 +339,60 @@ const ProductForm = ({
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="size_ids"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Product Sizes:</FormLabel>
-
-                  <FormControl>
-                    <ToggleGroup
-                      type="multiple"
-                      variant="outline"
-                      className="flex justify-start gap-2"
-                      onValueChange={field.onChange}
-                    >
-                      {sizes?.map((size) => (
-                        <ToggleGroupItem key={size.id} value={size.id}>
-                          {size.value}
-                        </ToggleGroupItem>
-                      ))}
-                    </ToggleGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <ProductVariantForm
+              sizes={sizes}
+              colors={colors}
+              variants={variants}
+              setVariants={setVariants}
             />
 
-            <FormField
-              control={form.control}
-              name="color_ids"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Product Colors:</FormLabel>
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="is_featured"
+                render={({ field }) => (
+                  <FormItem className="flex space-x-3 rounded-md border p-4">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
 
-                  <FormControl>
-                    <ToggleGroup
-                      type="multiple"
-                      variant="outline"
-                      className="flex justify-start gap-2"
-                      onValueChange={field.onChange}
-                    >
-                      {colors?.map((color) => (
-                        <ToggleGroupItem key={color.id} value={color.id}>
-                          <div className="flex items-center gap-1">
-                            <div
-                              className="h-5 w-5 rounded-full border"
-                              style={{ backgroundColor: color.value }}
-                            />
-                            {color.name}
-                          </div>
-                        </ToggleGroupItem>
-                      ))}
-                    </ToggleGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <div className="space-y-1 !mt-0 leading-none">
+                      <FormLabel>Featured</FormLabel>
+                      <FormDescription>
+                        This product will appear on the home page
+                      </FormDescription>
+                    </div>
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="is_featured"
-              render={({ field }) => (
-                <FormItem className="flex space-x-3 rounded-md border p-4">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-
-                  <div className="space-y-1 !mt-0 leading-none">
-                    <FormLabel>Featured</FormLabel>
-                    <FormDescription>
-                      This product will appear on the home page
-                    </FormDescription>
-                  </div>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="is_archived"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 rounded-md border p-4">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="space-y-1 !mt-0 leading-none">
-                    <FormLabel>Archived</FormLabel>
-                    <FormDescription>
-                      This product will not appear anywhere on the store
-                    </FormDescription>
-                  </div>
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="is_archived"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 rounded-md border p-4">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <div className="space-y-1 !mt-0 leading-none">
+                      <FormLabel>Archived</FormLabel>
+                      <FormDescription>
+                        This product will not appear anywhere on the store
+                      </FormDescription>
+                    </div>
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
 
-          <Button disabled={loading} className="ml-auto" type="submit">
+          <Button disabled={isLoading} className="ml-auto" type="submit">
             {action}
           </Button>
         </form>

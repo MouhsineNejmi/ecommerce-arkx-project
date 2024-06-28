@@ -3,7 +3,7 @@ import ColorsClient from "./components/client";
 import { getColors } from "@/actions/colors/queries";
 import { Color } from "@/types";
 
-const SizesPage = async () => {
+const ColorsPage = async () => {
   const colors: Color[] = await getColors();
 
   return (
@@ -13,4 +13,4 @@ const SizesPage = async () => {
   );
 };
 
-export default SizesPage;
+export default ColorsPage;

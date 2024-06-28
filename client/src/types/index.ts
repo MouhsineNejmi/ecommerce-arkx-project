@@ -25,6 +25,39 @@ export interface Size {
   updated_at?: Date;
 }
 
+export interface Color {
+  id: string;
+  name: string;
+  value: string;
+  store_id: string;
+  created_at: Date;
+  updated_at?: Date;
+}
+
+export interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category_id: string;
+  images: string[];
+  is_featured: boolean;
+  is_archived: boolean;
+  created_at: Date;
+  updated_at?: Date;
+
+  category: Category;
+}
+
+export interface ProductVariant {
+  id: string;
+  product_id?: string;
+  size_id: string;
+  color_id: string;
+  created_at?: Date;
+  updated_at?: Date;
+}
+
 /* OLD */
 export interface SignupUserInput {
   first_name: string;
@@ -79,31 +112,31 @@ export interface Store {
 //   updated_at?: Date;
 // }
 
-export interface Color {
-  id: string;
-  name: string;
-  value: string;
-  store_id: string;
-  created_at: Date;
-  updated_at?: Date;
-}
+// export interface Color {
+//   id: string;
+//   name: string;
+//   value: string;
+//   store_id: string;
+//   created_at: Date;
+//   updated_at?: Date;
+// }
 
-export interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  size_ids: string[];
-  category: Category;
-  color_ids: string[];
-  images: string[];
-  is_featured: boolean;
-  is_archived: boolean;
-  created_at: Date;
-  updated_at?: Date;
-  colors?: Color[];
-  sizes?: Size[];
-}
+// export interface Product {
+//   id: string;
+//   name: string;
+//   description: string;
+//   price: number;
+//   size_ids: string[];
+//   category: Category;
+//   color_ids: string[];
+//   images: string[];
+//   is_featured: boolean;
+//   is_archived: boolean;
+//   created_at: Date;
+//   updated_at?: Date;
+//   colors?: Color[];
+//   sizes?: Size[];
+// }
 
 export interface ProductSingle extends Product {
   colors: Color[];

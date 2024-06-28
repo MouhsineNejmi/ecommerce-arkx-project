@@ -31,8 +31,6 @@ export default async function OfficeLayout({
   const { storeId } = params;
   const session = await getUserSession();
 
-  console.log("SESSION: ", session);
-
   if (!session?.user || session?.user?.role !== "admin" || !storeId) {
     // To Do: Display an unathorized page
     redirect("/api/auth/signin");

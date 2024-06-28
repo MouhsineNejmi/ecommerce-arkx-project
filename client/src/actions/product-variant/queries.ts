@@ -1,0 +1,51 @@
+import { Product, ProductVariant } from "@/types";
+
+const URL = `${process.env.NEXT_PUBLIC_API_URL}/product-variant`;
+
+export const getProductVariants = async (
+  productId: string
+): Promise<ProductVariant[]> => {
+  try {
+    const res = await fetch(`${URL}/${productId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      return [];
+    }
+
+    const productVariants = await res.json();
+    return productVariants;
+  } catch {
+    return [];
+  }
+};
+
+export const getProduct = async (
+  productId: string
+): Promise<Product | null> => {
+  try {
+    const res = await fetch(`${URL}/${productId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      const { message } = await res.json();
+      console.log(message);
+
+      return null;
+    }
+
+    const product = await res.json();
+
+    return product;
+  } catch {
+    return null;
+  }
+};

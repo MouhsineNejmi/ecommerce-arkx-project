@@ -25,7 +25,7 @@ model User {
   created_at        DateTime @default(now())
   updated_at        DateTime @updatedAt
 
-  Billboards Billboard[]
+  billboards Billboard[]
 }
 
 model Billboard {
@@ -38,7 +38,7 @@ model Billboard {
   category_id String?
 
   user     User      @relation(fields: [user_id], references: [id])
-  Category Category? @relation(fields: [category_id], references: [id])
+  category Category? @relation(fields: [category_id], references: [id])
 }
 
 model Category {
@@ -48,7 +48,8 @@ model Category {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  Billboards Billboard[]
+  billboards Billboard[]
+  product    Product[]
 }
 
 model Size {
@@ -57,6 +58,8 @@ model Size {
   value      String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+
+  productVariant ProductVariant[]
 }
 
 model Color {
@@ -65,4 +68,35 @@ model Color {
   value      String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+
+  productVariant ProductVariant[]
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  price       Float
+  is_featured Boolean
+  is_archived Boolean
+  images      String[]
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  category_id String
+
+  category       Category         @relation(fields: [category_id], references: [id])
+  productVariant ProductVariant[]
+}
+
+model ProductVariant {
+  id         String   @id @default(uuid())
+  product_id String
+  size_id    String
+  color_id   String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  size    Size     @relation(fields: [size_id], references: [id])
+  color   Color    @relation(fields: [color_id], references: [id])
+  product Product? @relation(fields: [product_id], references: [id])
 }
