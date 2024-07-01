@@ -1,6 +1,6 @@
 import Container from "@/components/ui/container";
 import Billboard from "@/components/billboard";
-import ProductList from "@/components/product-list";
+import ProductsSection from "@/components/products-section";
 
 import { getBillboard } from "@/actions/billboards/queries";
 import { getProducts } from "@/actions/products/queries";
@@ -18,7 +18,7 @@ const HomePage = async () => {
       <div className="pb-10 space-y-10">
         <Billboard data={billboard} name="Shop Now" />
         <div className="flex flex-col px-4 gap-y-8 sm:px-6 lg:px-8">
-          <ProductList title="Featured Products" items={products} />
+          <ProductsSection title="Featured Products" items={products} />
         </div>
       </div>
     </Container>

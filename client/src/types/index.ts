@@ -47,6 +47,7 @@ export interface Product {
   updated_at?: Date;
 
   category: Category;
+  productVariant?: ProductVariant[];
 }
 
 export interface ProductVariant {

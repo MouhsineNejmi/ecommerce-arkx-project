@@ -9,6 +9,7 @@ import Info from "@/components/info";
 const PreviewModal = () => {
   const previewModal = usePreviewModal();
   const product = usePreviewModal((state) => state.data);
+  const productVariants = usePreviewModal((state) => state.productVariants);
 
   if (!product) {
     return null;
@@ -25,7 +26,7 @@ const PreviewModal = () => {
           <Gallery images={product.images} />
         </div>
         <div className="sm:col-span-8 lg:col-span-7">
-          <Info data={product} isPreview />
+          <Info data={product} productVariants={productVariants} isPreview />
         </div>
       </div>
     </Modal>
