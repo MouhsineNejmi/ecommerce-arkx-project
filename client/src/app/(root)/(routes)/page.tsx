@@ -1,22 +1,24 @@
 import Container from "@/components/ui/container";
-// import Billboard from "@/components/billboard";
-// import ProductList from "@/components/product-list";
+import Billboard from "@/components/billboard";
+import ProductList from "@/components/product-list";
 
-// import getBillboard from "@/actions/billboards/get-billboard";
-// import getProducts from "@/actions/get-products";
+import { getBillboard } from "@/actions/billboards/queries";
+import { getProducts } from "@/actions/products/queries";
 
 export const revalidate = 0;
 
 const HomePage = async () => {
-  // const billboard = await getBillboard("53ee6370-b93c-4564-a231-d2880da1268f");
-  // const products = await getProducts({ isFeatured: true });
+  const billboard = await getBillboard({
+    billboardId: "c8a518c0-e366-47a2-ba4b-19fba07102ea",
+  });
+  const products = await getProducts({ is_featured: true });
 
   return (
     <Container>
       <div className="pb-10 space-y-10">
-        {/* <Billboard data={billboard} /> */}
+        <Billboard data={billboard} name="Shop Now" />
         <div className="flex flex-col px-4 gap-y-8 sm:px-6 lg:px-8">
-          {/* <ProductList title="Featured Products" items={products} /> */}
+          <ProductList title="Featured Products" items={products} />
         </div>
       </div>
     </Container>

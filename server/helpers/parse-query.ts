@@ -1,9 +1,9 @@
-import { Prisma } from '@prisma/client';
+import { ProductFilters } from '../src/dto/products.dto';
 
 export const parseProductQueryParams = (query: {
   [key: string]: any;
-}): Prisma.ProductWhereInput => {
-  const parsedQuery: Prisma.ProductWhereInput = {};
+}): ProductFilters => {
+  const parsedQuery: ProductFilters = {};
 
   Object.entries(query).forEach(([key, value]) => {
     if (value === 'true') {

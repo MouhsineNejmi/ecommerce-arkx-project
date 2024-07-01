@@ -5,15 +5,14 @@ import Currency from "@/components/ui/currency";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-import { Product } from "@/types";
+import { Product, ProductVariant } from "@/types";
 
 interface InfoProps {
   data: Product;
+  productVariants: ProductVariant[];
   isPreview?: boolean;
 }
-const Info: React.FC<InfoProps> = ({ data, isPreview }) => {
-  // console.log("INFO PRODUCT: ", data);
-
+const Info: React.FC<InfoProps> = ({ data, productVariants, isPreview }) => {
   return (
     <div>
       <h1 className="text-3xl font-bold text-gray-900">{data?.name}</h1>
@@ -29,18 +28,20 @@ const Info: React.FC<InfoProps> = ({ data, isPreview }) => {
         <div className="flex items-center gap-4">
           <h3 className="font-semibold text-black">Sizes:</h3>
           <div className="flex gap-2">
-            {data?.sizes?.map((size) => (
-              <Badge key={size.id}>{size.value}</Badge>
+            {productVariants?.map((productVariant) => (
+              <Badge key={productVariant?.size?.id}>
+                {productVariant?.size?.value}
+              </Badge>
             ))}
           </div>
         </div>
         <div className="flex items-center gap-4">
           <h3 className="font-semibold text-black">Colors:</h3>
-          {data?.colors?.map((color) => (
+          {productVariants?.map((productVariant) => (
             <div
-              key={color.id}
+              key={productVariant?.color?.id}
               className="w-6 h-6 border border-gray-600 rounded-full"
-              style={{ backgroundColor: color.value }}
+              style={{ backgroundColor: productVariant?.color?.value }}
             />
           ))}
         </div>

@@ -35,10 +35,10 @@ model Billboard {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
   user_id     String
-  category_id String?
+  category_id String
 
-  user     User      @relation(fields: [user_id], references: [id])
-  category Category? @relation(fields: [category_id], references: [id])
+  user     User     @relation(fields: [user_id], references: [id])
+  category Category @relation(fields: [category_id], references: [id])
 }
 
 model Category {

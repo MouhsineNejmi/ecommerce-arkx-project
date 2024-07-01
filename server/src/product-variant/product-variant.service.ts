@@ -19,6 +19,7 @@ export class ProductVariantService {
   async findByProductId(productId: string): Promise<ProductVariant[]> {
     return this.prismaService.productVariant.findMany({
       where: { product_id: productId },
+      include: { size: true, color: true },
     });
   }
 

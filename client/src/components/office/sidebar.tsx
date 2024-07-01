@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   Boxes,
   Layers,
@@ -23,50 +23,49 @@ import { cn } from "@/lib/utils";
 
 const Sidebar = ({ className }: React.HTMLAttributes<HTMLElement>) => {
   const pathname = usePathname();
-  const params = useParams();
 
   const routes = [
     {
-      href: `/office/${params.storeId}`,
+      href: `/office/dashboard`,
       label: "Overview",
       icon: PanelsTopLeft,
-      active: pathname === `/office/${params.storeId}`,
+      active: pathname === `/office/dashboard`,
     },
     {
-      href: `/office/${params.storeId}/billboards`,
+      href: `/office/billboards`,
       label: "Billboards",
       icon: Presentation,
-      active: pathname === `/office/${params.storeId}/billboards`,
+      active: pathname === `/office/billboards`,
     },
     {
-      href: `/office/${params.storeId}/categories`,
+      href: `/office/categories`,
       label: "Categories",
       icon: Layers,
-      active: pathname === `/office/${params.storeId}/categories`,
+      active: pathname === `/office/categories`,
     },
     {
-      href: `/office/${params.storeId}/sizes`,
+      href: `/office/sizes`,
       label: "Sizes",
       icon: PencilRuler,
-      active: pathname === `/office/${params.storeId}/sizes`,
+      active: pathname === `/office/sizes`,
     },
     {
-      href: `/office/${params.storeId}/colors`,
+      href: `/office/colors`,
       label: "Colors",
       icon: Paintbrush,
-      active: pathname === `/office/${params.storeId}/colors`,
+      active: pathname === `/office/colors`,
     },
     {
-      href: `/office/${params.storeId}/products`,
+      href: `/office/products`,
       label: "Products",
       icon: PackageSearch,
-      active: pathname === `/office/${params.storeId}/products`,
+      active: pathname === `/office/products`,
     },
     {
-      href: `/office/${params.storeId}/orders`,
+      href: `/office/orders`,
       label: "Orders",
       icon: Boxes,
-      active: pathname === `/office/${params.storeId}/orders`,
+      active: pathname === `/office/orders`,
     },
   ];
 
@@ -75,7 +74,7 @@ const Sidebar = ({ className }: React.HTMLAttributes<HTMLElement>) => {
       <aside
         className={cn(
           "fixed inset-y-0 z-10 gap-10 hidden w-60 flex-col p-4 border-r bg-background md:flex",
-          className,
+          className
         )}
       >
         <Link
@@ -97,7 +96,7 @@ const Sidebar = ({ className }: React.HTMLAttributes<HTMLElement>) => {
                 "flex items-center rounded-lg space-x-2 px-2 text-muted-foreground transition-colors hover:text-foreground",
                 active
                   ? "text-black font-bold dark:text-white"
-                  : "text-muted-foreground",
+                  : "text-muted-foreground"
               )}
             >
               <Icon className="h-5 w-5" />
@@ -108,12 +107,12 @@ const Sidebar = ({ className }: React.HTMLAttributes<HTMLElement>) => {
 
         <nav className="mt-auto flex flex-col justify-center gap-4 px-2 py-4">
           <Link
-            href={`/office/${params.storeId}/settings`}
+            href={`/office/settings`}
             className={cn(
               "flex items-center space-x-2 rounded-lg text-muted-foreground transition-colors hover:text-foreground",
-              pathname === `/office/${params.storeId}/settings`
+              pathname === `/office/settings`
                 ? "text-black font-bold dark:text-white"
-                : "text-muted-foreground",
+                : "text-muted-foreground"
             )}
           >
             <Settings className="h-5 w-5" />
@@ -147,7 +146,7 @@ const Sidebar = ({ className }: React.HTMLAttributes<HTMLElement>) => {
                   "flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground",
                   active
                     ? "text-black font-bold dark:text-white"
-                    : "text-muted-foreground",
+                    : "text-muted-foreground"
                 )}
               >
                 <Icon className="h-5 w-5" />
@@ -156,12 +155,12 @@ const Sidebar = ({ className }: React.HTMLAttributes<HTMLElement>) => {
             ))}
 
             <Link
-              href={`/${params.storeId}/settings`}
+              href={`/office/settings`}
               className={cn(
                 "flex items-center gap-4 space-x-2 px-2.5 text-muted-foreground hover:text-foreground",
-                pathname === `/office/${params.storeId}/settings`
+                pathname === `/office/settings`
                   ? "text-black font-bold dark:text-white"
-                  : "text-muted-foreground",
+                  : "text-muted-foreground"
               )}
             >
               <Settings className="h-5 w-5" />

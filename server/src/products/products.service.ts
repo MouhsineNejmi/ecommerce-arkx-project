@@ -3,15 +3,15 @@ import { Prisma, Product } from '@prisma/client';
 
 import { PrismaService } from '../prisma/prisma.service';
 
-import { CreateProductDto } from '../dto/products.dto';
+import { CreateProductDto, ProductFilters } from '../dto/products.dto';
 
 @Injectable()
 export class ProductsService {
   constructor(private prismaService: PrismaService) {}
 
-  async findAll(params?: Prisma.ProductWhereInput): Promise<Product[]> {
+  async findAll(params?: ProductFilters): Promise<Product[]> {
     const query: Prisma.ProductWhereInput = { is_archived: false };
-    const { is_featured, is_archived } = params;
+    const { is_featured, is_archived, color_id, size_id } = params;
 
     if (is_featured) {
       query.is_featured = is_featured;
@@ -21,9 +21,29 @@ export class ProductsService {
       query.is_archived = is_archived;
     }
 
+    if (color_id) {
+      query.AND = {
+        productVariant: {
+          some: {
+            color_id,
+          },
+        },
+      };
+    }
+
+    if (size_id) {
+      query.AND = {
+        productVariant: {
+          some: {
+            size_id,
+          },
+        },
+      };
+    }
+
     return await this.prismaService.product.findMany({
       where: query,
-      include: { category: true },
+      include: { category: true, productVariant: true },
       orderBy: { created_at: 'desc' },
     });
   }

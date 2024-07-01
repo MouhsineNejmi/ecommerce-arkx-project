@@ -13,8 +13,23 @@ export class BillboardsService {
     return await this.prismaService.billboard.findMany();
   }
 
-  async findById(id: string): Promise<Billboard> {
-    return this.prismaService.billboard.findUnique({ where: { id } });
+  async findById(
+    billboardId?: string,
+    categoryId?: string,
+  ): Promise<Billboard | null> {
+    if (billboardId) {
+      return await this.prismaService.billboard.findUnique({
+        where: { id: billboardId },
+      });
+    }
+
+    if (categoryId) {
+      return await this.prismaService.billboard.findFirst({
+        where: { category_id: categoryId },
+      });
+    }
+
+    return null;
   }
 
   async createBillboard(data: CreateBillboardDto): Promise<Billboard> {

@@ -29,14 +29,22 @@ import {
   deleteBillboard,
 } from "@/actions/billboards/actions";
 
-import { Billboard } from "@/types";
+import { Billboard, Category } from "@/types";
 import { BillboardFormInput, billboardSchema } from "@/schemas/billboard";
+import {
+  SelectItem,
+  Select,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 interface BillboardFormProps {
   initialData: Billboard | null;
+  categories: Category[];
 }
 
-const BillboardForm = ({ initialData }: BillboardFormProps) => {
+const BillboardForm = ({ initialData, categories }: BillboardFormProps) => {
   const router = useRouter();
   const { toast } = useToast();
   const { data: session } = useSession();
@@ -59,6 +67,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
       label: "",
       image_url: "",
       user_id: session?.user.id,
+      category_id: "",
     },
   });
 
@@ -69,6 +78,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
       label: values.label,
       image_url: values.image_url,
       user_id: session?.user.id as string,
+      category_id: values.category_id,
     };
 
     try {
@@ -172,6 +182,39 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
                     {...field}
                   />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="category_id"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Category</FormLabel>
+                <Select
+                  disabled={loading}
+                  onValueChange={field.onChange}
+                  value={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue
+                        defaultValue={field.value}
+                        placeholder="Select a category"
+                      />
+                    </SelectTrigger>
+                  </FormControl>
+
+                  <SelectContent>
+                    {categories?.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}

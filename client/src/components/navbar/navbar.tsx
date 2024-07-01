@@ -5,7 +5,7 @@ import MainNav from "@/components/navbar/main-nav";
 import NavbarActions from "@/components/navbar/navbar-actions";
 import SignInButton from "@/components/sign-in-button";
 
-import getCategories from "@/actions/get-categories";
+import { getCategories } from "@/actions/categories/queries";
 
 export const revalidate = 0;
 

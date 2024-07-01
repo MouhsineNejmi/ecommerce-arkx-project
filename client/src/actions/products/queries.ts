@@ -1,9 +1,9 @@
-import { Product } from "@/types";
+import { Product, ProductFilters } from "@/types";
 
 const URL = `${process.env.NEXT_PUBLIC_API_URL}/products`;
 
 export const getProducts = async (
-  filters: Partial<Product> = {}
+  filters: ProductFilters = {}
 ): Promise<Product[]> => {
   try {
     const queryParams = new URLSearchParams(

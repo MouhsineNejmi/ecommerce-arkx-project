@@ -8,13 +8,16 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 
 import { ProductsService } from './products.service';
 
 import { Public } from '../auth/decorators/public.decorator';
 
-import { CreateProductDto, EditProductDto } from '../dto/products.dto';
+import {
+  CreateProductDto,
+  EditProductDto,
+  ProductFilters,
+} from '../dto/products.dto';
 
 import { parseProductQueryParams } from '../../helpers/parse-query';
 
@@ -24,7 +27,7 @@ export class ProductsController {
 
   @Public()
   @Get()
-  async getAllProducts(@Query() query?: Prisma.ProductWhereInput) {
+  async getAllProducts(@Query() query?: ProductFilters) {
     const parsedQuery = parseProductQueryParams(query);
 
     return await this.productsService.findAll(parsedQuery);

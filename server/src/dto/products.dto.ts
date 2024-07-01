@@ -9,3 +9,11 @@ export interface CreateProductDto {
 }
 
 export type EditProductDto = CreateProductDto;
+
+export interface ProductFilters {
+  is_featured?: boolean;
+  is_archived?: boolean;
+  category_id?: string;
+  color_id?: string;
+  size_id?: string;
+}

@@ -56,6 +56,17 @@ export interface ProductVariant {
   color_id: string;
   created_at?: Date;
   updated_at?: Date;
+
+  size?: Size;
+  color?: Color;
+}
+
+export interface ProductFilters {
+  is_featured?: boolean;
+  is_archived?: boolean;
+  category_id?: string;
+  color_id?: string;
+  size_id?: string;
 }
 
 /* OLD */

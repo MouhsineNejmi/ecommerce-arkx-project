@@ -6,6 +6,7 @@ import {
   NotFoundException,
   Param,
   Post,
+  Query,
 } from '@nestjs/common';
 
 import { BillboardsService } from './billboards.service';
@@ -18,15 +19,28 @@ import { CreateBillboardDto, EditBillboardDto } from '../dto/billboard.dto';
 export class BillboardsController {
   constructor(private billboardService: BillboardsService) {}
 
+  @Public()
   @Get()
   async getAllBillboards() {
     return this.billboardService.findAll();
   }
 
   @Public()
-  @Get('/:id')
-  async getBillboardById(@Param('id') id: string) {
-    const billboard = await this.billboardService.findById(id);
+  @Get('/billboard')
+  async getBillboardById(
+    @Query('billboardId') billboardId?: string,
+    @Query('categoryId') categoryId?: string,
+  ) {
+    if (!billboardId && !categoryId) {
+      throw new NotFoundException(
+        'Either Category id or Billboard id must be provided',
+      );
+    }
+
+    const billboard = await this.billboardService.findById(
+      billboardId,
+      categoryId,
+    );
 
     if (!billboard) {
       throw new NotFoundException('No billboard with this id found');
