@@ -6,7 +6,9 @@ import {
   NotFoundException,
   Param,
   Post,
+  Query,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 
 import { ProductsService } from './products.service';
 
@@ -14,14 +16,18 @@ import { Public } from '../auth/decorators/public.decorator';
 
 import { CreateProductDto, EditProductDto } from '../dto/products.dto';
 
+import { parseProductQueryParams } from '../../helpers/parse-query';
+
 @Controller('products')
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
 
   @Public()
   @Get()
-  async getAllProducts() {
-    return await this.productsService.findAll();
+  async getAllProducts(@Query() query?: Prisma.ProductWhereInput) {
+    const parsedQuery = parseProductQueryParams(query);
+
+    return await this.productsService.findAll(parsedQuery);
   }
 
   @Public()

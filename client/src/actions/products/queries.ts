@@ -2,9 +2,20 @@ import { Product } from "@/types";
 
 const URL = `${process.env.NEXT_PUBLIC_API_URL}/products`;
 
-export const getProducts = async (): Promise<Product[]> => {
+export const getProducts = async (
+  filters: Partial<Product> = {}
+): Promise<Product[]> => {
   try {
-    const res = await fetch(URL, {
+    const queryParams = new URLSearchParams(
+      Object.entries(filters).reduce((acc, [key, value]) => {
+        if (value !== undefined) acc[key] = String(value);
+        return acc;
+      }, {} as Record<string, string>)
+    ).toString();
+
+    const urlWithParams = `${URL}?${queryParams}`;
+
+    const res = await fetch(urlWithParams, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
