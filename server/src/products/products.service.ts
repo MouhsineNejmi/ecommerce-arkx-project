@@ -11,10 +11,14 @@ export class ProductsService {
 
   async findAll(params?: ProductFilters): Promise<Product[]> {
     const query: Prisma.ProductWhereInput = { is_archived: false };
-    const { is_featured, is_archived, color_id, size_id } = params;
+    const { is_featured, is_archived, category_id, color_id, size_id } = params;
 
     if (is_featured) {
       query.is_featured = is_featured;
+    }
+
+    if (category_id) {
+      query.category_id = category_id;
     }
 
     if (is_archived) {
