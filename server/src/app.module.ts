@@ -5,14 +5,6 @@ import { APP_GUARD } from '@nestjs/core';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-
-import { AuthController } from './auth/auth.controller';
-import { UsersController } from './users/users.controller';
-
-import { PrismaService } from './prisma/prisma.service';
-import { AuthService } from './auth/auth.service';
-import { UsersService } from './users/users.service';
-
 import { JwtGuard } from './auth/guards/jwt.guard';
 import { JwtStrategy } from './auth/strategies/jwt.strategy';
 import { BillboardsModule } from './billboards/billboards.module';
@@ -21,6 +13,14 @@ import { SizesModule } from './sizes/sizes.module';
 import { ColorsModule } from './colors/colors.module';
 import { ProductsModule } from './products/products.module';
 import { ProductVariantModule } from './product-variant/product-variant.module';
+import { CartModule } from './cart/cart.module';
+
+import { AuthController } from './auth/auth.controller';
+import { UsersController } from './users/users.controller';
+
+import { PrismaService } from './prisma/prisma.service';
+import { AuthService } from './auth/auth.service';
+import { UsersService } from './users/users.service';
 
 @Module({
   imports: [
@@ -34,6 +34,7 @@ import { ProductVariantModule } from './product-variant/product-variant.module';
     ColorsModule,
     ProductsModule,
     ProductVariantModule,
+    CartModule,
   ],
   controllers: [AuthController, UsersController],
   providers: [

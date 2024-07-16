@@ -26,6 +26,7 @@ model User {
   updated_at        DateTime @updatedAt
 
   billboards Billboard[]
+  Cart       Cart[]
 }
 
 model Billboard {
@@ -60,6 +61,8 @@ model Size {
   updated_at DateTime @updatedAt
 
   productVariant ProductVariant[]
+  Cart           Cart[]
+  CartItem       CartItem[]
 }
 
 model Color {
@@ -70,6 +73,8 @@ model Color {
   updated_at DateTime @updatedAt
 
   productVariant ProductVariant[]
+  Cart           Cart[]
+  CartItem       CartItem[]
 }
 
 model Product {
@@ -99,4 +104,30 @@ model ProductVariant {
   size    Size     @relation(fields: [size_id], references: [id])
   color   Color    @relation(fields: [color_id], references: [id])
   product Product? @relation(fields: [product_id], references: [id])
+}
+
+model Cart {
+  id       String  @id @default(uuid())
+  user_id  String
+  total    Float
+  size_id  String?
+  color_id String?
+
+  cartItems CartItem[]
+  user      User?      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  size      Size?      @relation(fields: [size_id], references: [id])
+  color     Color?     @relation(fields: [color_id], references: [id])
+}
+
+model CartItem {
+  id         String @id @default(uuid())
+  product_id String
+  quantity   Int
+  color_id   String
+  size_id    String
+  cart_id    String
+
+  size  Size?  @relation(fields: [size_id], references: [id])
+  color Color? @relation(fields: [color_id], references: [id])
+  cart  Cart   @relation(fields: [cart_id], references: [id])
 }
