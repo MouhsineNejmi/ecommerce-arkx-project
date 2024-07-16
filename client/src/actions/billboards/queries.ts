@@ -58,9 +58,6 @@ export const getBillboard = async ({
     });
 
     if (!res.ok) {
-      const error = await res.json();
-      console.log(error);
-
       return null;
     }
 

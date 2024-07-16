@@ -1,71 +1,148 @@
+/* eslint-disable no-unused-vars */
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 import { toast } from "@/components/ui/use-toast";
-import { Product } from "@/types";
+import { Color, Product, Size } from "@/types";
+import {
+  addToCart,
+  updateCartItem,
+  removeCartItem,
+  clearCart,
+} from "@/actions/cart/actions";
 
 type CartItem = {
   product: Product;
+  color: Color;
+  size: Size;
   quantity: number;
+  id: string;
 };
 
 interface CartStore {
   items: CartItem[];
-  // eslint-disable-next-line no-unused-vars
-  addItem: (data: Product, quantity?: number) => void;
-  // eslint-disable-next-line no-unused-vars
-  removeItem: (id: string) => void;
-  removeAll: () => void;
+  addItem: (
+    data: Product,
+    size: Size,
+    color: Color,
+    quantity?: number,
+    userId?: string,
+    token?: string
+  ) => void;
+  removeItem: (id: string, userId?: string, token?: string) => void;
+  removeAll: (userId?: string, token?: string) => void;
 }
 
 const useCart = create(
   persist<CartStore>(
     (set, get) => ({
       items: [],
-      addItem: (data: Product, quantity: number = 1) => {
+      addItem: async (
+        data: Product,
+        size: Size,
+        color: Color,
+        quantity: number = 1,
+        userId?: string,
+        token?: string
+      ) => {
         const currentItems = get().items;
         const existingItem = currentItems.find(
-          (item) => item.product.id === data.id,
+          (item) =>
+            item.product.id === data.id &&
+            item.size.id === size.id &&
+            item.color.id === color.id
         );
 
         if (existingItem) {
           const updatedQuantity = existingItem.quantity + quantity;
+
           if (updatedQuantity > 0) {
+            if (userId && token) {
+              const response = await updateCartItem(
+                existingItem.id,
+                { ...existingItem, quantity: updatedQuantity },
+                token
+              );
+
+              console.log("Use Cart Update Cart Item: ", response);
+            }
+
             set((state) => ({
               items: state.items.map((item) =>
-                item.product.id === data.id
+                item.id === existingItem.id
                   ? { ...item, quantity: updatedQuantity }
-                  : item,
+                  : item
               ),
             }));
+
             toast({
               title: `Added ${quantity} more of ${data.name} to your cart.`,
             });
           } else {
+            if (userId && token) {
+              await removeCartItem(existingItem.id, token);
+            }
             set({
-              items: currentItems.filter((item) => item.product.id !== data.id),
+              items: currentItems.filter((item) => item.id !== existingItem.id),
             });
             toast({
               title: `${data.name} removed from your cart.`,
             });
           }
         } else {
-          set({ items: [...currentItems, { product: data, quantity }] });
+          const newItemId = `${data.id}-${size.id}-${color.id}-${Date.now()}`;
+
+          if (userId && token) {
+            await addToCart(
+              userId,
+              {
+                product: data,
+                color,
+                size,
+                quantity,
+                id: newItemId,
+              },
+              token
+            );
+          }
+
+          set({
+            items: [
+              ...currentItems,
+              {
+                product: data,
+                color,
+                size,
+                quantity,
+                id: newItemId,
+              },
+            ],
+          });
           toast({ title: "Item added to cart.", variant: "success" });
         }
       },
-      removeItem: (id: string) => {
+      removeItem: async (id: string, userId?: string, token?: string) => {
+        if (userId && token) {
+          await removeCartItem(id, token);
+        }
+
         set({
-          items: [...get().items.filter((item) => item.product.id !== id)],
+          items: [...get().items.filter((item) => item.id !== id)],
         });
       },
-      removeAll: () => set({ items: [] }),
+      removeAll: async (userId?: string, token?: string) => {
+        if (userId && token) {
+          await clearCart(userId, token);
+        }
+
+        set({ items: [] });
+      },
     }),
     {
       name: "cart-storage",
       storage: createJSONStorage(() => localStorage),
-    },
-  ),
+    }
+  )
 );
 
 export default useCart;

@@ -70,6 +70,21 @@ export interface ProductFilters {
   size_id?: string;
 }
 
+export interface Cart {
+  id: string;
+  user_id: string;
+  total: string;
+  cartItems: CartItem[];
+}
+
+export interface CartItem {
+  id: string;
+  product: Product;
+  color: Color;
+  size: Size;
+  quantity: number;
+}
+
 /* OLD */
 export interface SignupUserInput {
   first_name: string;
@@ -155,10 +170,10 @@ export interface ProductSingle extends Product {
   sizes: Size[];
 }
 
-export interface CartItem {
-  product: Product;
-  quantity: number;
-}
+// export interface CartItem {
+//   product: Product;
+//   quantity: number;
+// }
 
 export interface Order {
   id: string;

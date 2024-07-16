@@ -6,27 +6,45 @@ import { X, Plus, Minus } from "lucide-react";
 
 import Currency from "@/components/ui/currency";
 import IconButton from "@/components/ui/icon-button";
+import { Badge } from "@/components/ui/badge";
+
 import useCart from "@/hooks/use-cart";
 
 import { CartItem as CartItemType } from "@/types";
+import { useSession } from "next-auth/react";
 
 interface CartItemProps {
   data: CartItemType;
 }
 
 const CartItem: React.FC<CartItemProps> = ({ data }) => {
+  const { data: session } = useSession();
   const cart = useCart();
 
   const onRemove = () => {
-    cart.removeItem(data.product?.id);
+    cart.removeItem(data.id, session?.user.id, session?.access_token);
   };
 
   const increaseQuantity = () => {
-    cart.addItem(data.product, 1);
+    cart.addItem(
+      data.product,
+      data.size,
+      data.color,
+      1,
+      session?.user.id,
+      session?.access_token
+    );
   };
 
   const decreaseQuantity = () => {
-    cart.addItem(data.product, -1);
+    cart.addItem(
+      data.product,
+      data.size,
+      data.color,
+      -1,
+      session?.user.id,
+      session?.access_token
+    );
   };
 
   return (
@@ -50,6 +68,21 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
             </p>
           </div>
           <Currency value={data.product?.price} />
+        </div>
+        <div className="grid gap-2">
+          <p className="font-bold underline">Product Variant:</p>
+          <div className="flex gap-2 mb-2">
+            <h4>Size: {data.size?.name}</h4>
+            <Badge variant="outline">{data.size?.value}</Badge>
+          </div>
+
+          <div className="flex gap-2 mb-2">
+            <h4>Color: {data.color?.name}</h4>
+            <div
+              className="w-6 h-6 border border-gray-600 rounded-full cursor-pointer"
+              style={{ backgroundColor: data.color?.value }}
+            />
+          </div>
         </div>
         <div className="flex items-center gap-2 text-sm">
           <IconButton onClick={decreaseQuantity} icon={<Minus size={15} />} />

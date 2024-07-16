@@ -6,7 +6,7 @@ import { getProductVariants } from "@/actions/product-variant/queries";
 import Container from "@/components/ui/container";
 import Gallery from "@/components/gallery";
 import Info from "@/components/info";
-import ProductList from "@/components/product-section";
+import ProductsSection from "@/components/products-section";
 
 interface ProductPageProps {
   params: {
@@ -17,8 +17,6 @@ interface ProductPageProps {
 const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
   const product = await getProduct(params.productId);
   const variants = await getProductVariants(params.productId);
-
-  console.log(variants);
 
   const suggestProducts = await getProducts({
     category_id: product?.category?.id,
@@ -37,7 +35,7 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
             </div>
           </div>
           <hr className="my-10" />
-          <ProductList title="Related Items" items={suggestProducts} />
+          <ProductsSection title="Related Items" items={suggestProducts} />
         </div>
       </Container>
     </div>

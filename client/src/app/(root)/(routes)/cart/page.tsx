@@ -14,7 +14,7 @@ import { CartItem as CartItemType } from "@/types";
 const stripePromise = getStripe();
 
 const CartPage = () => {
-  const cart = useCart();
+  const { items: cartItems } = useCart();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -32,12 +32,12 @@ const CartPage = () => {
           <h1 className="text-3xl font-bold text-black">Shopping Cart</h1>
           <div className="mt-12 lg:grid lg:grid-cols-12 lg:items-start gap-x-12">
             <div className="lg:col-span-7">
-              {cart?.items?.length === 0 && (
+              {cartItems?.length === 0 && (
                 <p className="text-neutral-500">No items added to cart</p>
               )}
               <ul>
-                {cart?.items?.map((item: CartItemType) => (
-                  <CartItem key={item.product?.id} data={item} />
+                {cartItems?.map((item: CartItemType) => (
+                  <CartItem key={item.id} data={item} />
                 ))}
               </ul>
             </div>
